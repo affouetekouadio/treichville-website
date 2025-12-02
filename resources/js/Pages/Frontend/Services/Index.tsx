@@ -29,6 +29,58 @@ type ServicesPageProps = {
 };
 
 const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
+  const fallbackServices: ServiceRecord[] = [
+    {
+      id: "etat-civil",
+      nom: "État civil",
+      description: "Actes de naissance, mariage, décès et mise à jour des documents officiels.",
+      categorie: "État civil",
+      icone: "FileText",
+      lien_externe: createPageUrl("EtatCivil"),
+    },
+    {
+      id: "urbanisme",
+      nom: "Urbanisme & permis",
+      description: "Permis de construire, conformité et suivi des chantiers dans la commune.",
+      categorie: "Urbanisme",
+      icone: "Building",
+      lien_externe: createPageUrl("Fiscalite"),
+    },
+    {
+      id: "fiscalite",
+      nom: "Fiscalité locale",
+      description: "Paiement des taxes, fiscalité des marchés et des entreprises locales.",
+      categorie: "Administratif",
+      icone: "Coins",
+      lien_externe: createPageUrl("Fiscalite"),
+    },
+    {
+      id: "solidarite",
+      nom: "Solidarité & santé",
+      description: "Aides sociales, accompagnement des familles et santé communautaire.",
+      categorie: "Social",
+      icone: "Heart",
+      lien_externe: createPageUrl("Services"),
+    },
+    {
+      id: "jeunesse",
+      nom: "Jeunesse & sport",
+      description: "Équipements sportifs, agenda des clubs et programmes pour la jeunesse.",
+      categorie: "Social",
+      icone: "Users",
+      lien_externe: createPageUrl("Evenements"),
+    },
+    {
+      id: "environnement",
+      nom: "Environnement",
+      description: "Propreté urbaine, collecte des déchets et initiatives écologiques.",
+      categorie: "Environnement",
+      icone: "Sprout",
+      lien_externe: createPageUrl("ParcsPiscines"),
+    },
+  ];
+
+  const servicesList = services.length ? services : fallbackServices;
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading] = useState(false);
@@ -58,7 +110,7 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
 
   const categories = ["Tous", "Administratif", "État civil", "Urbanisme", "Social", "Culture", "Environnement"];
 
-  const filteredServices = services.filter(service => {
+  const filteredServices = servicesList.filter(service => {
     const matchCategory = selectedCategory === "Tous" || service.categorie === selectedCategory;
     const matchSearch = !searchQuery || 
       service.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||

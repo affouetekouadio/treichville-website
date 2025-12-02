@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { Menu, X, Building2, Phone, Mail, MapPin, Clock, Facebook, Twitter, Instagram, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ApplifeCTA from "@/components/Frontend/ApplifeCTA";
+import ScrollToTop from "@/components/Frontend/ScrollToTop";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState<Record<string, boolean>>({});
 
   const { url } = usePage();
 
@@ -26,6 +28,22 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     setIsMenuOpen(false);
   }, [url]);
+
+  // Fonction pour vérifier si un menu est actif
+  const isMenuActive = (path: string, submenu?: { label: string; path: string }[]) => {
+    const currentPath = url.toLowerCase();
+    const menuPath = createPageUrl(path).toLowerCase();
+
+    // Vérifier si c'est la page exacte
+    if (currentPath === menuPath) return true;
+
+    // Vérifier si c'est une page du sous-menu
+    if (submenu) {
+      return submenu.some(sub => currentPath === createPageUrl(sub.path).toLowerCase());
+    }
+
+    return false;
+  };
 
   const menuItems = [
     { 
@@ -107,7 +125,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main Navigation */}
       <header className={`sticky top-0 z-50 bg-white transition-all duration-300 ${scrolled ? 'shadow-lg' : 'shadow-md'}`}>
-        <nav className="bg-[var(--primary-orange)] relative">
+        <nav className="bg-white relative">
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               {/* Logo */}
@@ -121,36 +139,50 @@ export default function Layout({ children }: LayoutProps) {
 
               {/* Desktop Menu */}
               <div className="hidden lg:flex items-center gap-1">
-                {menuItems.map((item) => (
-                  <div 
-                    key={item.path} 
-                    className="relative group"
-                  >
-                    <Link
-                      href={createPageUrl(item.path)}
-                      className="px-4 py-4 text-white font-medium hover:bg-white/10 rounded-lg transition-all duration-300 flex items-center gap-1"
+                {menuItems.map((item) => {
+                  const isActive = isMenuActive(item.path, item.submenu);
+                  return (
+                    <div
+                      key={item.path}
+                      className="relative group"
                     >
-                      {item.label}
-                      {item.submenu && <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />}
-                    </Link>
+                      <Link
+                        href={createPageUrl(item.path)}
+                        className={`px-4 py-4 font-medium hover:bg-gray-100 rounded-lg transition-all duration-300 flex items-center gap-1 ${
+                          isActive
+                            ? 'bg-[#1d8595] text-white hover:bg-[#1d8595]/90'
+                            : 'text-gray-800'
+                        }`}
+                      >
+                        {item.label}
+                        {item.submenu && <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />}
+                      </Link>
                     
                     {item.submenu && (
                       <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                         <div className="bg-white rounded-lg shadow-xl py-2 min-w-[220px] border border-gray-100">
-                          {item.submenu.map((sub) => (
-                            <Link
-                              key={sub.path}
-                              href={createPageUrl(sub.path)}
-                              className="block px-4 py-3 text-gray-700 hover:bg-[#1d8595] hover:text-white transition-colors"
-                            >
-                              {sub.label}
-                            </Link>
-                          ))}
+                          {item.submenu.map((sub) => {
+                            const isSubActive = url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
+                            return (
+                              <Link
+                                key={sub.path}
+                                href={createPageUrl(sub.path)}
+                                className={`block px-4 py-3 transition-colors ${
+                                  isSubActive
+                                    ? 'bg-[#1d8595] text-white font-semibold'
+                                    : 'text-gray-700 hover:bg-[#1d8595] hover:text-white'
+                                }`}
+                              >
+                                {sub.label}
+                              </Link>
+                            );
+                          })}
                         </div>
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Right Side - Desktop */}
@@ -166,7 +198,7 @@ export default function Layout({ children }: LayoutProps) {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden w-10 h-10 flex items-center justify-center text-white hover:bg-white/10 rounded-lg transition-colors z-50"
+                className="lg:hidden w-10 h-10 flex items-center justify-center text-gray-800 hover:bg-gray-100 rounded-lg transition-colors z-50"
               >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -183,29 +215,63 @@ export default function Layout({ children }: LayoutProps) {
                 className="lg:hidden bg-white border-t border-gray-200 overflow-hidden shadow-lg"
               >
                 <div className="px-6 py-4 space-y-2">
-                  {menuItems.map((item) => (
-                    <div key={item.path}>
-                      <Link
-                        href={createPageUrl(item.path)}
-                        className="block px-4 py-3 text-gray-800 font-medium hover:bg-[var(--light-gray)] rounded-lg transition-colors"
-                      >
-                        {item.label}
-                      </Link>
-                      {item.submenu && (
-                        <div className="ml-4 space-y-1">
-                          {item.submenu.map((sub) => (
-                            <Link
-                              key={sub.path}
-                              href={createPageUrl(sub.path)}
-                              className="block px-4 py-2 text-gray-600 text-sm hover:bg-[var(--light-gray)] rounded-lg transition-colors"
-                            >
-                              {sub.label}
-                            </Link>
-                          ))}
+                  {menuItems.map((item) => {
+                    const isActive = isMenuActive(item.path, item.submenu);
+                    return (
+                      <div key={item.path} className="border border-gray-100 rounded-xl overflow-hidden">
+                        {item.submenu ? (
+                          <button
+                            onClick={() =>
+                              setMobileOpen((prev) => ({ ...prev, [item.path]: !prev[item.path] }))
+                            }
+                            className={`w-full flex items-center justify-between px-4 py-3 font-semibold hover:bg-[var(--light-gray)] transition-colors ${
+                              isActive
+                                ? 'bg-[#1d8595] text-white'
+                                : 'text-gray-800'
+                            }`}
+                          >
+                            <span>{item.label}</span>
+                            <ChevronDown
+                              className={`w-4 h-4 transition-transform duration-300 ${
+                                mobileOpen[item.path] ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+                        ) : (
+                          <Link
+                            href={createPageUrl(item.path)}
+                            className={`block px-4 py-3 font-medium hover:bg-[var(--light-gray)] rounded-xl transition-colors ${
+                              isActive
+                                ? 'bg-[#1d8595] text-white'
+                                : 'text-gray-800'
+                            }`}
+                          >
+                            {item.label}
+                          </Link>
+                        )}
+                      {item.submenu && mobileOpen[item.path] && (
+                        <div className="bg-gray-50 border-t border-gray-100">
+                          {item.submenu.map((sub) => {
+                            const isSubActive = url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
+                            return (
+                              <Link
+                                key={sub.path}
+                                href={createPageUrl(sub.path)}
+                                className={`block px-4 py-3 text-sm transition-colors ${
+                                  isSubActive
+                                    ? 'bg-[#1d8595] text-white font-semibold'
+                                    : 'text-gray-700 hover:bg-white'
+                                }`}
+                              >
+                                {sub.label}
+                              </Link>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
                   <div className="pt-4 border-t border-gray-200">
                     <a
                       href="#"
@@ -299,6 +365,9 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
       </footer>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </div>
   );
 }

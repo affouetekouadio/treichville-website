@@ -50,7 +50,7 @@ const Fiscalite: FrontendPage = () => {
       </section>
 
       {/* Blocs intro sous la bannière */}
-      <section className="max-w-6xl mx-auto px-6 mt-[-60px] mb-12 space-y-6">
+      <section className="max-w-6xl mx-auto px-6 mt-10 mb-12 space-y-6">
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
             <p className="text-gray-700 text-lg mb-4">
