@@ -529,7 +529,7 @@ const Histoire: FrontendPage = () => {
           </motion.div>
 
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#1d8595]/20"></div>
+            <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#1d8595]/20"></div>
             {timeline.map((item, index) => (
               <motion.div
                 key={item.year}
@@ -537,10 +537,10 @@ const Histoire: FrontendPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className={`relative flex items-center mb-8 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                className={`relative mb-8 lg:flex lg:items-center ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
               >
-                <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <div className={`w-full lg:w-1/2 ${index % 2 === 0 ? 'lg:pr-8 lg:text-right' : 'lg:pl-8 lg:text-left'} text-left`}>
+                  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 break-words">
                     <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#f8812f] to-amber-500 text-white text-sm font-bold rounded-full mb-2">
                       {item.year}
                     </span>
@@ -548,8 +548,8 @@ const Histoire: FrontendPage = () => {
                     <p className="text-gray-600">{item.description}</p>
                   </div>
                 </div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#1d8595] rounded-full border-4 border-white shadow"></div>
-                <div className="w-1/2"></div>
+                <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#1d8595] rounded-full border-4 border-white shadow"></div>
+                <div className="hidden lg:block w-1/2"></div>
               </motion.div>
             ))}
           </div>
