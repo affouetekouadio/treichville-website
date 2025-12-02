@@ -102,10 +102,10 @@ const Contact: FrontendPage = () => {
           >
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Informations de contact</h2>
             {[
-              { icon: MapPin, title: "Adresse", content: "Place de la Mairie, 75000 Paris" },
-              { icon: Phone, title: "Téléphone", content: "01 23 45 67 89", link: "tel:0123456789" },
-              { icon: Mail, title: "Email", content: "contact@collectivite.fr", link: "mailto:contact@collectivite.fr" },
-              { icon: Clock, title: "Horaires", content: "Lun-Ven : 8h30 - 17h00\nSam : 9h00 - 12h00" }
+              { icon: MapPin, title: "Adresse", content: "8X6P+3Q4, Av. Victor Biaka, Abidjan" },
+              { icon: Phone, title: "Téléphone", content: "27 21 2 40809", link: "tel:27212240809" },
+              { icon: Mail, title: "Email", content: "contact@treichville.ci", link: "mailto:contact@treichville.ci" },
+              { icon: Clock, title: "Horaires", content: "Lun - Ven : 7h30 - 16h30" }
             ].map((item, index) => (
               <motion.div
                 key={index}

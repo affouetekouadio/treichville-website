@@ -346,11 +346,11 @@ export default function Layout({ children }: LayoutProps) {
               <div className="space-y-4 text-gray-400">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-[var(--primary-orange)] mt-1 flex-shrink-0" />
-                  <span>Mairie de Treichville<br />Abidjan, Côte d'Ivoire</span>
+                  <span>8X6P+3Q4, Av. Victor Biaka<br />Abidjan, Côte d'Ivoire</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
-                  <span>+225 27 21 24 XX XX</span>
+                  <span>+225 27 21 2 40809</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
