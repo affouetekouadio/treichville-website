@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 
 const slides = [
   {
-    title: "Bienvenue à",
-    subtitle: "Treichville",
+    title: "Bienvenue à la Cité",
+    subtitle: "N’Zassa",
     highlight: "cœur d'Abidjan",
     description: "Découvrez le dynamisme et la richesse culturelle de notre commune",
-    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200",
+    // image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200",
+      image: "images/bannieres/banniere-1.jpg",
     cta: "Découvrir"
   },
   {
@@ -17,7 +18,8 @@ const slides = [
     subtitle: "à votre",
     highlight: "service",
     description: "État civil, fiscalité, urbanisme... simplifiez vos démarches",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200",
+    // image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200",
+    image: "images/bannieres/banniere-2.jpg",
     cta: "Nos services"
   },
   {
@@ -25,7 +27,8 @@ const slides = [
     subtitle: "Commune",
     highlight: "dynamique",
     description: "Événements, culture, sports... vivez pleinement votre commune",
-    image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1200",
+    // image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1200",
+    image: "images/bannieres/banniere-3.jpg",
     cta: "Que faire ?"
   }
 ];
