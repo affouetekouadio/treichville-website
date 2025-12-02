@@ -108,7 +108,7 @@ const MessageMaire: FrontendPage = () => {
 
             {/* Signature */}
             <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg">
-              <p className="text-gray-900 font-bold text-xl mb-1">Dr. Jean-Baptiste Kouassi</p>
+              <p className="text-gray-900 font-bold text-xl mb-1">François Albert Amichia</p>
               <p className="text-[#1d8595] font-semibold mb-4">Maire de Treichville</p>
               <div className="h-px bg-gradient-to-r from-[#f8812f] to-transparent mb-4" />
               <p className="text-gray-600 text-sm italic">"Ensemble, bâtissons une Treichville moderne, inclusive et prospère pour tous."</p>
