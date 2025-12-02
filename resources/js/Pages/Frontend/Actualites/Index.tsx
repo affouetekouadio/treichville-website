@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { civClient } from "@/api/civClient";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar, Tag, Search } from "lucide-react";
@@ -12,15 +10,14 @@ import type { Actualite } from "@/types/content";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 
-const Actualites: FrontendPage = () => {
+type ActualitesPageProps = {
+  actualites?: Actualite[];
+};
+
+const Actualites: FrontendPage<ActualitesPageProps> = ({ actualites = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState("Toutes");
   const [searchQuery, setSearchQuery] = useState("");
-
-  const { data: actualites = [], isLoading } = useQuery<Actualite[]>({
-    queryKey: ['actualites-page'],
-    queryFn: () =>
-      civClient.entities.Actualite.filter<Actualite>({ statut: "Publié" }, '-date_publication'),
-  });
+  const [isLoading] = useState(false);
 
   const categories = ["Toutes", "Annonce", "Événement", "Travaux", "Culture", "Social", "Environnement"];
 
@@ -44,7 +41,7 @@ const Actualites: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-[#DC2626] py-20">
+      {/* <section className="bg-[#e0d4d4] py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -62,7 +59,36 @@ const Actualites: FrontendPage = () => {
             Toutes les informations de votre collectivité
           </motion.p>
         </div>
-      </section>
+      </section> */}
+
+      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-24 overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+      
+              <div className="max-w-7xl mx-auto px-6 relative">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center max-w-3xl mx-auto"
+                >
+                  <span className="inline-block px-4 py-2 bg-white/20 text-white rounded-full text-sm font-semibold mb-6">
+                    Actualités
+                  </span>
+                  <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
+                    Actualités
+                  </h1>
+                  {/* <p className="text-xl text-gray-300 leading-relaxed">
+                   Toutes les informations de votre collectivité
+                  </p> */}
+                </motion.div>
+              </div>
+        </section>
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Filtres */}

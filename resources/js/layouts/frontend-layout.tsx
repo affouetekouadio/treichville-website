@@ -3,6 +3,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { createPageUrl } from "@/utils";
 import { Menu, X, Building2, Phone, Mail, MapPin, Clock, Facebook, Twitter, Instagram, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ApplifeCTA from "@/components/Frontend/ApplifeCTA";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -110,14 +111,12 @@ export default function Layout({ children }: LayoutProps) {
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               {/* Logo */}
-              <Link href={createPageUrl("Home")} className="flex items-center gap-3 group z-10">
-                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300">
-                  <Building2 className="w-7 h-7 text-[var(--primary-orange)]" />
-                </div>
-                <div className="text-white">
-                  <div className="font-bold text-2xl tracking-tight">Treichville</div>
-                  <div className="text-xs opacity-90 tracking-wider">COMMUNE D'ABIDJAN</div>
-                </div>
+              <Link href={createPageUrl("Home")} className="flex items-center group z-10">
+                <img
+                  src="/images/logo/logo-t-1.png"
+                  alt="Treichville - Commune d'Abidjan"
+                  className="h-16 w-auto transform group-hover:scale-105 transition-transform duration-300"
+                />
               </Link>
 
               {/* Desktop Menu */}
@@ -227,8 +226,11 @@ export default function Layout({ children }: LayoutProps) {
         {children}
       </main>
 
+      {/* Applife CTA */}
+      <ApplifeCTA />
+
       {/* Footer */}
-      <footer className="bg-[var(--dark-bg)] text-white mt-20">
+      <footer className="bg-[var(--dark-bg)] text-white">
         <div className="max-w-7xl mx-auto px-6 py-16">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
             <div>

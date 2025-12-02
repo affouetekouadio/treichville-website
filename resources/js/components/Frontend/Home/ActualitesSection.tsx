@@ -1,19 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { civClient } from "@/api/civClient";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar, ArrowRight, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Actualite } from "@/types/content";
 
-export default function ActualitesSection() {
-  const { data: actualites = [] } = useQuery<Actualite[]>({
-    queryKey: ['actualites'],
-    queryFn: () =>
-      civClient.entities.Actualite.filter<Actualite>({ statut: "Publié" }, '-date_publication', 3),
-  });
+type Props = {
+  actualites?: Actualite[];
+};
+
+export default function ActualitesSection({ actualites = [] }: Props) {
 
   const categoryColors = {
     "Annonce": "bg-blue-600 text-white",

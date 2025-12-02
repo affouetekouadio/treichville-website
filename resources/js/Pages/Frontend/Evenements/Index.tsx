@@ -1,20 +1,111 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { civClient } from "@/api/civClient";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, MapPin, Clock, Tag, Users } from "lucide-react";
+import { Calendar, MapPin, Clock, Tag, Users, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Evenement } from "@/types/content";
 import FrontendLayout from "@/layouts/frontend-layout";
+import PageBanner from "@/components/Frontend/PageBanner";
 import type { FrontendPage } from "@/types";
 
-const Evenements: FrontendPage = () => {
-  const { data: evenements = [], isLoading } = useQuery<Evenement[]>({
-    queryKey: ['evenements-page'],
-    queryFn: () => civClient.entities.Evenement.list<Evenement>('date_debut'),
-  });
+type EvenementsPageProps = {
+  evenements?: Evenement[];
+};
+
+const fallbackImages = [
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
+  "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=1400&q=80",
+  "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80",
+  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80",
+  "https://images.unsplash.com/photo-1515165562835-c3b8e0ea7d83?auto=format&fit=crop&w=1400&q=80",
+  "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80",
+];
+
+function futureIso(daysFromNow: number, hour: number) {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + daysFromNow);
+  d.setHours(hour, 0, 0, 0);
+  return d.toISOString();
+}
+
+const fallbackEvents: Evenement[] = [
+  {
+    id: 1,
+    titre: "Festival des saveurs de Treichville",
+    description: "Découverte de la gastronomie locale, concerts live et animations familiales.",
+    categorie: "Culturel",
+    image_url: fallbackImages[0],
+    date_debut: futureIso(14, 10),
+    date_fin: futureIso(14, 18),
+    lieu: "Esplanade de la mairie",
+    gratuit: true,
+  },
+  {
+    id: 2,
+    titre: "Course lagunaire solidaire",
+    description: "Parcours 5 km et 10 km le long des berges pour soutenir les associations locales.",
+    categorie: "Sportif",
+    image_url: fallbackImages[1],
+    date_debut: futureIso(28, 7),
+    date_fin: futureIso(28, 11),
+    lieu: "Berges lagunaires",
+    gratuit: true,
+  },
+  {
+    id: 3,
+    titre: "Nuit de la culture urbaine",
+    description: "Scènes ouvertes, graffiti et danse urbaine avec les artistes de la commune.",
+    categorie: "Festif",
+    image_url: fallbackImages[2],
+    date_debut: futureIso(42, 18),
+    date_fin: futureIso(42, 23),
+    lieu: "Centre culturel de Treichville",
+    gratuit: false,
+  },
+  {
+    id: 4,
+    titre: "Forum des associations",
+    description: "Rencontre des associations locales, ateliers participatifs et débats citoyens.",
+    categorie: "Citoyen",
+    image_url: fallbackImages[3],
+    date_debut: futureIso(7, 9),
+    date_fin: futureIso(7, 16),
+    lieu: "Maison des jeunes",
+    gratuit: true,
+  },
+  {
+    id: 5,
+    titre: "Salon de l'emploi jeunes",
+    description: "Entreprises, formations et coaching pour l'insertion professionnelle.",
+    categorie: "Social",
+    image_url: fallbackImages[4],
+    date_debut: futureIso(21, 9),
+    date_fin: futureIso(21, 17),
+    lieu: "Salle des fêtes municipale",
+    gratuit: true,
+  },
+  {
+    id: 6,
+    titre: "Concert lagunaire",
+    description: "Concert en plein air avec des artistes locaux et animations familiales.",
+    categorie: "Festif",
+    image_url: fallbackImages[5],
+    date_debut: futureIso(35, 18),
+    date_fin: futureIso(35, 23),
+    lieu: "Berges de Treichville",
+    gratuit: false,
+  },
+];
+
+const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
+  const isLoading = false;
+  const dataset = evenements.length ? evenements : fallbackEvents;
+  const eventsWithImages = dataset.map((evt, idx) => ({
+    ...evt,
+    image_url: evt.image_url || fallbackImages[idx % fallbackImages.length],
+  }));
 
   const categoryColors = {
     "Culturel": "bg-purple-600",
@@ -24,31 +115,55 @@ const Evenements: FrontendPage = () => {
     "Festif": "bg-pink-600"
   };
 
-  const upcomingEvents = evenements.filter(e => new Date(e.date_debut) >= new Date());
-  const pastEvents = evenements.filter(e => new Date(e.date_debut) < new Date());
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const upcomingEvents = eventsWithImages.filter((e) => new Date(e.date_debut) >= today);
+  const pastEvents = eventsWithImages.filter((e) => new Date(e.date_debut) < today);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero */}
-      <section className="bg-[#DC2626] py-20">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl lg:text-5xl font-bold text-white mb-4"
-          >
-            Événements
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-xl text-white/90"
-          >
-            Découvrez tous les événements de notre territoire
-          </motion.p>
-        </div>
-      </section>
+      {/* <PageBanner
+        title="Événements"
+        description="Découvrez tous les événements de notre commune"
+        icon={Calendar}
+        variant="compact"
+        align="left"
+        gradient={{
+          from: "#f8812f",
+          to: "#ea580c",
+        }}
+      /> */}
+
+
+        <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-24 overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+      
+              <div className="max-w-7xl mx-auto px-6 relative">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center max-w-3xl mx-auto"
+                >
+                  <span className="inline-block px-4 py-2 bg-white/20 text-white rounded-full text-sm font-semibold mb-6">
+                      Découvrir Treichville
+                  </span>
+                  <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
+                    Événements
+                  </h1>
+                  <p className="text-xl text-gray-300 leading-relaxed">
+                    Découvrez tous les événements de notre commune
+                  </p>
+                </motion.div>
+              </div>
+        </section>
+
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         {isLoading ? (

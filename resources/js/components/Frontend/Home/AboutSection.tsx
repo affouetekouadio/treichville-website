@@ -7,8 +7,16 @@ import { Button } from "@/components/ui/button";
 
 export default function AboutSection() {
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24 bg-white relative overflow-hidden">
+      <div
+        className="absolute inset-0 opacity-35 bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80')",
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/85 via-white/70 to-white/80" />
+      <div className="max-w-7xl mx-auto px-6 relative">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Image Side */}
           <motion.div
@@ -23,7 +31,7 @@ export default function AboutSection() {
                 // src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
                 src="/images/personnes/maire.jpg"
                 alt="Le Maire"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               

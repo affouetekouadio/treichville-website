@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { civClient } from "@/api/civClient";
 import { 
   FileText, Users, Building, Home, Sprout, Heart, Briefcase, Coins, 
   ExternalLink, Search, ChevronRight, Loader2
@@ -11,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import type { Service as ServiceRecord } from "@/types/content";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
+import { createPageUrl } from "@/utils";
 
 const iconMap = {
   FileText, Users, Building, Home, Sprout, Heart, Briefcase, Coins
@@ -25,14 +24,37 @@ const categoryInfo = {
   "Environnement": { color: "bg-emerald-500", lightColor: "bg-emerald-50", textColor: "text-emerald-600" }
 };
 
-const Services: FrontendPage = () => {
+type ServicesPageProps = {
+  services?: ServiceRecord[];
+};
+
+const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading] = useState(false);
 
-  const { data: services = [], isLoading } = useQuery<ServiceRecord[]>({
-    queryKey: ['services-page'],
-    queryFn: () => civClient.entities.Service.list<ServiceRecord>('ordre'),
-  });
+  const organigramme = [
+    {
+      title: "Mairie",
+      lead: "Maire & Conseil municipal",
+      teams: ["Cabinet du Maire", "Communication", "Protocoles"],
+    },
+    {
+      title: "Services techniques",
+      lead: "Direction des infrastructures",
+      teams: ["Urbanisme & Permis", "Voirie", "Assainissement", "Eclairage public"],
+    },
+    {
+      title: "Citoyenneté & proximité",
+      lead: "Direction population",
+      teams: ["État civil", "Jeunesse & Sports", "Culture", "Solidarité"],
+    },
+    {
+      title: "Finances & Marchés",
+      lead: "Direction financière",
+      teams: ["Fiscalité locale", "Marchés et redevances", "Commandes publiques"],
+    },
+  ];
 
   const categories = ["Tous", "Administratif", "État civil", "Urbanisme", "Social", "Culture", "Environnement"];
 
@@ -47,19 +69,23 @@ const Services: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-[#DC2626] rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#DC2626] rounded-full blur-3xl"></div>
-        </div>
-        
+      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-24 overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+
         <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <span className="inline-block px-4 py-2 bg-[#f8812f]/20 text-[#f8812f] rounded-full text-sm font-semibold mb-6">
+            <span className="inline-block px-4 py-2 bg-white/20 text-white rounded-full text-sm font-semibold mb-6">
               À votre service
             </span>
             <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
@@ -206,6 +232,66 @@ const Services: FrontendPage = () => {
               </Button>
             </motion.div>
           )}
+        </div>
+      </section>
+
+      {/* Organigramme synthétique */}
+      <section className="py-16 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+            <div>
+              <h2 className="text-3xl font-bold">Organigramme municipal</h2>
+              <p className="text-white/70">
+                Les pôles qui structurent les services de Treichville pour un suivi clair de vos demandes.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <a
+                href={createPageUrl("Services")}
+                className="px-4 py-2 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-400 transition-colors"
+              >
+                Télécharger l’organigramme
+              </a>
+              <a
+                href={createPageUrl("Contact")}
+                className="px-4 py-2 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors"
+              >
+                Contacter un service
+              </a>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {organigramme.map((bloc, idx) => (
+              <div
+                key={bloc.title}
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur shadow-xl"
+                style={{ borderColor: idx % 2 === 0 ? "#f8812f55" : "#1d859555" }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                    <Building className="w-5 h-5 text-orange-300" />
+                  </div>
+                  <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/70 border border-white/10">
+                    Pôle
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold">{bloc.title}</h3>
+                <p className="text-white/70 text-sm mb-3">{bloc.lead}</p>
+                <div className="space-y-2">
+                  {bloc.teams.map((team) => (
+                    <div
+                      key={team}
+                      className="flex items-center gap-2 text-sm text-white/80 bg-white/5 px-3 py-2 rounded-xl border border-white/10"
+                    >
+                      <FileText className="w-4 h-4 text-orange-300" />
+                      <span>{team}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
