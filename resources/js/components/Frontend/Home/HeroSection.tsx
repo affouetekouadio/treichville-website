@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 
 const slides = [
   {
-    title: "Bienvenue à la Cité",
-    subtitle: "N’Zassa",
-    highlight: "cœur d'Abidjan",
+    title: "Bienvenue à Treichville ",
+    subtitle: "notre",
+    highlight: "cité",
     description: "Découvrez le dynamisme et la richesse culturelle de notre commune",
     // image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200",
       image: "images/bannieres/banniere-1.jpg",
@@ -28,9 +28,20 @@ const slides = [
     highlight: "dynamique",
     description: "Événements, culture, sports... vivez pleinement votre commune",
     // image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1200",
-    image: "images/bannieres/banniere-3.jpg",
+    // image: "images/bannieres/banniere-3.jpg",
+    image: "images/autres/maire-14.jpg",
     cta: "Que faire ?"
-  }
+  }, 
+   {
+    title: "",
+    subtitle: "",
+    highlight: "",
+    description: "",
+    // image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1200",
+    // image: "images/bannieres/banniere-3.jpg",
+    image: "images/autres/maire-10.jpg",
+    cta: "Treichville"
+  }, 
 ];
 
 export default function HeroSection() {

@@ -150,15 +150,13 @@ const ConseilMunicipal: FrontendPage = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+              <div className="rounded-3xl overflow-hidden bg-transparent">
                 <img
-                  src="https://images.unsplash.com/photo-1577415124269-fc1140a69e91?w=800"
+                  src="/images/autres/maire-1.png"
                   alt="Conseil municipal"
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto max-h-[540px] object-contain mx-auto"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#1d8595]/20 rounded-full blur-2xl -z-10" />
-              <div className="absolute -top-6 -left-6 w-32 h-32 bg-[#f8812f]/20 rounded-full blur-2xl -z-10" />
             </motion.div>
           </div>
         </div>

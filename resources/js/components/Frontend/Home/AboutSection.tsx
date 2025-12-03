@@ -12,7 +12,8 @@ export default function AboutSection() {
         className="absolute inset-0 opacity-35 bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80')",
+            // "url('https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80')",
+            "url('images/autres/maire-14.jpg')",
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-br from-white/85 via-white/70 to-white/80" />

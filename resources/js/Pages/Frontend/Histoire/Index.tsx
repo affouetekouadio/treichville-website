@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback } from "react";
-import { motion, useAnimation } from "framer-motion";
+import React, { useEffect, useCallback, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, MapPin, Users, Building, BookOpen, Ship, ShoppingBag, Landmark, Map, Heart, Home, ChevronLeft, ChevronRight } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import PageBanner from "@/components/Frontend/PageBanner";
@@ -8,10 +8,10 @@ import type { FrontendPage } from "@/types";
 const Histoire: FrontendPage = () => {
   // Images géographiques de Treichville
   const geographicImages = [
-    { id: 1, url: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800", alt: "Carte de Treichville" },
-    { id: 2, url: "https://images.unsplash.com/photo-1569163139394-de4798aa62b0?w=800", alt: "Vue aérienne de Treichville" },
-    { id: 3, url: "https://images.unsplash.com/photo-1486299267070-83823f5448dd?w=800", alt: "Position stratégique" },
-    { id: 4, url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800", alt: "Localisation urbaine" },
+    { id: 1, url: "/images/treichville-1.jpeg", alt: "Vue de Treichville" },
+    { id: 2, url: "/images/treichville-2.jpg", alt: "Quartiers de Treichville" },
+    { id: 3, url: "/images/treichville-3.jpg", alt: "Lagune et port" },
+    { id: 4, url: "/images/treichville-4.jpg", alt: "Boulevard et vie urbaine" },
   ];
 
   const timeline = [
@@ -56,38 +56,41 @@ const Histoire: FrontendPage = () => {
     },
   ];
 
-  // Carousel logic for geographic images
-  const duplicatedImages = [...geographicImages, ...geographicImages];
-  const controls = useAnimation();
-  const slideWidth = 100; // percentage per image
-
-  const startLoop = useCallback(() => {
-    controls.start({
-      x: [`0%`, `-${geographicImages.length * slideWidth}%`],
-      transition: {
-        repeat: Infinity,
-        repeatType: "loop",
-        duration: 35,
-        ease: "linear",
-      },
-    });
-  }, [controls, geographicImages.length]);
+  // Carousel logic for geographic images (like homepage hero)
+  const [currentGeo, setCurrentGeo] = useState(0);
+  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
-    startLoop();
-  }, [startLoop]);
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrentGeo((prev) => (prev + 1) % geographicImages.length);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [geographicImages.length]);
 
   const nudge = useCallback(
-    async (direction: "next" | "prev") => {
-      await controls.stop();
-      await controls.start({
-        x: direction === "next" ? `-=${slideWidth}%` : `+=${slideWidth}%`,
-        transition: { duration: 0.5, ease: "easeInOut" },
-      });
-      startLoop();
+    (dir: "next" | "prev") => {
+      setDirection(dir === "next" ? 1 : -1);
+      setCurrentGeo((prev) =>
+        dir === "next"
+          ? (prev + 1) % geographicImages.length
+          : (prev - 1 + geographicImages.length) % geographicImages.length
+      );
     },
-    [controls, startLoop]
+    [geographicImages.length]
   );
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+    }),
+    center: { x: 0, opacity: 1 },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+    }),
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -325,12 +328,10 @@ const Histoire: FrontendPage = () => {
               className="relative"
             >
               {/* Carousel Container */}
-              <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                {/* Gradient overlays for edges */}
+              <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gray-200">
                 <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-black/30 to-transparent z-10 pointer-events-none" />
                 <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-black/30 to-transparent z-10 pointer-events-none" />
 
-                {/* Navigation Buttons */}
                 <button
                   onClick={() => nudge("prev")}
                   className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#1d8595] transition-all duration-300 flex items-center justify-center shadow-xl group"
@@ -346,26 +347,24 @@ const Histoire: FrontendPage = () => {
                   <ChevronRight className="w-6 h-6 text-gray-700 group-hover:text-[#1d8595] transition-colors" />
                 </button>
 
-                {/* Carousel Track */}
-                <motion.div
-                  className="flex h-full"
-                  animate={controls}
-                  style={{ width: `${duplicatedImages.length * 100}%` }}
-                >
-                  {duplicatedImages.map((image, index) => (
-                    <div
-                      key={`${image.id}-${index}`}
-                      className="flex-shrink-0 h-full"
-                      style={{ width: `${100 / duplicatedImages.length}%` }}
-                    >
-                      <img
-                        src={image.url}
-                        alt={image.alt}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </motion.div>
+                <AnimatePresence custom={direction} initial={false}>
+                  <motion.div
+                    key={geographicImages[currentGeo].id}
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                    className="absolute inset-0"
+                  >
+                    <img
+                      src={geographicImages[currentGeo].url}
+                      alt={geographicImages[currentGeo].alt}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#1d8595]/20 rounded-full blur-2xl -z-10" />
             </motion.div>
