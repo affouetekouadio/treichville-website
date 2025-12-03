@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const slides = [
+ 
   {
     title: "Bienvenue à Treichville ",
     subtitle: "notre",
@@ -41,6 +42,16 @@ const slides = [
     // image: "images/bannieres/banniere-3.jpg",
     image: "images/autres/maire-10.jpg",
     cta: "Treichville"
+  }, 
+   {
+    title: "",
+    subtitle: "",
+    highlight: "",
+    description: "",
+    // image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1200",
+    // image: "images/bannieres/banniere-3.jpg",
+    image: "images/bannieres/banniere-4.jpg",
+    cta: "CHU de Treichville"
   }, 
 ];
 

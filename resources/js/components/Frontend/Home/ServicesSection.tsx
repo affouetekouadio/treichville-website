@@ -63,7 +63,7 @@ export default function ServicesSection({ services = [] }: Props) {
     {
       id: "jeunesse",
       nom: "Jeunesse & sport",
-      description: "Équipements sportifs, agendas des clubs et programmes pour la jeunesse.",
+      description: "Équipements sportifs, agenda des clubs et programmes pour la jeunesse.",
       icone: "Users",
       lien_externe: createPageUrl("Evenements"),
     },
@@ -79,6 +79,15 @@ export default function ServicesSection({ services = [] }: Props) {
   const items = useMemo(() => (services.length ? services : fallbackServices), [services]);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const accentPalette = ["#f8812f", "#1d8595", "#D4AF37", "#0A1628", "#22c55e", "#ea580c"];
+  const bgImagesByKey: Record<string, string> = {
+    FileText: "/images/etat-civil-2.jpg", // état civil / démarches
+    Building: "/images/palais.jpg",
+    Coins: "/images/fiscalite-locale.jpg",
+    Heart: "/images/mairie.jpg",
+    // Users: "/images/treichville-1.jpeg",
+    Users: "/images/palais-des-sports.jpg",
+    Sprout: "/images/treichville-3.jpg",
+  };
 
   const handleScroll = (direction: "prev" | "next") => {
     const node = scrollRef.current;
@@ -133,18 +142,7 @@ export default function ServicesSection({ services = [] }: Props) {
             const iconKey = (service.icone as keyof typeof iconMap) ?? "FileText";
             const Icon = iconMap[iconKey] || FileText;
             const accent = accentPalette[index % accentPalette.length];
-            const bgImage =
-              service.icone === "Sprout"
-                ? "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80"
-                : service.icone === "Coins"
-                  ? "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1400&q=80"
-                  : service.icone === "Heart"
-                    ? "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1400&q=80"
-                    : service.icone === "Users"
-                      ? "https://images.unsplash.com/photo-1455734729978-db1ae4f687fc?auto=format&fit=crop&w=1400&q=80"
-                      : service.icone === "Building"
-                        ? "https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?auto=format&fit=crop&w=1400&q=80"
-                        : "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80";
+            const bgImage = bgImagesByKey[iconKey] ?? "/images/treichville-4.jpg";
             return (
               <motion.div
                 key={service.id}
@@ -153,15 +151,18 @@ export default function ServicesSection({ services = [] }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="snap-start min-w-[280px] md:min-w-[320px] bg-[#0b172b] text-white rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 group border border-white/10"
+                className="snap-start min-w-[300px] md:min-w-[360px] bg-[#0b172b] text-white rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 group border border-white/10"
                 style={{ boxShadow: `0 14px 38px -18px ${accent}80` }}
               >
-                <div className="relative h-40">
+                <div className="relative h-48">
                   <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.65)), url('${bgImage}')` }}
+                    style={{
+                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.65)), url('${bgImage}')`,
+                    }}
                   />
-                  <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur"
+                  <div
+                    className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur"
                     style={{ borderColor: accent, backgroundColor: `${accent}20` }}
                   >
                     <Icon className="w-4 h-4" style={{ color: accent }} />
@@ -169,16 +170,15 @@ export default function ServicesSection({ services = [] }: Props) {
                   </div>
                 </div>
 
-                <div className="p-7 space-y-4 bg-gradient-to-b from-[#0b172b] to-[#11284c]">
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center"
+                <div className="p-6 space-y-3 bg-gradient-to-b from-[#0b172b] to-[#11284c]">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
                     style={{ backgroundColor: `${accent}25` }}
                   >
-                    <Icon className="w-7 h-7" style={{ color: accent }} />
+                    <Icon className="w-6 h-6" style={{ color: accent }} />
                   </div>
-                  <h3 className="text-xl font-bold leading-tight">{service.nom}</h3>
-                  <p className="text-white/80 leading-relaxed">
-                    {service.description}
-                  </p>
+                  <h3 className="text-lg font-bold leading-tight">{service.nom}</h3>
+                  <p className="text-white/80 leading-relaxed text-sm">{service.description}</p>
                   {service.lien_externe && (
                     <a
                       href={service.lien_externe}
