@@ -1,6 +1,6 @@
-import React, { useEffect, useCallback } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useCallback } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface TeamMember {
   id: number;
@@ -37,43 +37,32 @@ const teamMembers: TeamMember[] = [
 ];
 
 export default function TeamSection() {
-  // Prépare une liste répétée pour un défilement fluide
-  const duplicatedMembers = [...teamMembers, ...teamMembers];
-  const controls = useAnimation();
-  const loopDistance = -100 * teamMembers.length;
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const members = useMemo(() => [...teamMembers, ...teamMembers], []);
 
-  const startLoop = useCallback(() => {
-    controls.start({
-      x: [0, loopDistance],
-      transition: {
-        repeat: Infinity,
-        repeatType: "loop",
-        duration: 28,
-        ease: "linear",
-      },
-    });
-  }, [controls, loopDistance]);
+  const scrollByStep = useCallback((direction: "next" | "prev") => {
+    const node = sliderRef.current;
+    const card = cardRef.current;
+    if (!node || !card) return;
+    const gap = 32; // matches gap-8
+    const step = card.offsetWidth + gap;
+    const maxScroll = node.scrollWidth - node.clientWidth;
+    const next = direction === "next" ? node.scrollLeft + step : node.scrollLeft - step;
+    const target = next >= maxScroll ? 0 : next < 0 ? maxScroll : next;
+    node.scrollTo({ left: target, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
-    startLoop();
-  }, [startLoop]);
-
-  const nudge = useCallback(
-    async (direction: "next" | "prev") => {
-      await controls.stop();
-      await controls.start({
-        x: direction === "next" ? "-=240" : "+=240",
-        transition: { duration: 0.35, ease: "easeInOut" },
-      });
-      startLoop();
-    },
-    [controls, startLoop]
-  );
+    const timer = setInterval(() => {
+      scrollByStep("next");
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [scrollByStep]);
 
   return (
     <section className="py-20 bg-gray-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -90,43 +79,37 @@ export default function TeamSection() {
           </h2>
         </motion.div>
 
-        {/* Slider infini */}
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
+
           <button
-            onClick={() => nudge("prev")}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition-colors"
+            onClick={() => scrollByStep("prev")}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition-colors flex items-center justify-center shadow"
             aria-label="Précédent"
           >
-            <span className="sr-only">Précédent</span>
-            ‹
+            <ArrowLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button
-            onClick={() => nudge("next")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition-colors"
+            onClick={() => scrollByStep("next")}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white border border-gray-200 hover:bg-gray-100 transition-colors flex items-center justify-center shadow"
             aria-label="Suivant"
           >
-            <span className="sr-only">Suivant</span>
-            ›
+            <ArrowRight className="w-5 h-5 text-gray-700" />
           </button>
 
-          <div className="overflow-hidden">
-            <motion.div
-              className="flex gap-8"
-              animate={controls}
-              transition={{
-                x: {
-                  duration: 28,
-                },
-              }}
-            >
-              {duplicatedMembers.map((member, index) => (
+          <div
+            ref={sliderRef}
+            className="overflow-hidden"
+          >
+            <div className="flex gap-8">
+              {members.map((member, index) => (
                 <div
                   key={`${member.id}-${index}`}
                   className="flex-shrink-0 w-80 group"
+                  ref={index === 0 ? cardRef : undefined}
                 >
-                  <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 relative">
+                  <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 relative shadow-lg">
                     <div className="relative overflow-hidden h-96">
                       <img
                         src={member.image}
@@ -144,11 +127,10 @@ export default function TeamSection() {
                   </div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        {/* Info Text */}
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}

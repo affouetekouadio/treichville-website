@@ -70,7 +70,7 @@ const fallbackEvents: Evenement[] = [
     date_debut: futureIso(14, 10),
     date_fin: futureIso(14, 18),
     lieu: "Esplanade de la mairie",
-    gratuit: true,
+    gratuit: false,
   },
   {
     id: 2,
@@ -81,7 +81,7 @@ const fallbackEvents: Evenement[] = [
     date_debut: futureIso(28, 7),
     date_fin: futureIso(28, 11),
     lieu: "Berges lagunaires",
-    gratuit: true,
+    gratuit: false,
   },
   {
     id: 3,
