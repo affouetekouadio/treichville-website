@@ -33,8 +33,8 @@ const stats: Stat[] = [
     value: 8,
     suffix: "K+",
     label: "Entreprises",
-    color: "text-[#1d8595]",
-    bgGradient: "from-teal-500/20 to-emerald-500/10",
+    color: "text-[#03800a]",
+    bgGradient: "from-[#03800a]/20 to-[#03800a]/10",
   },
   {
     icon: Heart,
@@ -91,7 +91,7 @@ export default function CityStatsSection() {
 
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-[#f8812f]/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#1d8595]/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#03800a]/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-6 relative" ref={ref}>
         {/* Section Header */}
@@ -174,7 +174,7 @@ export default function CityStatsSection() {
             <div className="flex -space-x-2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 border-2 border-white" />
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 border-2 border-white" />
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 border-2 border-white" />
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#03800a] to-[#03800a] border-2 border-white" />
             </div>
             <span className="text-gray-900 font-medium">
               Plus de <span className="font-bold text-[#f8812f]">400 000</span> citoyens dans le

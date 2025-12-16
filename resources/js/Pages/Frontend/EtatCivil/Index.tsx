@@ -55,7 +55,7 @@ const services = [
     title: "Certificats & légalisations",
     description: "Certificats de résidence, de vie, de nationalité, légalisation de documents.",
     delai: "24h",
-    color: "from-teal-500 to-emerald-500",
+    color: "from-[#03800a] to-[#03800a]",
     documents: ["Pièce d'identité", "Justificatif de domicile", "Document à légaliser"],
   },
 ];
@@ -122,8 +122,8 @@ const EtatCivil: FrontendPage = () => {
         variant="compact"
         align="left"
         gradient={{
-          from: "#1d8595",
-          to: "#0d7490",
+          from: "#03800a",
+          to: "#03800a",
         }}
       />
 
@@ -141,7 +141,7 @@ const EtatCivil: FrontendPage = () => {
                 className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <stat.icon className="w-8 h-8 text-[#1d8595]" />
+                  <stat.icon className="w-8 h-8 text-[#03800a]" />
                 </div>
                 <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
                 <div className="text-sm text-gray-600">{stat.label}</div>
@@ -160,7 +160,7 @@ const EtatCivil: FrontendPage = () => {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-[#1d8595] to-teal-700 rounded-3xl p-8 text-white shadow-xl"
+              className="bg-gradient-to-br from-[#03800a] to-[#03800a] rounded-3xl p-8 text-white shadow-xl"
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
@@ -231,7 +231,7 @@ const EtatCivil: FrontendPage = () => {
                   { label: "Naissance", status: "Sans RDV", icon: Baby, color: "bg-blue-50 text-blue-600 border-blue-200" },
                   { label: "Mariage", status: "RDV en ligne", icon: Heart, color: "bg-rose-50 text-rose-600 border-rose-200" },
                   { label: "Décès", status: "Prioritaire", icon: FileText, color: "bg-gray-50 text-gray-600 border-gray-200" },
-                  { label: "Certificats", status: "24h", icon: Users, color: "bg-teal-50 text-teal-600 border-teal-200" },
+                  { label: "Certificats", status: "24h", icon: Users, color: "bg-[#03800a]/10 text-[#03800a] border-[#03800a]/30" },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -301,7 +301,7 @@ const EtatCivil: FrontendPage = () => {
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold mb-2 text-gray-900 group-hover:text-[#1d8595] transition-colors">
+                <h3 className="text-xl font-bold mb-2 text-gray-900 group-hover:text-[#03800a] transition-colors">
                   {service.title}
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">{service.description}</p>
@@ -312,7 +312,7 @@ const EtatCivil: FrontendPage = () => {
                   </div>
                   {service.documents.map((doc) => (
                     <div key={doc} className="flex items-start gap-2 text-gray-700 text-sm">
-                      <Check className="w-4 h-4 text-[#1d8595] mt-0.5 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-[#03800a] mt-0.5 flex-shrink-0" />
                       <span>{doc}</span>
                     </div>
                   ))}
@@ -332,9 +332,9 @@ const EtatCivil: FrontendPage = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-100 rounded-full mb-4">
-              <ShieldCheck className="w-4 h-4 text-[#1d8595]" />
-              <span className="text-sm text-[#1d8595] font-semibold">Processus simplifié</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#03800a]/20 rounded-full mb-4">
+              <ShieldCheck className="w-4 h-4 text-[#03800a]" />
+              <span className="text-sm text-[#03800a] font-semibold">Processus simplifié</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Comment effectuer votre démarche ?
@@ -355,9 +355,9 @@ const EtatCivil: FrontendPage = () => {
                 transition={{ delay: idx * 0.1 }}
                 className="relative"
               >
-                <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:border-[#1d8595] transition-all duration-300 h-full">
+                <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:border-[#03800a] transition-all duration-300 h-full">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#1d8595] to-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-lg">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#03800a] to-[#03800a] text-white flex items-center justify-center font-bold text-lg shadow-lg">
                       {step.number}
                     </div>
                     {idx < steps.length - 1 && (
@@ -379,7 +379,7 @@ const EtatCivil: FrontendPage = () => {
           >
             <Link
               href={createPageUrl("Contact")}
-              className="inline-flex items-center gap-2 text-[#1d8595] hover:text-teal-700 font-semibold text-lg transition-colors"
+              className="inline-flex items-center gap-2 text-[#03800a] hover:text-[#03800a] font-semibold text-lg transition-colors"
             >
               Besoin d'aide ? Contactez-nous
               <ChevronRight className="w-5 h-5" />
@@ -421,7 +421,7 @@ const EtatCivil: FrontendPage = () => {
                 className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
               >
                 <h4 className="text-lg font-bold text-gray-900 mb-3 flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#1d8595] text-white flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-[#03800a] text-white flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
                     ?
                   </div>
                   {faq.q}

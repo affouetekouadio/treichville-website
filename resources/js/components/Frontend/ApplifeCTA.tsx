@@ -4,7 +4,7 @@ import { Smartphone, Download, Bell, MapPin, Calendar, Shield } from "lucide-rea
 
 export default function ApplifeCTA() {
   return (
-    <section className="relative py-20 overflow-hidden bg-gradient-to-br from-[#1d8595] via-[#1d8595] to-[#0d7490]">
+    <section className="relative py-20 overflow-hidden bg-gradient-to-br from-[#03800a] via-[#03800a] to-[#03800a]">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -14,7 +14,7 @@ export default function ApplifeCTA() {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/95 via-[#1d8595]/90 to-[#0d7490]/95" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/95 via-[#03800a]/90 to-[#03800a]/95" />
 
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -155,7 +155,7 @@ export default function ApplifeCTA() {
                         {[1, 2, 3].map((i) => (
                           <div key={i} className="bg-white rounded-lg p-2.5 shadow-md">
                             <div className="flex items-center gap-2">
-                              <div className="w-9 h-9 bg-[#1d8595]/10 rounded-lg flex-shrink-0" />
+                              <div className="w-9 h-9 bg-[#03800a]/10 rounded-lg flex-shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <div className="h-2 bg-gray-300 rounded w-3/4 mb-1" />
                                 <div className="h-1.5 bg-gray-200 rounded w-1/2" />

@@ -26,7 +26,7 @@ const commissions = [
     lead: "M. Traoré",
     focus: "Soutenir les clubs, les écoles et les initiatives sportives.",
     icon: Award,
-    color: "from-green-500 to-emerald-500"
+    color: "from-green-500 to-[#03800a]"
   },
   {
     name: "Urbanisme et Cadre de vie",
@@ -42,7 +42,7 @@ const missions = [
     icon: Target,
     title: "Définir la stratégie",
     description: "Orienter les grandes politiques publiques de la commune",
-    color: "from-[#1d8595] to-teal-500"
+    color: "from-[#03800a] to-[#03800a]"
   },
   {
     icon: Briefcase,
@@ -68,7 +68,7 @@ const ConseilMunicipal: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
-      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-20 overflow-hidden text-white">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-20 overflow-hidden text-white">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -77,7 +77,7 @@ const ConseilMunicipal: FrontendPage = () => {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
         <div className="max-w-6xl mx-auto px-6 relative space-y-3">
           <p className="uppercase tracking-[0.25em] text-sm text-orange-200">Vie citoyenne</p>
           <h1 className="text-4xl lg:text-5xl font-bold">Le Conseil municipal</h1>
@@ -108,8 +108,8 @@ const ConseilMunicipal: FrontendPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <div className="inline-block px-4 py-2 bg-[#1d8595]/10 rounded-full mb-6">
-                <span className="text-[#1d8595] font-semibold text-sm tracking-wider uppercase">Notre institution</span>
+              <div className="inline-block px-4 py-2 bg-[#03800a]/10 rounded-full mb-6">
+                <span className="text-[#03800a] font-semibold text-sm tracking-wider uppercase">Notre institution</span>
               </div>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
                 Au service des habitants
@@ -190,7 +190,7 @@ const ConseilMunicipal: FrontendPage = () => {
                 <div className={`w-14 h-14 bg-gradient-to-br ${mission.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <mission.icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#1d8595] transition-colors">
+                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#03800a] transition-colors">
                   {mission.title}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">{mission.description}</p>
@@ -209,7 +209,7 @@ const ConseilMunicipal: FrontendPage = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <p className="text-[#1d8595] font-semibold uppercase tracking-wider text-sm mb-3">Notre équipe</p>
+            <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Notre équipe</p>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
               Les adjoints au Maire
             </h2>
@@ -234,17 +234,17 @@ const ConseilMunicipal: FrontendPage = () => {
                       alt={membre.name}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1d8595]/90 via-[#1d8595]/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#03800a]/90 via-[#03800a]/40 to-transparent" />
 
                     {/* Icon Badge */}
                     <div className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                      <membre.icon className="w-6 h-6 text-[#1d8595]" />
+                      <membre.icon className="w-6 h-6 text-[#03800a]" />
                     </div>
                   </div>
 
                   {/* Info */}
                   <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-[#1d8595] transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-[#03800a] transition-colors">
                       {membre.name}
                     </h3>
                     <p className="text-[#f8812f] font-semibold text-sm mb-3">{membre.role}</p>
@@ -294,9 +294,9 @@ const ConseilMunicipal: FrontendPage = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{commission.name}</h3>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <Users className="w-4 h-4 text-[#1d8595]" />
+                    <Users className="w-4 h-4 text-[#03800a]" />
                   </div>
-                  <p className="text-sm text-[#1d8595] font-semibold">Référent : {commission.lead}</p>
+                  <p className="text-sm text-[#03800a] font-semibold">Référent : {commission.lead}</p>
                 </div>
                 <p className="text-gray-600 leading-relaxed">{commission.focus}</p>
               </motion.div>
@@ -306,7 +306,7 @@ const ConseilMunicipal: FrontendPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-[#1d8595] to-teal-700 relative overflow-hidden">
+      <section className="py-16 bg-gradient-to-br from-[#03800a] to-[#03800a] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8812f] rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />
@@ -330,7 +330,7 @@ const ConseilMunicipal: FrontendPage = () => {
             </p>
             <Link
               href={createPageUrl("Contact")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1d8595] rounded-xl font-semibold hover:bg-gray-100 transition-colors shadow-xl"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#03800a] rounded-xl font-semibold hover:bg-gray-100 transition-colors shadow-xl"
             >
               Nous contacter
               <ChevronRight className="w-5 h-5" />

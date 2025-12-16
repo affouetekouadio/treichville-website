@@ -5,6 +5,9 @@ import { Menu, X, Building2, Phone, Mail, MapPin, Clock, Facebook, Twitter, Inst
 import { motion, AnimatePresence } from "framer-motion";
 import ApplifeCTA from "@/components/Frontend/ApplifeCTA";
 import ScrollToTop from "@/components/Frontend/ScrollToTop";
+import NotificationContainer from "@/components/NotificationContainer";
+import { NotificationProvider } from "@/contexts/NotificationContext";
+import type { SharedData } from "@/types";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -15,7 +18,9 @@ export default function Layout({ children }: LayoutProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState<Record<string, boolean>>({});
 
-  const { url } = usePage();
+  const { url, props } = usePage<SharedData>();
+  const authUser = props.auth?.user;
+  const isAdmin = authUser?.role === 'admin';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,36 +68,56 @@ export default function Layout({ children }: LayoutProps) {
         { label: "Patrimoine et Monuments", path: "Patrimoine" }
       ]
     },
-    { 
-      label: "Services", 
-      path: "Services",
+    // { 
+    //   label: "Services", 
+    //   path: "Services",
+    //   submenu: [
+    //     { label: "Organigrammes et services", path: "Services" },
+    //     { label: "État civil", path: "EtatCivil" },
+    //     { label: "Fiscalité et urbanisme", path: "Fiscalite" }
+    //   ]
+    // },
+    {
+      label: "Directions", 
+      path: "Directions",
       submenu: [
         { label: "Organigrammes et services", path: "Services" },
         { label: "État civil", path: "EtatCivil" },
         { label: "Fiscalité et urbanisme", path: "Fiscalite" }
       ]
     },
+    {
+      label: "Communication",
+      path: "Communication",
+      submenu: [
+        { label: "Journal", path: "Journal" },
+        { label: "Radio", path: "Radio", externalUrl: "https://radio.treichville.ci" },
+        { label: "Vidéo", path: "Video" },
+      ],
+    },
     { 
       label: "Que faire à Treichville?", 
       path: "QueFaire",
       submenu: [
         { label: "Events et expos", path: "Evenements" },
-        { label: "Parcs et Piscines", path: "ParcsPiscines" }
+        { label: "Endroits à découvrir", path: "ParcsPiscines" }
       ]
     },
     { label: "Nos Contacts", path: "Contact" }
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <style>{`
-        :root {
-          --primary-orange: #f8812f;
-          --primary-teal: #1d8595;
-          --dark-bg: #1F2937;
-          --light-gray: #F3F4F6;
-        }
-      `}</style>
+    // Provider de notifications pour gérer tous les messages flash et notifications
+    <NotificationProvider>
+      <div className="min-h-screen bg-white">
+        <style>{`
+          :root {
+            --primary-orange: #f8812f;
+            --primary-teal: #03800a;
+            --dark-bg: #1F2937;
+            --light-gray: #F3F4F6;
+          }
+        `}</style>
 
       {/* Top Bar */}
       <div className="bg-[var(--dark-bg)] text-white text-sm py-3 border-b border-gray-700">
@@ -146,35 +171,68 @@ export default function Layout({ children }: LayoutProps) {
                       key={item.path}
                       className="relative group"
                     >
-                      <Link
-                        href={createPageUrl(item.path)}
-                        className={`px-4 py-4 font-medium hover:bg-gray-100 rounded-lg transition-all duration-300 flex items-center gap-1 ${
-                          isActive
-                            ? 'bg-[#1d8595] text-white hover:bg-[#1d8595]/90'
-                            : 'text-gray-800'
-                        }`}
-                      >
-                        {item.label}
-                        {item.submenu && <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />}
-                      </Link>
+                      {item.submenu ? (
+                        <button
+                          type="button"
+                          className={`px-4 py-4 font-medium rounded-lg transition-all duration-300 flex items-center gap-1 ${
+                            isActive
+                              ? 'bg-[#03800a] text-white hover:bg-[#026707]'
+                              : 'text-gray-800 hover:bg-[#f8812f] hover:text-white'
+                          }`}
+                        >
+                          {item.label}
+                          <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
+                        </button>
+                      ) : (
+                        <Link
+                          href={createPageUrl(item.path)}
+                          className={`px-4 py-4 font-medium rounded-lg transition-all duration-300 flex items-center gap-1 ${
+                            item.label === 'Nos Contacts'
+                              ? 'bg-[#03800a] text-white hover:bg-[#026707] shadow-lg'
+                              : 'hover:bg-[#f8812f] hover:text-white'
+                          } ${
+                            isActive && item.label !== 'Nos Contacts'
+                              ? 'bg-[#03800a] text-white hover:bg-[#026707]'
+                            : item.label === 'Nos Contacts'
+                              ? ''
+                                : 'text-gray-800'
+                          }`}
+                        >
+                          {item.label}
+                        </Link>
+                      )}
                     
                     {item.submenu && (
                       <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                         <div className="bg-white rounded-lg shadow-xl py-2 min-w-[220px] border border-gray-100">
                           {item.submenu.map((sub) => {
-                            const isSubActive = url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
+                            const isExternal = Boolean((sub as any).externalUrl);
+                            const subHref = isExternal ? (sub as any).externalUrl : createPageUrl(sub.path);
+                            const isSubActive = !isExternal && url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
                             return (
-                              <Link
-                                key={sub.path}
-                                href={createPageUrl(sub.path)}
-                                className={`block px-4 py-3 transition-colors ${
-                                  isSubActive
-                                    ? 'bg-[#1d8595] text-white font-semibold'
-                                    : 'text-gray-700 hover:bg-[#1d8595] hover:text-white'
-                                }`}
-                              >
-                                {sub.label}
-                              </Link>
+                              <React.Fragment key={sub.path}>
+                                {isExternal ? (
+                                  <a
+                                    href={subHref}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block px-4 py-3 transition-colors text-gray-700 hover:bg-[#026707] hover:text-white"
+                                  >
+                                    {sub.label}
+                                  </a>
+                                ) : (
+                                  <Link
+                                    href={subHref}
+                                    className={`block px-4 py-3 transition-colors ${
+                                      isSubActive
+                                        ? 'bg-[#03800a] text-white font-semibold'
+                                        : 'text-gray-700 hover:bg-[#026707] hover:text-white'
+                                    }`}
+                                  >
+                                    {sub.label}
+                                  </Link>
+                                )}
+                              </React.Fragment>
                             );
                           })}
                         </div>
@@ -186,14 +244,16 @@ export default function Layout({ children }: LayoutProps) {
               </div>
 
               {/* Right Side - Desktop */}
-              <div className="hidden lg:flex items-center gap-4">
-                <a
-                  href="#"
-                  className="px-5 py-2.5 bg-[var(--primary-teal)] text-white rounded-lg hover:bg-teal-700 transition-all duration-300 font-semibold shadow-lg"
-                >
-                  Applife
-                </a>
-              </div>
+              {isAdmin && (
+                <div className="hidden lg:flex items-center gap-4">
+                  <Link
+                    href="/admin/dashboard"
+                    className="px-5 py-2.5 bg-[var(--primary-orange)] text-white rounded-lg hover:bg-orange-600 transition-all duration-300 font-semibold shadow-lg"
+                  >
+                    Dashboard
+                  </Link>
+                </div>
+              )}
 
               {/* Mobile Menu Button */}
               <button
@@ -226,7 +286,7 @@ export default function Layout({ children }: LayoutProps) {
                             }
                             className={`w-full flex items-center justify-between px-4 py-3 font-semibold hover:bg-[var(--light-gray)] transition-colors ${
                               isActive
-                                ? 'bg-[#1d8595] text-white'
+                                ? 'bg-[#03800a] text-white'
                                 : 'text-gray-800'
                             }`}
                           >
@@ -240,10 +300,16 @@ export default function Layout({ children }: LayoutProps) {
                         ) : (
                           <Link
                             href={createPageUrl(item.path)}
-                            className={`block px-4 py-3 font-medium hover:bg-[var(--light-gray)] rounded-xl transition-colors ${
-                              isActive
-                                ? 'bg-[#1d8595] text-white'
-                                : 'text-gray-800'
+                            className={`block px-4 py-3 font-medium rounded-xl transition-colors ${
+                              item.label === 'Nos Contacts'
+                                ? 'bg-[var(--primary-teal)] text-white text-center shadow-lg'
+                                : 'hover:bg-[var(--light-gray)]'
+                            } ${
+                              isActive && item.label !== 'Nos Contacts'
+                                ? 'bg-[#03800a] text-white'
+                                : item.label === 'Nos Contacts'
+                                  ? ''
+                                  : 'text-gray-800'
                             }`}
                           >
                             {item.label}
@@ -252,19 +318,33 @@ export default function Layout({ children }: LayoutProps) {
                       {item.submenu && mobileOpen[item.path] && (
                         <div className="bg-gray-50 border-t border-gray-100">
                           {item.submenu.map((sub) => {
-                            const isSubActive = url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
+                            const isExternal = Boolean((sub as any).externalUrl);
+                            const subHref = isExternal ? (sub as any).externalUrl : createPageUrl(sub.path);
+                            const isSubActive = !isExternal && url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
                             return (
-                              <Link
-                                key={sub.path}
-                                href={createPageUrl(sub.path)}
-                                className={`block px-4 py-3 text-sm transition-colors ${
-                                  isSubActive
-                                    ? 'bg-[#1d8595] text-white font-semibold'
-                                    : 'text-gray-700 hover:bg-white'
-                                }`}
-                              >
-                                {sub.label}
-                              </Link>
+                              <React.Fragment key={sub.path}>
+                                {isExternal ? (
+                                  <a
+                                    href={subHref}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block px-4 py-3 text-sm transition-colors text-gray-700 hover:bg-white"
+                                  >
+                                    {sub.label}
+                                  </a>
+                                ) : (
+                                  <Link
+                                    href={subHref}
+                                    className={`block px-4 py-3 text-sm transition-colors ${
+                                      isSubActive
+                                        ? 'bg-[#03800a] text-white font-semibold'
+                                        : 'text-gray-700 hover:bg-white'
+                                    }`}
+                                  >
+                                    {sub.label}
+                                  </Link>
+                                )}
+                              </React.Fragment>
                             );
                           })}
                         </div>
@@ -272,14 +352,16 @@ export default function Layout({ children }: LayoutProps) {
                     </div>
                     );
                   })}
-                  <div className="pt-4 border-t border-gray-200">
-                    <a
-                      href="#"
-                      className="block px-4 py-3 bg-[var(--primary-teal)] text-white text-center rounded-lg font-semibold"
-                    >
-                      Applife
-                    </a>
-                  </div>
+                  {isAdmin && (
+                    <div className="pt-4 border-t border-gray-200">
+                      <Link
+                        href="/admin/dashboard"
+                        className="block px-4 py-3 bg-[var(--primary-orange)] text-white text-center rounded-lg font-semibold shadow-lg"
+                      >
+                        Dashboard
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -368,6 +450,10 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Scroll to Top Button */}
       <ScrollToTop />
+
+      {/* Conteneur des notifications - affiche les messages flash et notifications */}
+      <NotificationContainer />
     </div>
+    </NotificationProvider>
   );
 }

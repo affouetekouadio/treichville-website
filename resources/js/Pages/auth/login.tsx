@@ -24,10 +24,10 @@ export default function Login({
 }: LoginProps) {
     return (
         <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
+            title="Connexion"
+            description="Entrez vos identifiants pour accéder à votre espace"
         >
-            <Head title="Log in" />
+            <Head title="Connexion" />
 
             <Form
                 {...store.form()}
@@ -38,7 +38,7 @@ export default function Login({
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email" className="text-gray-700 font-semibold">Adresse email</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -47,21 +47,22 @@ export default function Login({
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="email"
-                                    placeholder="email@example.com"
+                                    placeholder="votre@email.com"
+                                    className="border-gray-300 focus:border-[#03800a] focus:ring-[#03800a]"
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password" className="text-gray-700 font-semibold">Mot de passe</Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
-                                            className="ml-auto text-sm"
+                                            className="ml-auto text-sm text-[#03800a] hover:text-[#f8812f]"
                                             tabIndex={5}
                                         >
-                                            Forgot password?
+                                            Mot de passe oublié ?
                                         </TextLink>
                                     )}
                                 </div>
@@ -72,7 +73,8 @@ export default function Login({
                                     required
                                     tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder="Votre mot de passe"
+                                    className="border-gray-300 focus:border-[#03800a] focus:ring-[#03800a]"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -82,27 +84,28 @@ export default function Login({
                                     id="remember"
                                     name="remember"
                                     tabIndex={3}
+                                    className="border-gray-300 text-[#03800a] focus:ring-[#03800a]"
                                 />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label htmlFor="remember" className="text-gray-700">Se souvenir de moi</Label>
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
+                                className="mt-4 w-full bg-gradient-to-r from-[#03800a] to-[#03800a] hover:from-[#03800a]/90 hover:to-[#03800a] text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
                             >
                                 {processing && <Spinner />}
-                                Log in
+                                Se connecter
                             </Button>
                         </div>
 
                         {canRegister && (
-                            <div className="text-center text-sm text-muted-foreground">
-                                Don't have an account?{' '}
-                                <TextLink href={register()} tabIndex={5}>
-                                    Sign up
+                            <div className="text-center text-sm text-gray-600">
+                                Vous n'avez pas de compte ?{' '}
+                                <TextLink href={register()} tabIndex={5} className="text-[#03800a] hover:text-[#f8812f] font-semibold">
+                                    S'inscrire
                                 </TextLink>
                             </div>
                         )}

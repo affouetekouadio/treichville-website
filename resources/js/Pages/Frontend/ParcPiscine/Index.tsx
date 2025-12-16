@@ -47,7 +47,7 @@ const ParcsPiscines: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
             src="https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?w=1200"
@@ -65,7 +65,8 @@ const ParcsPiscines: FrontendPage = () => {
               <Waves className="w-12 h-12 text-white" />
             </div>
             <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-              Parcs et Piscines
+              {/* Parcs et Piscines */}
+              Endroits à découvrir
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
               Détente, loisirs et activités sportives pour toute la famille

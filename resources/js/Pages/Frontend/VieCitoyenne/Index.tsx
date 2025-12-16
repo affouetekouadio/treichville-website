@@ -36,7 +36,7 @@ const VieCitoyenne: FrontendPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="bg-gradient-to-br from-[#1d8595] to-teal-700 text-white py-20">
+      <section className="bg-gradient-to-br from-[#03800a] to-[#03800a] text-white py-20">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-10 items-center">
           <div>
             <p className="uppercase tracking-[0.3em] text-sm text-white/70 mb-4">Vie citoyenne</p>
@@ -50,7 +50,7 @@ const VieCitoyenne: FrontendPage = () => {
             <div className="flex flex-wrap gap-3">
               <Link
                 href={createPageUrl("MessageMaire")}
-                className="bg-white text-[#1d8595] px-5 py-3 rounded-lg font-semibold shadow-lg hover:-translate-y-0.5 transition-transform"
+                className="bg-white text-[#03800a] px-5 py-3 rounded-lg font-semibold shadow-lg hover:-translate-y-0.5 transition-transform"
               >
                 Lire le mot du Maire
               </Link>
@@ -64,7 +64,7 @@ const VieCitoyenne: FrontendPage = () => {
           </div>
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="bg-white text-[#1d8595] w-12 h-12 rounded-xl flex items-center justify-center">
+              <div className="bg-white text-[#03800a] w-12 h-12 rounded-xl flex items-center justify-center">
                 <Users className="w-6 h-6" />
               </div>
               <div>
@@ -97,7 +97,7 @@ const VieCitoyenne: FrontendPage = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">{section.title}</h3>
               <p className="text-gray-600 mb-4 leading-relaxed">{section.description}</p>
-              <span className="text-[#1d8595] font-semibold">En savoir plus →</span>
+              <span className="text-[#03800a] font-semibold">En savoir plus →</span>
             </Link>
           ))}
         </div>

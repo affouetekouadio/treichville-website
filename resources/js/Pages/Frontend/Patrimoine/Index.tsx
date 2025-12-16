@@ -66,7 +66,7 @@ const Patrimoine: FrontendPage = () => {
         </div>
       </section> */}
 
-      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-20"
                   style={{
@@ -74,7 +74,7 @@ const Patrimoine: FrontendPage = () => {
                       "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
         
                 <div className="max-w-7xl mx-auto px-6 relative">
                   <motion.div
@@ -103,7 +103,7 @@ const Patrimoine: FrontendPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <History className="w-16 h-16 text-[#1d8595] mx-auto mb-6" />
+            <History className="w-16 h-16 text-[#03800a] mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
               Un patrimoine riche et diversifié
             </h2>
@@ -138,7 +138,7 @@ const Patrimoine: FrontendPage = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     <div className="absolute top-4 left-4">
-                      <span className="inline-block px-3 py-1 bg-[#1d8595] text-white text-xs font-semibold rounded-full">
+                      <span className="inline-block px-3 py-1 bg-[#03800a] text-white text-xs font-semibold rounded-full">
                         {monument.category}
                       </span>
                     </div>
@@ -161,7 +161,7 @@ const Patrimoine: FrontendPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-[#1d8595]">
+      <section className="py-16 bg-[#03800a]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Camera className="w-16 h-16 text-white/80 mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-4">

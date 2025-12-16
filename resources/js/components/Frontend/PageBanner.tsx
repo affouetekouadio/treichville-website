@@ -26,7 +26,7 @@ export default function PageBanner({
   icon: Icon,
   badge,
   gradient = {
-    from: "#1d8595",
+    from: "#03800a",
     to: "#0d9488",
   },
   variant = "large",

@@ -36,9 +36,9 @@ const Fiscalite: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Hero (sobre) */}
-      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-16 overflow-hidden text-white">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-16 overflow-hidden text-white">
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: heroBg, backgroundSize: "cover", backgroundPosition: "center" }} />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
         <div className="max-w-6xl mx-auto px-6 relative text-center">
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="uppercase tracking-[0.25em] text-sm text-orange-200 mb-3">
             Fiscalité & urbanisme

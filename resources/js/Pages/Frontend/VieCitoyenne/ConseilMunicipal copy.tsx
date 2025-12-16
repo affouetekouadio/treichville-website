@@ -20,7 +20,7 @@ const ConseilMunicipal: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero harmonisé */}
-      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-20 overflow-hidden text-white">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-20 overflow-hidden text-white">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -29,7 +29,7 @@ const ConseilMunicipal: FrontendPage = () => {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
         <div className="max-w-6xl mx-auto px-6 relative space-y-3">
           <p className="uppercase tracking-[0.25em] text-sm text-orange-200">Vie citoyenne</p>
           <h1 className="text-4xl lg:text-5xl font-bold">Le Conseil municipal</h1>
@@ -100,7 +100,7 @@ const ConseilMunicipal: FrontendPage = () => {
               className="bg-white rounded-xl shadow-md border border-gray-100 p-6"
             >
               <h3 className="text-lg font-semibold text-gray-900 mb-1">{commission.name}</h3>
-              <p className="text-sm text-[#1d8595] font-semibold mb-2">Référent : {commission.lead}</p>
+              <p className="text-sm text-[#03800a] font-semibold mb-2">Référent : {commission.lead}</p>
               <p className="text-gray-600 leading-relaxed">{commission.focus}</p>
             </div>
           ))}

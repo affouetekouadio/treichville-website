@@ -16,10 +16,10 @@ interface ResetPasswordProps {
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
     return (
         <AuthLayout
-            title="Reset password"
-            description="Please enter your new password below"
+            title="Réinitialiser le mot de passe"
+            description="Veuillez entrer votre nouveau mot de passe"
         >
-            <Head title="Reset password" />
+            <Head title="Réinitialiser le mot de passe" />
 
             <Form
                 {...update.form()}
@@ -29,14 +29,14 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                 {({ processing, errors }) => (
                     <div className="grid gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email" className="text-gray-700 font-semibold">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
                                 name="email"
                                 autoComplete="email"
                                 value={email}
-                                className="mt-1 block w-full"
+                                className="mt-1 block w-full bg-gray-100 border-gray-300"
                                 readOnly
                             />
                             <InputError
@@ -46,30 +46,30 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password" className="text-gray-700 font-semibold">Nouveau mot de passe</Label>
                             <Input
                                 id="password"
                                 type="password"
                                 name="password"
                                 autoComplete="new-password"
-                                className="mt-1 block w-full"
+                                className="mt-1 block w-full border-gray-300 focus:border-[#03800a] focus:ring-[#03800a]"
                                 autoFocus
-                                placeholder="Password"
+                                placeholder="Entrez votre nouveau mot de passe"
                             />
                             <InputError message={errors.password} />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password_confirmation">
-                                Confirm password
+                            <Label htmlFor="password_confirmation" className="text-gray-700 font-semibold">
+                                Confirmer le mot de passe
                             </Label>
                             <Input
                                 id="password_confirmation"
                                 type="password"
                                 name="password_confirmation"
                                 autoComplete="new-password"
-                                className="mt-1 block w-full"
-                                placeholder="Confirm password"
+                                className="mt-1 block w-full border-gray-300 focus:border-[#03800a] focus:ring-[#03800a]"
+                                placeholder="Confirmez votre nouveau mot de passe"
                             />
                             <InputError
                                 message={errors.password_confirmation}
@@ -79,12 +79,12 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
                         <Button
                             type="submit"
-                            className="mt-4 w-full"
+                            className="mt-4 w-full bg-gradient-to-r from-[#03800a] to-[#03800a] hover:from-[#03800a]/90 hover:to-[#03800a] text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                             disabled={processing}
                             data-test="reset-password-button"
                         >
                             {processing && <Spinner />}
-                            Reset password
+                            Réinitialiser le mot de passe
                         </Button>
                     </div>
                 )}

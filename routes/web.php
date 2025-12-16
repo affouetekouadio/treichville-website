@@ -1,9 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\ActualiteController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\EvenementController;
+use App\Http\Controllers\Admin\MediaFileController;
+use App\Models\Actualite;
+use App\Models\Evenement;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-$homeActualites = [
+$fallbackActualites = [
     [
         'id' => 1,
         'titre' => "3e réunion du Conseil municipal",
@@ -38,7 +44,7 @@ $homeActualites = [
     ],
 ];
 
-$homeEvenements = [
+$fallbackEvenements = [
     [
         'id' => 1,
         'titre' => "Festival des saveurs de Treichville",
@@ -87,11 +93,25 @@ $homeEvenements = [
     // ],
 ];
 
-Route::get('/', function () use ($homeActualites, $homeEvenements) {
+$radioUrl = 'https://radio.treichville.ci';
+
+$loadActualites = function () use ($fallbackActualites) {
+    $items = Actualite::published()->latest('published_at')->get()->map->toFrontendArray();
+
+    return $items->isNotEmpty() ? $items : collect($fallbackActualites);
+};
+
+$loadEvenements = function () use ($fallbackEvenements) {
+    $items = Evenement::published()->orderBy('date_debut')->get()->map->toFrontendArray();
+
+    return $items->isNotEmpty() ? $items : collect($fallbackEvenements);
+};
+
+Route::get('/', function () use ($loadActualites, $loadEvenements) {
     return Inertia::render('Frontend/Home', [
         'services' => [],
-        'homeActualites' => $homeActualites,
-        'homeEvenements' => $homeEvenements,
+        'homeActualites' => $loadActualites()->take(3)->values(),
+        'homeEvenements' => $loadEvenements()->take(3)->values(),
     ]);
 })->name('home');
 
@@ -99,15 +119,17 @@ Route::get('/contact', function () {
     return Inertia::render('Frontend/Contact');
 })->name('contact');
 
-Route::get('/actualites', function () use ($homeActualites) {
+Route::post('/contact', [App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/actualites', function () use ($loadActualites) {
     return Inertia::render('Frontend/Actualites/Index', [
-        'actualites' => $homeActualites,
+        'actualites' => $loadActualites(),
     ]);
 })->name('actualites.index');
 
-Route::get('/evenements', function () use ($homeEvenements) {
+Route::get('/evenements', function () use ($loadEvenements) {
     return Inertia::render('Frontend/Evenements/Index', [
-        'evenements' => $homeEvenements,
+        'evenements' => $loadEvenements(),
     ]);
 })->name('evenements.index');
 
@@ -141,6 +163,22 @@ Route::get('/parcs-piscines', function () {
     return Inertia::render('Frontend/ParcPiscine/Index');
 })->name('parcs-piscines');
 
+Route::get('/communication', function () {
+    return Inertia::render('Frontend/Communication/Index');
+})->name('communication');
+
+Route::get('/communication/journal', function () {
+    return Inertia::render('Frontend/Communication/Journal');
+})->name('communication.journal');
+
+Route::get('/communication/radio', function () use ($radioUrl) {
+    return redirect()->away($radioUrl);
+})->name('communication.radio');
+
+Route::get('/communication/video', function () {
+    return Inertia::render('Frontend/Communication/Video');
+})->name('communication.video');
+
 Route::get('/que-faire', function () {
     return Inertia::render('Frontend/QueFaire/Index');
 })->name('que-faire');
@@ -167,8 +205,54 @@ Route::get('/evenements/details', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        return redirect()->to('/admin/dashboard');
     })->name('dashboard');
 });
+
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', function () {
+            return Inertia::render('Backend/Dashboard/Index');
+        })->name('dashboard');
+
+        // Pages Inertia (admin UI)
+        Route::get('/actualites', function () {
+            return Inertia::render('Backend/Actualites/Index');
+        })->name('actualites.index');
+
+        Route::get('/evenements', function () {
+            return Inertia::render('Backend/Evenements/Index');
+        })->name('evenements.index');
+
+        Route::get('/media', function () {
+            return Inertia::render('Backend/Media/Index');
+        })->name('media.index');
+
+        Route::get('/categories', function () {
+            return Inertia::render('Backend/Categories/Index');
+        })->name('categories.index');
+
+        // API CRUD backoffice
+        Route::get('/api/actualites', [ActualiteController::class, 'index'])->name('api.actualites.index');
+        Route::post('/api/actualites', [ActualiteController::class, 'store'])->name('api.actualites.store');
+        Route::put('/api/actualites/{actualite}', [ActualiteController::class, 'update'])->name('api.actualites.update');
+        Route::delete('/api/actualites/{actualite}', [ActualiteController::class, 'destroy'])->name('api.actualites.destroy');
+
+        Route::get('/api/evenements', [EvenementController::class, 'index'])->name('api.evenements.index');
+        Route::post('/api/evenements', [EvenementController::class, 'store'])->name('api.evenements.store');
+        Route::put('/api/evenements/{evenement}', [EvenementController::class, 'update'])->name('api.evenements.update');
+        Route::delete('/api/evenements/{evenement}', [EvenementController::class, 'destroy'])->name('api.evenements.destroy');
+
+        Route::get('/api/media', [MediaFileController::class, 'index'])->name('api.media.index');
+        Route::post('/api/media', [MediaFileController::class, 'store'])->name('api.media.store');
+        Route::delete('/api/media/{mediaFile}', [MediaFileController::class, 'destroy'])->name('api.media.destroy');
+
+        Route::get('/api/categories', [CategoryController::class, 'index'])->name('api.categories.index');
+        Route::post('/api/categories', [CategoryController::class, 'store'])->name('api.categories.store');
+        Route::put('/api/categories/{category}', [CategoryController::class, 'update'])->name('api.categories.update');
+        Route::delete('/api/categories/{category}', [CategoryController::class, 'destroy'])->name('api.categories.destroy');
+    });
 
 require __DIR__.'/settings.php';

@@ -73,9 +73,9 @@ export default function TeamSection() {
             Notre équipe
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-            Rencontrez les membres du
+            Les adjoints au Maire
             <br />
-            <span className="text-[#1d8595]">conseil municipal</span>
+            {/* <span className="text-[#03800a]">Les Adjoints au Maire</span> */}
           </h2>
         </motion.div>
 
@@ -116,10 +116,10 @@ export default function TeamSection() {
                         alt={member.name}
                         className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1d8595]/85 via-[#1d8595]/35 to-transparent opacity-90" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#03800a]/85 via-[#03800a]/35 to-transparent opacity-90" />
                     </div>
                     <div className="p-6 text-center bg-white">
-                      <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-[#1d8595] transition-colors">
+                      <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-[#03800a] transition-colors">
                         {member.name}
                       </h3>
                       <p className="text-gray-600 font-medium text-sm">{member.role}</p>

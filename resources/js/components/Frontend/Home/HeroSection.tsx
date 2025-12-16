@@ -84,24 +84,16 @@ export default function HeroSection() {
     }
   };
 
+  // Crossfade only to avoid revealing the section background between slides
   const variants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
-    center: {
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction) => ({
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
+    enter: () => ({ opacity: 0 }),
+    center: { opacity: 1 },
+    exit: () => ({ opacity: 0 })
   };
 
   return (
     <section className="relative h-[700px] overflow-hidden bg-gray-900">
-      <AnimatePresence initial={false} custom={direction} mode="wait">
+      <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={currentSlide}
           custom={direction}
@@ -119,7 +111,8 @@ export default function HeroSection() {
               alt={slides[currentSlide].title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+            {/* ça ajoute un peti fond sur les images */}
+            {/* <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div> */}
           </div>
 
           {/* Content */}

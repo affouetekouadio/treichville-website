@@ -15,7 +15,7 @@ const QueFaire: FrontendPage = () => {
       cta: "Voir les événements",
     },
     {
-      title: "Parcs et piscines",
+      title: "Endroits à découvrir",
       description: "Les espaces de détente pour profiter en famille : parcs, piscines et balades.",
       icon: Trees,
       href: createPageUrl("ParcsPiscines"),
@@ -25,7 +25,7 @@ const QueFaire: FrontendPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="bg-gradient-to-br from-[#f8812f] via-[#f8843f] to-[#1d8595] text-white">
+      <section className="bg-gradient-to-br from-[#f8812f] via-[#f8843f] to-[#03800a] text-white">
         <div className="max-w-6xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-10 items-center">
           <div>
             <p className="uppercase tracking-[0.3em] text-sm text-white/80 mb-3">Découvrir Treichville</p>
@@ -59,7 +59,7 @@ const QueFaire: FrontendPage = () => {
             href={idea.href}
             className="group bg-white border border-gray-100 rounded-2xl p-8 shadow-lg hover:-translate-y-1 transition-all duration-300"
           >
-            <div className="w-12 h-12 rounded-xl bg-[#1d8595]/10 text-[#1d8595] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-[#03800a]/10 text-[#03800a] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
               <idea.icon className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">{idea.title}</h3>

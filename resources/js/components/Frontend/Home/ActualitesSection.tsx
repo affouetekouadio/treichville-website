@@ -36,7 +36,7 @@ export default function ActualitesSection({ actualites = [] }: Props) {
             <span className="text-[#f8812f] font-semibold text-sm tracking-wider uppercase">Actualités</span>
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Dernières nouvelles et mises à jour
+            Actualités
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Restez informé de toute l'actualité de votre territoire

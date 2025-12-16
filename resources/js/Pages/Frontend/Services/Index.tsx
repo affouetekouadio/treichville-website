@@ -21,7 +21,7 @@ const categoryInfo = {
   "Urbanisme": { color: "bg-amber-500", lightColor: "bg-amber-50", textColor: "text-amber-600" },
   "Social": { color: "bg-green-500", lightColor: "bg-green-50", textColor: "text-green-600" },
   "Culture": { color: "bg-pink-500", lightColor: "bg-pink-50", textColor: "text-pink-600" },
-  "Environnement": { color: "bg-emerald-500", lightColor: "bg-emerald-50", textColor: "text-emerald-600" }
+  "Environnement": { color: "bg-[#03800a]", lightColor: "bg-emerald-50", textColor: "text-emerald-600" }
 };
 
 type ServicesPageProps = {
@@ -121,7 +121,7 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -129,7 +129,7 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
               "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
 
         <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div
@@ -318,7 +318,7 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
               <div
                 key={bloc.title}
                 className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur shadow-xl"
-                style={{ borderColor: idx % 2 === 0 ? "#f8812f55" : "#1d859555" }}
+                style={{ borderColor: idx % 2 === 0 ? "#f8812f55" : "#03800a55" }}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">

@@ -255,7 +255,7 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
     "Familial": "bg-blue-600",
     "Citoyen": "bg-orange-600",
     "Festif": "bg-pink-600",
-    "Social": "bg-teal-600"
+    "Social": "bg-[#03800a]"
   };
 
   const today = new Date();
@@ -268,7 +268,7 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Banner */}
-      <section className="relative bg-gradient-to-br from-[#1d8595] to-teal-700 py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -276,7 +276,7 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
               "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1d8595]/40 via-[#1d8595]/50 to-teal-700/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
 
         <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div
@@ -353,7 +353,7 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
                             {event.categorie}
                           </Badge>
 
-                          <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#1d8595] transition-colors">
+                          <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#03800a] transition-colors">
                             {event.titre}
                           </h3>
                           <p className="text-gray-600 mb-4 line-clamp-2">{event.description}</p>

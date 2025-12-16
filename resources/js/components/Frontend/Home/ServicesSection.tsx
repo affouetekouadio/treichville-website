@@ -78,7 +78,7 @@ export default function ServicesSection({ services = [] }: Props) {
 
   const items = useMemo(() => (services.length ? services : fallbackServices), [services]);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const accentPalette = ["#f8812f", "#1d8595", "#D4AF37", "#0A1628", "#22c55e", "#ea580c"];
+  const accent = "#f8812f";
   const bgImagesByKey: Record<string, string> = {
     FileText: "/images/etat-civil-2.jpg", // état civil / démarches
     Building: "/images/palais.jpg",
@@ -141,7 +141,6 @@ export default function ServicesSection({ services = [] }: Props) {
           {items.map((service, index) => {
             const iconKey = (service.icone as keyof typeof iconMap) ?? "FileText";
             const Icon = iconMap[iconKey] || FileText;
-            const accent = accentPalette[index % accentPalette.length];
             const bgImage = bgImagesByKey[iconKey] ?? "/images/treichville-4.jpg";
             return (
               <motion.div
@@ -151,14 +150,14 @@ export default function ServicesSection({ services = [] }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="snap-start min-w-[300px] md:min-w-[360px] bg-[#0b172b] text-white rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 group border border-white/10"
+                className="snap-start min-w-[300px] md:min-w-[360px] bg-[#fff7ef] text-[#0f172a] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 group border border-white/10"
                 style={{ boxShadow: `0 14px 38px -18px ${accent}80` }}
               >
-                <div className="relative h-48">
+                <div className="relative h-60 md:h-64">
                   <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.65)), url('${bgImage}')`,
+                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.55)), url('${bgImage}')`,
                     }}
                   />
                   <div
@@ -170,22 +169,22 @@ export default function ServicesSection({ services = [] }: Props) {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-3 bg-gradient-to-b from-[#0b172b] to-[#11284c]">
+                <div className="p-6 space-y-3 bg-gradient-to-b from-[#fff7ef] via-[#ffdcb8] to-[#f39a4a]">
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${accent}25` }}
+                    style={{ backgroundColor: "rgba(255,255,255,0.3)" }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: accent }} />
+                    <Icon className="w-6 h-6" style={{ color: "#c75d0d" }} />
                   </div>
                   <h3 className="text-lg font-bold leading-tight">{service.nom}</h3>
-                  <p className="text-white/80 leading-relaxed text-sm">{service.description}</p>
+                  <p className="text-[#1f2937] leading-relaxed text-sm">{service.description}</p>
                   {service.lien_externe && (
                     <a
                       href={service.lien_externe}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold"
-                      style={{ color: accent }}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-white/80 transition-colors px-3 py-2 rounded-full"
+                      style={{ backgroundColor: "#c75d0d" }}
                     >
                       En savoir plus →
                     </a>

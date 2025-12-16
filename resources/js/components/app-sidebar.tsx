@@ -13,14 +13,34 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, CalendarDays, Folder, Images, LayoutGrid, Megaphone, Tag } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: '/admin/dashboard',
         icon: LayoutGrid,
+    },
+    {
+        title: 'Actualités',
+        href: '/admin/actualites',
+        icon: Megaphone,
+    },
+    {
+        title: 'Événements',
+        href: '/admin/evenements',
+        icon: CalendarDays,
+    },
+    {
+        title: 'Médias',
+        href: '/admin/media',
+        icon: Images,
+    },
+    {
+        title: 'Catégories',
+        href: '/admin/categories',
+        icon: Tag,
     },
 ];
 

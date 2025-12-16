@@ -30,7 +30,7 @@ export default function AboutSection() {
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 // src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
-                src="/images/personnes/maire.jpg"
+                src="/images/personnes/maire-2.jpg"
                 alt="Le Maire"
                 className="w-full h-full object-cover object-top"
               />
@@ -44,7 +44,7 @@ export default function AboutSection() {
             </div>
 
             {/* Decorative Element */}
-            <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-[#1d8595]/10 rounded-2xl -z-10"></div>
+            <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-[#03800a]/10 rounded-2xl -z-10"></div>
           </motion.div>
 
           {/* Content Side */}
@@ -55,7 +55,7 @@ export default function AboutSection() {
             transition={{ duration: 0.8 }}
           >
             <div className="inline-block px-4 py-2 bg-[#f8812f]/10 rounded-full mb-4">
-              <span className="text-[#f8812f] font-semibold text-sm tracking-wider uppercase">Message du Maire</span>
+              <span className="text-[#f8812f] font-semibold text-sm tracking-wider uppercase">Le Maire</span>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
@@ -83,7 +83,7 @@ export default function AboutSection() {
                   transition={{ delay: index * 0.1 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-6 h-6 bg-[#1d8595] rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-6 h-6 bg-[#03800a] rounded-full flex items-center justify-center flex-shrink-0">
                     <Check className="w-4 h-4 text-white" />
                   </div>
                   <span className="text-gray-700 font-medium">{item}</span>

@@ -1,0 +1,224 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Direction;
+use App\Models\DirectionContact;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+
+/**
+ * Contrôleur pour la gestion des directions/services et leurs contacts
+ */
+class DirectionController extends Controller
+{
+    /**
+     * Liste les directions avec leurs contacts
+     */
+    public function index()
+    {
+        $items = Direction::with('contacts')
+            ->orderBy('ordre', 'asc')
+            ->orderBy('nom', 'asc')
+            ->get();
+
+        return response()->json([
+            'data' => $items,
+        ]);
+    }
+
+    /**
+     * Affiche une direction avec ses contacts
+     */
+    public function show(Direction $direction)
+    {
+        $direction->load('contacts');
+
+        return response()->json([
+            'data' => $direction,
+        ]);
+    }
+
+    /**
+     * Crée une direction avec ses contacts
+     */
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'nom' => ['required', 'string', 'max:255'],
+                'description' => ['nullable', 'string'],
+                'responsable' => ['nullable', 'string', 'max:255'],
+                'adresse' => ['nullable', 'string', 'max:500'],
+                'ordre' => ['nullable', 'integer', 'min:0'],
+                'actif' => ['nullable', 'boolean'],
+                'contacts' => ['nullable', 'array'],
+                'contacts.*.type' => ['required', 'in:email,telephone,fax,whatsapp'],
+                'contacts.*.valeur' => ['required', 'string', 'max:255'],
+                'contacts.*.label' => ['nullable', 'string', 'max:100'],
+                'contacts.*.ordre' => ['nullable', 'integer', 'min:0'],
+            ]);
+
+            DB::beginTransaction();
+
+            // Génération du slug
+            $validated['slug'] = Str::slug($validated['nom']);
+
+            // Création de la direction
+            $direction = Direction::create([
+                'nom' => $validated['nom'],
+                'slug' => $validated['slug'],
+                'description' => $validated['description'] ?? null,
+                'responsable' => $validated['responsable'] ?? null,
+                'adresse' => $validated['adresse'] ?? null,
+                'ordre' => $validated['ordre'] ?? 0,
+                'actif' => $validated['actif'] ?? true,
+            ]);
+
+            // Création des contacts associés
+            if (!empty($validated['contacts'])) {
+                foreach ($validated['contacts'] as $contact) {
+                    DirectionContact::create([
+                        'direction_id' => $direction->id,
+                        'type' => $contact['type'],
+                        'valeur' => $contact['valeur'],
+                        'label' => $contact['label'] ?? null,
+                        'ordre' => $contact['ordre'] ?? 0,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            $direction->load('contacts');
+
+            return response()->json([
+                'data' => $direction,
+                'message' => 'Direction créée avec succès',
+            ], 201)->with('success', 'Direction créée avec succès');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Erreur lors de la création de la direction: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la création de la direction',
+            ], 500)->with('error', 'Une erreur est survenue lors de la création de la direction');
+        }
+    }
+
+    /**
+     * Met à jour une direction et ses contacts
+     */
+    public function update(Request $request, Direction $direction)
+    {
+        try {
+            $validated = $request->validate([
+                'nom' => ['sometimes', 'string', 'max:255'],
+                'description' => ['nullable', 'string'],
+                'responsable' => ['nullable', 'string', 'max:255'],
+                'adresse' => ['nullable', 'string', 'max:500'],
+                'ordre' => ['nullable', 'integer', 'min:0'],
+                'actif' => ['nullable', 'boolean'],
+                'contacts' => ['nullable', 'array'],
+                'contacts.*.id' => ['nullable', 'exists:direction_contacts,id'],
+                'contacts.*.type' => ['required', 'in:email,telephone,fax,whatsapp'],
+                'contacts.*.valeur' => ['required', 'string', 'max:255'],
+                'contacts.*.label' => ['nullable', 'string', 'max:100'],
+                'contacts.*.ordre' => ['nullable', 'integer', 'min:0'],
+            ]);
+
+            DB::beginTransaction();
+
+            // Mise à jour de la direction
+            if (array_key_exists('nom', $validated)) {
+                $validated['slug'] = Str::slug($validated['nom']);
+            }
+
+            $direction->update([
+                'nom' => $validated['nom'] ?? $direction->nom,
+                'slug' => $validated['slug'] ?? $direction->slug,
+                'description' => $validated['description'] ?? $direction->description,
+                'responsable' => $validated['responsable'] ?? $direction->responsable,
+                'adresse' => $validated['adresse'] ?? $direction->adresse,
+                'ordre' => $validated['ordre'] ?? $direction->ordre,
+                'actif' => $validated['actif'] ?? $direction->actif,
+            ]);
+
+            // Gestion des contacts
+            if (array_key_exists('contacts', $validated)) {
+                // Récupérer les IDs des contacts existants à conserver
+                $contactIds = collect($validated['contacts'])
+                    ->pluck('id')
+                    ->filter()
+                    ->toArray();
+
+                // Supprimer les contacts qui ne sont plus dans la liste
+                DirectionContact::where('direction_id', $direction->id)
+                    ->whereNotIn('id', $contactIds)
+                    ->delete();
+
+                // Créer ou mettre à jour les contacts
+                foreach ($validated['contacts'] as $contactData) {
+                    if (isset($contactData['id'])) {
+                        // Mise à jour d'un contact existant
+                        DirectionContact::where('id', $contactData['id'])
+                            ->update([
+                                'type' => $contactData['type'],
+                                'valeur' => $contactData['valeur'],
+                                'label' => $contactData['label'] ?? null,
+                                'ordre' => $contactData['ordre'] ?? 0,
+                            ]);
+                    } else {
+                        // Création d'un nouveau contact
+                        DirectionContact::create([
+                            'direction_id' => $direction->id,
+                            'type' => $contactData['type'],
+                            'valeur' => $contactData['valeur'],
+                            'label' => $contactData['label'] ?? null,
+                            'ordre' => $contactData['ordre'] ?? 0,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            $direction->load('contacts');
+
+            return response()->json([
+                'data' => $direction,
+                'message' => 'Direction mise à jour avec succès',
+            ])->with('success', 'Direction mise à jour avec succès');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Erreur lors de la mise à jour de la direction: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la mise à jour de la direction',
+            ], 500)->with('error', 'Une erreur est survenue lors de la mise à jour de la direction');
+        }
+    }
+
+    /**
+     * Supprime une direction et tous ses contacts
+     */
+    public function destroy(Direction $direction)
+    {
+        try {
+            // Les contacts seront supprimés automatiquement grâce à cascadeOnDelete
+            $direction->delete();
+
+            return response()->json([
+                'message' => 'Direction supprimée avec succès',
+            ])->with('success', 'Direction supprimée avec succès');
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la suppression de la direction: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la suppression de la direction',
+            ], 500)->with('error', 'Une erreur est survenue lors de la suppression de la direction');
+        }
+    }
+}

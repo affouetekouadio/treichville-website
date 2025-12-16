@@ -46,7 +46,7 @@ const Histoire: FrontendPage = () => {
       icon: Landmark,
       title: "Gare Lagunaire",
       description: "Point de départ historique des transports lagunaires vers les autres communes.",
-      color: "from-[#1d8595] to-teal-500"
+      color: "from-[#03800a] to-[#03800a]"
     },
     {
       icon: Building,
@@ -102,8 +102,8 @@ const Histoire: FrontendPage = () => {
         variant="compact"
         align="left"
         gradient={{
-          from: "#1d8595",
-          to: "#0d7490",
+          from: "#03800a",
+          to: "#03800a",
         }}
       />
 
@@ -126,12 +126,12 @@ const Histoire: FrontendPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <div className="relative">
-                <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+              <div className="relative max-w-[420px] mx-auto">
+                <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border border-white/70 bg-white/50 backdrop-blur-sm">
                   <img
-                    src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800"
+                    src="images/personnes/treich-laplene.jpg"
                     alt="Marcel Treich-Laplène"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain p-4"
                   />
                 </div>
                 <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#f8812f]/30 rounded-full blur-2xl" />
@@ -207,7 +207,7 @@ const Histoire: FrontendPage = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl" />
                   {/* Bordure décorative */}
-                  <div className="absolute -inset-2 bg-gradient-to-br from-[#1d8595]/20 to-[#f8812f]/20 rounded-3xl -z-10 blur-xl" />
+                  <div className="absolute -inset-2 bg-gradient-to-br from-[#03800a]/20 to-[#f8812f]/20 rounded-3xl -z-10 blur-xl" />
                 </div>
               </div>
 
@@ -229,7 +229,7 @@ const Histoire: FrontendPage = () => {
               </div>
 
               {/* Éléments décoratifs */}
-              <div className="absolute top-1/4 -left-6 w-32 h-32 bg-[#1d8595]/10 rounded-full blur-3xl" />
+              <div className="absolute top-1/4 -left-6 w-32 h-32 bg-[#03800a]/10 rounded-full blur-3xl" />
               <div className="absolute bottom-1/4 -right-6 w-40 h-40 bg-[#f8812f]/10 rounded-full blur-3xl" />
             </motion.div>
           </div>
@@ -245,7 +245,7 @@ const Histoire: FrontendPage = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <p className="text-[#1d8595] font-semibold uppercase tracking-wider text-sm mb-3">En chiffres</p>
+            <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">En chiffres</p>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Treichville en quelques données</h2>
           </motion.div>
 
@@ -296,7 +296,7 @@ const Histoire: FrontendPage = () => {
             >
               <div className="bg-white rounded-2xl p-8 shadow-xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-[#1d8595] rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#03800a] rounded-xl flex items-center justify-center">
                     <Map className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900">Localisation</h3>
@@ -334,17 +334,17 @@ const Histoire: FrontendPage = () => {
 
                 <button
                   onClick={() => nudge("prev")}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#1d8595] transition-all duration-300 flex items-center justify-center shadow-xl group"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#03800a] transition-all duration-300 flex items-center justify-center shadow-xl group"
                   aria-label="Image précédente"
                 >
-                  <ChevronLeft className="w-6 h-6 text-gray-700 group-hover:text-[#1d8595] transition-colors" />
+                  <ChevronLeft className="w-6 h-6 text-gray-700 group-hover:text-[#03800a] transition-colors" />
                 </button>
                 <button
                   onClick={() => nudge("next")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#1d8595] transition-all duration-300 flex items-center justify-center shadow-xl group"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#03800a] transition-all duration-300 flex items-center justify-center shadow-xl group"
                   aria-label="Image suivante"
                 >
-                  <ChevronRight className="w-6 h-6 text-gray-700 group-hover:text-[#1d8595] transition-colors" />
+                  <ChevronRight className="w-6 h-6 text-gray-700 group-hover:text-[#03800a] transition-colors" />
                 </button>
 
                 <AnimatePresence custom={direction} initial={false}>
@@ -366,7 +366,7 @@ const Histoire: FrontendPage = () => {
                   </motion.div>
                 </AnimatePresence>
               </div>
-              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#1d8595]/20 rounded-full blur-2xl -z-10" />
+              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#03800a]/20 rounded-full blur-2xl -z-10" />
             </motion.div>
           </div>
         </div>
@@ -381,7 +381,7 @@ const Histoire: FrontendPage = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <p className="text-[#1d8595] font-semibold uppercase tracking-wider text-sm mb-3">Nos quartiers</p>
+            <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Nos quartiers</p>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Les quartiers de Treichville</h2>
           </motion.div>
 
@@ -400,7 +400,7 @@ const Histoire: FrontendPage = () => {
                     <Home className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#1d8595] transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#03800a] transition-colors">
                       {quartier.name}
                     </h3>
                     <p className="text-gray-600 leading-relaxed">{quartier.description}</p>
@@ -461,7 +461,7 @@ const Histoire: FrontendPage = () => {
               viewport={{ once: true }}
               className="order-2 lg:order-1"
             >
-              <p className="text-[#1d8595] font-semibold uppercase tracking-wider text-sm mb-3">Économie</p>
+              <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Économie</p>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
                 Un pôle économique majeur
               </h2>
@@ -484,7 +484,7 @@ const Histoire: FrontendPage = () => {
               </div>
 
               <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-[#1d8595] to-teal-600 rounded-xl p-5 text-white">
+                <div className="bg-gradient-to-br from-[#03800a] to-[#03800a] rounded-xl p-5 text-white">
                   <div className="text-3xl font-bold mb-1">1er</div>
                   <div className="text-sm text-white/90">Port d'Afrique de l'Ouest</div>
                 </div>
@@ -528,7 +528,7 @@ const Histoire: FrontendPage = () => {
           </motion.div>
 
           <div className="relative">
-            <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#1d8595]/20"></div>
+            <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#03800a]/20"></div>
             {timeline.map((item, index) => (
               <motion.div
                 key={item.year}
@@ -547,7 +547,7 @@ const Histoire: FrontendPage = () => {
                     <p className="text-gray-600">{item.description}</p>
                   </div>
                 </div>
-                <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#1d8595] rounded-full border-4 border-white shadow"></div>
+                <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#03800a] rounded-full border-4 border-white shadow"></div>
                 <div className="hidden lg:block w-1/2"></div>
               </motion.div>
             ))}
@@ -556,7 +556,7 @@ const Histoire: FrontendPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-[#1d8595] to-teal-700 relative overflow-hidden">
+      <section className="py-16 bg-gradient-to-br from-[#03800a] to-[#03800a] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8812f] rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />

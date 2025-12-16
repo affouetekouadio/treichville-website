@@ -15,6 +15,10 @@ const PAGE_ROUTES: Record<string, string> = {
   EtatCivil: "/etat-civil",
   Fiscalite: "/fiscalite-urbanisme",
   ParcsPiscines: "/parcs-piscines",
+  Communication: "/communication",
+  Journal: "/communication/journal",
+  Radio: "/communication/radio",
+  Video: "/communication/video",
   Contact: "/contact",
 };
 

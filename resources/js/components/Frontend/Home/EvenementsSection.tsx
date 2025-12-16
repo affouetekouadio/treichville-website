@@ -16,7 +16,7 @@ export default function EvenementsSection({ evenements = [] }: Props) {
     return start >= new Date();
   });
   const displayEvents = (futurEvenements.length ? futurEvenements : evenements).slice(0, 3);
-  const accentPalette = ["#D4AF37", "#1d8595", "#f8812f"];
+  const accent = "#f8812f";
 
   return (
     <section id="evenements" className="py-24 bg-white">
@@ -46,7 +46,6 @@ export default function EvenementsSection({ evenements = [] }: Props) {
             {displayEvents.map((evt, index) => {
               const eventStart = new Date(evt.date_debut);
               const eventEnd = evt.date_fin ? new Date(evt.date_fin) : null;
-              const accent = accentPalette[index % accentPalette.length];
               return (
                 <motion.article
                   key={evt.id}
@@ -55,7 +54,7 @@ export default function EvenementsSection({ evenements = [] }: Props) {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -10 }}
-                  className="relative overflow-hidden rounded-2xl border border-[#0A1628]/20 shadow-xl bg-[#0A1628] text-white"
+                  className="relative overflow-hidden rounded-2xl border border-white shadow-xl bg-[#fff7ef] text-[#0f172a]"
                   style={{ boxShadow: `0 14px 38px -16px ${accent}80` }}
                 >
                   <div className="h-48 bg-gray-200 relative">
@@ -66,20 +65,20 @@ export default function EvenementsSection({ evenements = [] }: Props) {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-[#0A1628] to-[#122544]" />
+                      <div className="w-full h-full bg-gradient-to-br from-[#fdf2e9] to-[#f8d8b6]" />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-[#0A1628]/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/45 via-[#f77f2b]/10 to-transparent" />
                     <div className="absolute top-4 left-4 flex flex-wrap gap-2">
                       <span
                         className="inline-flex items-center px-3 py-1 rounded-full backdrop-blur text-white text-xs font-semibold border"
-                        style={{ backgroundColor: "#ffffff20", borderColor: accent }}
+                        style={{ backgroundColor: "#00000030", borderColor: accent }}
                       >
                         {evt.categorie}
                       </span>
                     </div>
                   </div>
-                  <div className="p-6 space-y-4 bg-gradient-to-b from-[#0A1628] to-[#10274a]">
-                    <div className="flex items-center gap-3 text-sm text-white/70">
+                  <div className="p-6 space-y-4 bg-gradient-to-b from-[#fff7ef] via-[#ffe2c5] to-[#f6b167]">
+                    <div className="flex items-center gap-3 text-sm text-[#334155]">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" style={{ color: accent }} />
                         <span>{format(eventStart, "d MMM yyyy", { locale: fr })}</span>
@@ -92,8 +91,8 @@ export default function EvenementsSection({ evenements = [] }: Props) {
                         </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold leading-tight">{evt.titre}</h3>
-                    <p className="text-white/80 leading-relaxed line-clamp-3">{evt.description}</p>
+                    <h3 className="text-xl font-bold leading-tight text-[#0f172a]">{evt.titre}</h3>
+                    <p className="text-[#1f2937] leading-relaxed line-clamp-3">{evt.description}</p>
                     <div className="flex items-center justify-between">
                       <div
                         className="flex items-center gap-2 text-sm font-semibold"
