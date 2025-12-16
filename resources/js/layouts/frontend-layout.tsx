@@ -91,7 +91,7 @@ export default function Layout({ children }: LayoutProps) {
       path: "Communication",
       submenu: [
         { label: "Journal", path: "Journal" },
-        { label: "Radio", path: "Radio", externalUrl: "https://radio.treichville.ci" },
+        { label: "Radio (officiel)", path: "RadioOfficiel", externalUrl: "https://radiotreichville.ci/" },
         { label: "Vidéo", path: "Video" },
       ],
     },

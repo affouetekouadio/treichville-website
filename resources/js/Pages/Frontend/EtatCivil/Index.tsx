@@ -123,7 +123,7 @@ const EtatCivil: FrontendPage = () => {
         align="left"
         gradient={{
           from: "#03800a",
-          to: "#03800a",
+          to: "#0f6b7a",
         }}
       />
 

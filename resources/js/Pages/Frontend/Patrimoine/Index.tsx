@@ -66,7 +66,7 @@ const Patrimoine: FrontendPage = () => {
         </div>
       </section> */}
 
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#03800a] to-[#0f6b7a] py-24 overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-20"
                   style={{
@@ -74,7 +74,7 @@ const Patrimoine: FrontendPage = () => {
                       "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/55 to-[#0f6b7a]/65" />
         
                 <div className="max-w-7xl mx-auto px-6 relative">
                   <motion.div
