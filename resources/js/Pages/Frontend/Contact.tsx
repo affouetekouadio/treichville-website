@@ -21,6 +21,7 @@ import {
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import { useForm } from "@inertiajs/react";
+import PageBanner from "@/components/Frontend/PageBanner";
 
 const Contact: FrontendPage = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -67,34 +68,10 @@ const Contact: FrontendPage = () => {
         </div>
       </section> */}
 
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
-            <div
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
-    
-            <div className="max-w-7xl mx-auto px-6 relative">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center max-w-3xl mx-auto"
-              >
-                <span className="inline-block px-4 py-2 bg-white/20 text-white rounded-full text-sm font-semibold mb-6">
-                    Découvrir Treichville
-                </span>
-                <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-                  Nous contacter
-                </h1>
-                {/* <p className="text-xl text-gray-300 leading-relaxed">
-                  Explorez les lieux emblématiques qui font la richesse historique et culturelle de notre commune
-                </p> */}
-              </motion.div>
-            </div>
-      </section>
+      <PageBanner
+        title="Nous contacter"
+        variant="compact"
+      />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid lg:grid-cols-2 gap-12">
@@ -287,7 +264,7 @@ const Contact: FrontendPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05 }}
-                className="p-6 rounded-2xl bg-gradient-to-b from-[#f4f9fb] via-[#d9edf3] to-[#b9deeb] shadow-lg border border-[#e5f4f8]"
+                className="p-6 rounded-2xl bg-white shadow-lg border border-gray-100"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(29,133,149,0.12)" }}>
                   <dir.icon className="w-6 h-6" style={{ color: "#03800a" }} />

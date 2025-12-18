@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Trees, Waves, MapPin, Clock, Users, Star } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
+import PageBanner from "@/components/Frontend/PageBanner";
 
 const lieux = [
   {
@@ -47,33 +48,10 @@ const ParcsPiscines: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <img
-            src="https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?w=1200"
-            alt="Parc"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-6 text-center relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="flex justify-center gap-4 mb-6">
-              <Trees className="w-12 h-12 text-white" />
-              <Waves className="w-12 h-12 text-white" />
-            </div>
-            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-              {/* Parcs et Piscines */}
-              Endroits à découvrir
-            </h1>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              Détente, loisirs et activités sportives pour toute la famille
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      <PageBanner
+        title="Endroits à découvrir"
+        variant="compact"
+      />
 
       {/* Lieux */}
       <section className="py-16">

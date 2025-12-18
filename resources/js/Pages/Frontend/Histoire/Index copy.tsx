@@ -97,7 +97,6 @@ const Histoire: FrontendPage = () => {
       {/* Hero */}
       <PageBanner
         title="Notre Histoire"
-        description="Découvrez l'histoire riche et fascinante de Treichville, berceau culturel d'Abidjan"
         icon={BookOpen}
         variant="compact"
         align="left"

@@ -131,8 +131,8 @@ const quickServices = [
 export default function QuickServicesSection() {
   return (
     <section className="relative -mt-20 z-20">
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8 items-stretch">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-5 lg:gap-8 items-stretch">
           {quickServices.map((service, index) => (
             <motion.div
               key={index}
@@ -145,20 +145,20 @@ export default function QuickServicesSection() {
             >
               <Link 
                 href={createPageUrl(service.link)}
-                className="block h-full bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group border-t-4 border-[#f8812f] flex flex-col"
+                className="block h-full bg-white rounded-2xl p-5 sm:p-6 md:p-7 shadow-xl hover:shadow-2xl transition-all duration-300 group border-t-4 border-[#f8812f] flex flex-col"
               >
-                <div className="w-16 h-16 bg-[#f8812f] rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <service.icon className="w-8 h-8 text-white" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#f8812f] rounded-full flex items-center justify-center mb-4 sm:mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <service.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#f8812f] transition-colors">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-[#f8812f] transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     {service.description}
                   </p>
                 </div>
-                <div className="mt-6 flex items-center gap-2 text-[#f8812f] font-semibold group-hover:gap-3 transition-all">
+                <div className="mt-4 sm:mt-6 flex items-center gap-2 text-[#f8812f] font-semibold group-hover:gap-3 transition-all text-sm sm:text-base">
                   En savoir plus
                   <ArrowRight className="w-4 h-4" />
                 </div>

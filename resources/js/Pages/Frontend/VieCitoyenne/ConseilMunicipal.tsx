@@ -5,6 +5,7 @@ import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import { Link } from "@inertiajs/react";
 import { createPageUrl } from "@/utils";
+import PageBanner from "@/components/Frontend/PageBanner";
 
 const membres = [
   { name: "Adjoint 1", role: "4ème adjoint", photo: "/images/personnes/1.jpg", focus: "Vie citoyenne & proximité", icon: Users },
@@ -68,25 +69,10 @@ const ConseilMunicipal: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-20 overflow-hidden text-white">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
-        <div className="max-w-6xl mx-auto px-6 relative space-y-3">
-          <p className="uppercase tracking-[0.25em] text-sm text-orange-200">Vie citoyenne</p>
-          <h1 className="text-4xl lg:text-5xl font-bold">Le Conseil municipal</h1>
-          <div className="flex items-center gap-3 text-white/85 text-sm">
-            <Landmark className="w-5 h-5" />
-            <span>Administration locale et représentants des habitants</span>
-          </div>
-        </div>
-      </section>
+      <PageBanner
+        title="Le Conseil municipal"
+        variant="compact"
+      />
 
       {/* Intro Section - Redesigned */}
       <section className="relative py-16">

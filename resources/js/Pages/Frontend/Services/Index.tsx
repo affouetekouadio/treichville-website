@@ -10,6 +10,7 @@ import type { Service as ServiceRecord } from "@/types/content";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import { createPageUrl } from "@/utils";
+import PageBanner from "@/components/Frontend/PageBanner";
 
 const iconMap = {
   FileText, Users, Building, Home, Sprout, Heart, Briefcase, Coins
@@ -121,34 +122,10 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
-
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <span className="inline-block px-4 py-2 bg-white/20 text-white rounded-full text-sm font-semibold mb-6">
-              À votre service
-            </span>
-            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-              Nos Services Municipaux
-            </h1>
-            <p className="text-xl text-gray-300 leading-relaxed">
-              Découvrez l'ensemble des services proposés par votre collectivité pour simplifier vos démarches au quotidien
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      <PageBanner
+        title="Nos Services Municipaux"
+        variant="compact"
+      />
 
       {/* Filters Section */}
       <section className="sticky top-[88px] z-40 bg-white border-b shadow-sm">

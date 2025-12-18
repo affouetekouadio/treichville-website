@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, MapPin, Users, Building, BookOpen, Ship, ShoppingBag, Landmark, Map, Heart, Home, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, MapPin, Users, Building, Ship, ShoppingBag, Landmark, Map, Heart, Home, ChevronLeft, ChevronRight } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import PageBanner from "@/components/Frontend/PageBanner";
 import type { FrontendPage } from "@/types";
@@ -12,6 +12,41 @@ const Histoire: FrontendPage = () => {
     { id: 2, url: "/images/treichville-2.jpg", alt: "Quartiers de Treichville" },
     { id: 3, url: "/images/treichville-3.jpg", alt: "Lagune et port" },
     { id: 4, url: "/images/treichville-4.jpg", alt: "Boulevard et vie urbaine" },
+  ];
+  const presentationSlides = [
+    {
+      id: 1,
+      main: {
+        url: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
+        alt: "Treichville - Vue principale",
+      },
+      secondary: {
+        url: "https://images.unsplash.com/photo-1549144511-f099e773c147?w=600",
+        alt: "Treichville - Architecture",
+      },
+    },
+    {
+      id: 2,
+      main: {
+        url: "/images/treichville-3.jpg",
+        alt: "Lagune et port de Treichville",
+      },
+      secondary: {
+        url: "/images/treichville-2.jpg",
+        alt: "Quartiers de Treichville",
+      },
+    },
+    {
+      id: 3,
+      main: {
+        url: "/images/treichville-4.jpg",
+        alt: "Boulevard et vie urbaine",
+      },
+      secondary: {
+        url: "/images/treichville-1.jpeg",
+        alt: "Vue de Treichville",
+      },
+    },
   ];
 
   const timeline = [
@@ -59,14 +94,31 @@ const Histoire: FrontendPage = () => {
   // Carousel logic for geographic images (like homepage hero)
   const [currentGeo, setCurrentGeo] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [currentPresentation, setCurrentPresentation] = useState(0);
+  const [presentationDirection, setPresentationDirection] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxImages, setLightboxImages] = useState<
+    { id: string | number; url: string; alt: string }[]
+  >([]);
 
   useEffect(() => {
+    if (isLightboxOpen) return;
     const timer = setInterval(() => {
       setDirection(1);
       setCurrentGeo((prev) => (prev + 1) % geographicImages.length);
     }, 7000);
     return () => clearInterval(timer);
-  }, [geographicImages.length]);
+  }, [geographicImages.length, isLightboxOpen]);
+
+  useEffect(() => {
+    if (isLightboxOpen) return;
+    const timer = setInterval(() => {
+      setPresentationDirection(1);
+      setCurrentPresentation((prev) => (prev + 1) % presentationSlides.length);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [presentationSlides.length, isLightboxOpen]);
 
   const nudge = useCallback(
     (dir: "next" | "prev") => {
@@ -79,6 +131,67 @@ const Histoire: FrontendPage = () => {
     },
     [geographicImages.length]
   );
+
+  const presentationImages = presentationSlides.flatMap((slide) => [
+    { id: `${slide.id}-main`, url: slide.main.url, alt: slide.main.alt },
+    { id: `${slide.id}-secondary`, url: slide.secondary.url, alt: slide.secondary.alt },
+  ]);
+
+  const nudgePresentation = useCallback(
+    (dir: "next" | "prev") => {
+      setPresentationDirection(dir === "next" ? 1 : -1);
+      setCurrentPresentation((prev) =>
+        dir === "next"
+          ? (prev + 1) % presentationSlides.length
+          : (prev - 1 + presentationSlides.length) % presentationSlides.length
+      );
+    },
+    [presentationSlides.length]
+  );
+
+  const openLightbox = useCallback(
+    (
+      images: { id: string | number; url: string; alt: string }[],
+      index: number
+    ) => {
+      setLightboxImages(images);
+      setLightboxIndex(index);
+      setIsLightboxOpen(true);
+    },
+    []
+  );
+
+  const stepLightbox = useCallback(
+    (dir: "next" | "prev") => {
+      if (lightboxImages.length === 0) return;
+      setLightboxIndex((prev) =>
+        dir === "next"
+          ? (prev + 1) % lightboxImages.length
+          : (prev - 1 + lightboxImages.length) % lightboxImages.length
+      );
+    },
+    [lightboxImages.length]
+  );
+
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsLightboxOpen(false);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        stepLightbox("next");
+      }
+      if (event.key === "ArrowLeft") {
+        stepLightbox("prev");
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isLightboxOpen, stepLightbox]);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -97,14 +210,7 @@ const Histoire: FrontendPage = () => {
       {/* Hero */}
       <PageBanner
         title="Notre Histoire"
-        description="Découvrez l'histoire riche et fascinante de Treichville, berceau culturel d'Abidjan"
-        icon={BookOpen}
         variant="compact"
-        align="left"
-        gradient={{
-          from: "#03800a",
-          to: "#0f6b7a",
-        }}
       />
 
       {/* Origine du nom */}
@@ -113,7 +219,7 @@ const Histoire: FrontendPage = () => {
         <div
           className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1400')",
+            backgroundImage: "url('images/personnes/fond-3.jpg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -195,37 +301,99 @@ const Histoire: FrontendPage = () => {
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative h-[500px]"
+              className="relative h-[520px]"
             >
-              {/* Image principale - Grande */}
-              <div className="absolute top-0 left-0 w-[75%] h-[400px] z-10">
-                <div className="relative h-full group">
-                  <img
-                    src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800"
-                    alt="Treichville - Vue principale"
-                    className="w-full h-full object-cover rounded-3xl shadow-2xl group-hover:scale-[1.02] transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl" />
-                  {/* Bordure décorative */}
-                  <div className="absolute -inset-2 bg-gradient-to-br from-[#03800a]/20 to-[#f8812f]/20 rounded-3xl -z-10 blur-xl" />
-                </div>
-              </div>
+              <div className="absolute inset-0">
+                <button
+                  onClick={() => nudgePresentation("prev")}
+                  type="button"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#f8812f] transition-all duration-300 flex items-center justify-center shadow-xl group"
+                  aria-label="Image précédente"
+                >
+                  <ChevronLeft className="w-6 h-6 text-gray-700 group-hover:text-[#f8812f] transition-colors" />
+                </button>
+                <button
+                  onClick={() => nudgePresentation("next")}
+                  type="button"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#f8812f] transition-all duration-300 flex items-center justify-center shadow-xl group"
+                  aria-label="Image suivante"
+                >
+                  <ChevronRight className="w-6 h-6 text-gray-700 group-hover:text-[#f8812f] transition-colors" />
+                </button>
 
-              {/* Image secondaire - Petite, en bas à droite */}
-              <div className="absolute bottom-0 right-0 w-[55%] h-[280px] z-20">
-                <div className="relative h-full group">
-                  <div className="absolute inset-0 bg-white p-3 rounded-3xl shadow-2xl transform rotate-2 group-hover:rotate-0 transition-transform duration-500">
-                    <img
-                      src="https://images.unsplash.com/photo-1549144511-f099e773c147?w=600"
-                      alt="Treichville - Architecture"
-                      className="w-full h-full object-cover rounded-2xl"
-                    />
-                  </div>
-                  {/* Badge décoratif */}
-                  <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-[#f8812f] to-amber-500 rounded-2xl flex items-center justify-center shadow-xl transform rotate-12">
-                    <Building className="w-10 h-10 text-white" />
-                  </div>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+                  {presentationSlides.map((slide, index) => {
+                    const isActive = index === currentPresentation;
+                    return (
+                      <button
+                        key={slide.id}
+                        onClick={() => {
+                          setPresentationDirection(index > currentPresentation ? 1 : -1);
+                          setCurrentPresentation(index);
+                        }}
+                        type="button"
+                        className={`h-2.5 rounded-full transition-all ${
+                          isActive ? "w-6 bg-[#f8812f]" : "w-2.5 bg-white/80 hover:bg-white"
+                        }`}
+                        aria-label={`Aller à l'image ${index + 1}`}
+                      />
+                    );
+                  })}
                 </div>
+
+                <AnimatePresence custom={presentationDirection} initial={false}>
+                  <motion.div
+                    key={presentationSlides[currentPresentation].id}
+                    custom={presentationDirection}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                    className="absolute inset-0"
+                  >
+                    {/* Image principale - Grande */}
+                    <div className="absolute top-0 left-0 w-[80%] h-[420px] z-10">
+                      <button
+                        type="button"
+                        onClick={() => openLightbox(presentationImages, currentPresentation * 2)}
+                        className="relative h-full w-full group cursor-pointer"
+                        aria-label="Voir l'image en grand"
+                      >
+                        <img
+                          src={presentationSlides[currentPresentation].main.url}
+                          alt={presentationSlides[currentPresentation].main.alt}
+                          className="w-full h-full object-cover rounded-3xl shadow-2xl group-hover:scale-[1.02] transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl" />
+                        {/* Bordure décorative */}
+                        <div className="absolute -inset-2 bg-gradient-to-br from-[#03800a]/20 to-[#f8812f]/20 rounded-3xl -z-10 blur-xl" />
+                      </button>
+                    </div>
+
+                    {/* Image secondaire - Petite, en bas à droite */}
+                    <div className="absolute bottom-0 right-0 w-[60%] h-[300px] z-20">
+                      <button
+                        type="button"
+                        onClick={() => openLightbox(presentationImages, currentPresentation * 2 + 1)}
+                        className="relative h-full w-full group cursor-pointer"
+                        aria-label="Voir l'image en grand"
+                      >
+                        <div className="absolute inset-0 bg-white p-3 rounded-3xl shadow-2xl transform rotate-2 group-hover:rotate-0 transition-transform duration-500">
+                          <img
+                            src={presentationSlides[currentPresentation].secondary.url}
+                            alt={presentationSlides[currentPresentation].secondary.alt}
+                            className="w-full h-full object-cover rounded-2xl"
+                          />
+                        </div>
+                        {/* Badge décoratif */}
+                        <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-[#f8812f] to-amber-500 rounded-2xl flex items-center justify-center shadow-xl transform rotate-12">
+                          <Building className="w-10 h-10 text-white" />
+                        </div>
+                      </button>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
               {/* Éléments décoratifs */}
@@ -294,7 +462,7 @@ const Histoire: FrontendPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <div className="bg-white rounded-2xl p-8 shadow-xl">
+              <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 bg-[#03800a] rounded-xl flex items-center justify-center">
                     <Map className="w-6 h-6 text-white" />
@@ -358,11 +526,18 @@ const Histoire: FrontendPage = () => {
                     transition={{ duration: 0.7, ease: "easeInOut" }}
                     className="absolute inset-0"
                   >
-                    <img
-                      src={geographicImages[currentGeo].url}
-                      alt={geographicImages[currentGeo].alt}
-                      className="w-full h-full object-cover"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => openLightbox(geographicImages, currentGeo)}
+                      className="absolute inset-0 cursor-pointer"
+                      aria-label="Voir l'image en grand"
+                    >
+                      <img
+                        src={geographicImages[currentGeo].url}
+                        alt={geographicImages[currentGeo].alt}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -581,6 +756,68 @@ const Histoire: FrontendPage = () => {
           </motion.div>
         </div>
       </section>
+
+      <AnimatePresence>
+        {isLightboxOpen && (
+          <motion.div
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 px-4 py-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsLightboxOpen(false)}
+          >
+            <motion.div
+              className="relative w-full max-w-5xl"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="absolute -top-12 right-0 rounded-full bg-white/90 hover:bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-lg transition-colors"
+                onClick={() => setIsLightboxOpen(false)}
+                aria-label="Fermer"
+              >
+                Fermer
+              </button>
+
+              <button
+                type="button"
+                onClick={() => stepLightbox("prev")}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#f8812f] transition-all duration-300 flex items-center justify-center shadow-xl group"
+                aria-label="Image précédente"
+              >
+                <ChevronLeft className="w-6 h-6 text-gray-700 group-hover:text-[#f8812f] transition-colors" />
+              </button>
+              <button
+                type="button"
+                onClick={() => stepLightbox("next")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-gray-200 hover:border-[#f8812f] transition-all duration-300 flex items-center justify-center shadow-xl group"
+                aria-label="Image suivante"
+              >
+                <ChevronRight className="w-6 h-6 text-gray-700 group-hover:text-[#f8812f] transition-colors" />
+              </button>
+
+              {lightboxImages[lightboxIndex] && (
+                <>
+                  <div className="rounded-2xl overflow-hidden shadow-2xl bg-black/40">
+                    <img
+                      src={lightboxImages[lightboxIndex].url}
+                      alt={lightboxImages[lightboxIndex].alt}
+                      className="w-full max-h-[80vh] object-contain"
+                    />
+                  </div>
+                  <div className="mt-4 text-center text-sm text-white/80">
+                    {lightboxImages[lightboxIndex].alt}
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

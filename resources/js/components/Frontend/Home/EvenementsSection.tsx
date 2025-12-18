@@ -77,7 +77,7 @@ export default function EvenementsSection({ evenements = [] }: Props) {
                       </span>
                     </div>
                   </div>
-                  <div className="p-6 space-y-4 bg-gradient-to-b from-[#fff7ef] via-[#ffe2c5] to-[#f6b167]">
+                  <div className="p-6 space-y-4 bg-gradient-to-b from-[#fff7ef]">
                     <div className="flex items-center gap-3 text-sm text-[#334155]">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" style={{ color: accent }} />
@@ -103,8 +103,8 @@ export default function EvenementsSection({ evenements = [] }: Props) {
                       </div>
                       {evt.gratuit && (
                         <span className="text-green-300 text-sm font-semibold inline-flex items-center gap-1">
-                          <Euro className="w-4 h-4" />
-                          Gratuit
+                          {/* <Euro className="w-4 h-4" />
+                          Gratuit */}
                         </span>
                       )}
                     </div>

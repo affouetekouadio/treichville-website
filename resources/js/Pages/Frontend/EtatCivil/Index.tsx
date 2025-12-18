@@ -115,10 +115,6 @@ const EtatCivil: FrontendPage = () => {
       {/* Hero Section */}
       <PageBanner
         title="État Civil de Treichville"
-        description="Vos actes officiels, vos célébrations, vos démarches administratives"
-        badge={{
-          text: "Service public municipal",
-        }}
         variant="compact"
         align="left"
         gradient={{

@@ -78,6 +78,7 @@ export default function ServicesSection({ services = [] }: Props) {
 
   const items = useMemo(() => (services.length ? services : fallbackServices), [services]);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  // const accent = "#f8812f";
   const accent = "#f8812f";
   const bgImagesByKey: Record<string, string> = {
     FileText: "/images/etat-civil-2.jpg", // état civil / démarches
@@ -136,7 +137,7 @@ export default function ServicesSection({ services = [] }: Props) {
         {/* Services slider */}
         <div
           ref={scrollRef}
-          className="relative flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory no-scrollbar"
+          className="relative grid grid-cols-1 sm:grid-cols-2 gap-4 md:flex md:gap-6 overflow-x-visible md:overflow-x-auto pb-4 snap-x md:snap-x md:snap-mandatory no-scrollbar"
         >
           {items.map((service, index) => {
             const iconKey = (service.icone as keyof typeof iconMap) ?? "FileText";
@@ -150,10 +151,10 @@ export default function ServicesSection({ services = [] }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="snap-start min-w-[300px] md:min-w-[360px] bg-[#fff7ef] text-[#0f172a] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 group border border-white/10"
+                className="w-full md:snap-start md:min-w-[280px] lg:min-w-[320px] bg-[#fff7ef] text-[#0f172a] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 group border border-white/10"
                 style={{ boxShadow: `0 14px 38px -18px ${accent}80` }}
               >
-                <div className="relative h-60 md:h-64">
+                <div className="relative h-44 sm:h-48 md:h-60 lg:h-64">
                   <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
@@ -169,7 +170,8 @@ export default function ServicesSection({ services = [] }: Props) {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-3 bg-gradient-to-b from-[#fff7ef] via-[#ffdcb8] to-[#f39a4a]">
+                {/* <div className="p-6 space-y-3 bg-gradient-to-b from-[#fff7ef] via-[#ffdcb8] to-[#f39a4a]"> */}
+                <div className="p-6 space-y-3">
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center"
                     style={{ backgroundColor: "rgba(255,255,255,0.3)" }}

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Building2, Coins, ClipboardCheck, MapPin, Clock, Phone, FileCheck, ShieldCheck } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
+import PageBanner from "@/components/Frontend/PageBanner";
 
 const taxes = [
   {
@@ -30,24 +31,13 @@ const etapesUrbanisme = [
 ];
 
 const Fiscalite: FrontendPage = () => {
-  const heroBg =
-    "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')";
-
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Hero (sobre) */}
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-16 overflow-hidden text-white">
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: heroBg, backgroundSize: "cover", backgroundPosition: "center" }} />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
-        <div className="max-w-6xl mx-auto px-6 relative text-center">
-          <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="uppercase tracking-[0.25em] text-sm text-orange-200 mb-3">
-            Fiscalité & urbanisme
-          </motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="text-4xl lg:text-5xl font-bold leading-tight">
-            Transparence sur vos taxes, clarté sur vos projets
-          </motion.h1>
-        </div>
-      </section>
+      <PageBanner
+        title="Transparence sur vos taxes, clarté sur vos projets"
+        variant="compact"
+      />
 
       {/* Blocs intro sous la bannière */}
       <section className="max-w-6xl mx-auto px-6 mt-10 mb-12 space-y-6">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "@inertiajs/react";
 import { Megaphone } from "lucide-react";
@@ -24,6 +24,17 @@ const flashItems = [
 
 export default function FlashInfoSection() {
   const items = [...flashItems, ...flashItems];
+  const [duration, setDuration] = useState(18);
+
+  useEffect(() => {
+    const updateDuration = () => {
+      const isMobile = window.innerWidth < 768;
+      setDuration(isMobile ? 12 : 18);
+    };
+    updateDuration();
+    window.addEventListener("resize", updateDuration);
+    return () => window.removeEventListener("resize", updateDuration);
+  }, []);
 
   return (
     <section className="relative z-30 py-4">
@@ -38,8 +49,8 @@ export default function FlashInfoSection() {
             <div className="relative overflow-hidden flex-1">
               <motion.div
                 className="flex items-center gap-8"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{ duration: 18, ease: "linear", repeat: Infinity }}
+                animate={{ x: ["0%", "-100%"] }}
+                transition={{ duration, ease: "linear", repeat: Infinity }}
               >
                 {items.map((item, index) => (
                   <Link

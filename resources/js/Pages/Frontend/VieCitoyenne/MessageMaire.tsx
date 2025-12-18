@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
-import { Calendar, Target, TrendingUp, Users, Heart, Award, CheckCircle2, Lightbulb, HandHeart, Building } from "lucide-react";
+import { Target, TrendingUp, Users, Heart, Award, CheckCircle2, Lightbulb, HandHeart, Building } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import { createPageUrl } from "@/utils";
+import PageBanner from "@/components/Frontend/PageBanner";
 
 const achievements = [
   { number: "15+", label: "Projets lancés", icon: Building },
@@ -53,25 +54,10 @@ const MessageMaire: FrontendPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero harmonisé */}
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-20 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-25"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
-        <div className="max-w-6xl mx-auto px-6 relative text-center">
-          <p className="uppercase tracking-[0.25em] text-sm text-orange-200 mb-3">Mot du Maire</p>
-          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-3">Construire Treichville ensemble</h1>
-          <div className="flex items-center justify-center gap-2 text-white/85 text-sm">
-            <Calendar className="w-4 h-4" />
-            <span>Message institutionnel</span>
-          </div>
-        </div>
-      </section>
+      <PageBanner
+        title="Construire Treichville ensemble"
+        variant="compact"
+      />
 
       {/* Photo + Message du Maire */}
       <section className="relative py-16">
@@ -159,7 +145,8 @@ const MessageMaire: FrontendPage = () => {
       </section>
 
       {/* Chiffres clés */}
-      <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-16 relative overflow-hidden">
+      {/* <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-16 relative overflow-hidden"> */}
+      <section className="bg-gradient-to-br from-green-700 to-green-700 py-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8812f] rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#03800a] rounded-full blur-3xl" />

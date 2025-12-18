@@ -268,34 +268,10 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Banner */}
-      <section className="relative bg-gradient-to-br from-[#03800a] to-[#03800a] py-24 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200')",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#03800a]/40 via-[#03800a]/50 to-[#03800a]/60" />
-
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <span className="inline-block px-4 py-2 bg-white/20 text-white rounded-full text-sm font-semibold mb-6">
-              Découvrir Treichville
-            </span>
-            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-              Événements
-            </h1>
-            <p className="text-xl text-white/90 leading-relaxed">
-              Découvrez tous les événements de notre commune
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      <PageBanner
+        title="Événements"
+        variant="compact"
+      />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         {isLoading ? (

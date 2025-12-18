@@ -91,7 +91,7 @@ export default function Layout({ children }: LayoutProps) {
       path: "Communication",
       submenu: [
         { label: "Journal", path: "Journal" },
-        { label: "Radio (officiel)", path: "RadioOfficiel", externalUrl: "https://radiotreichville.ci/" },
+        { label: "Radio", path: "RadioOfficiel", externalUrl: "https://radiotreichville.ci/" },
         { label: "Vidéo", path: "Video" },
       ],
     },
@@ -120,11 +120,11 @@ export default function Layout({ children }: LayoutProps) {
         `}</style>
 
       {/* Top Bar */}
-      <div className="bg-[var(--dark-bg)] text-white text-sm py-3 border-b border-gray-700">
+      <div className="bg-[var(--primary-orange)] text-white text-sm py-3 border-b border-orange-600">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-3">
             <div className="flex flex-wrap items-center gap-6">
-              <a href="mailto:contact@treichville.ci" className="flex items-center gap-2 hover:text-[var(--primary-orange)] transition-colors">
+              <a href="mailto:contact@treichville.ci" className="flex items-center gap-2 hover:text-white/80 transition-colors">
                 <Mail className="w-4 h-4" />
                 <span>contact@treichville.ci</span>
               </a>
@@ -134,13 +134,13 @@ export default function Layout({ children }: LayoutProps) {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-[var(--primary-orange)] transition-colors">
+              <a href="#" className="hover:text-white/80 transition-colors">
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href="#" className="hover:text-[var(--primary-orange)] transition-colors">
+              <a href="#" className="hover:text-white/80 transition-colors">
                 <Twitter className="w-4 h-4" />
               </a>
-              <a href="#" className="hover:text-[var(--primary-orange)] transition-colors">
+              <a href="#" className="hover:text-white/80 transition-colors">
                 <Instagram className="w-4 h-4" />
               </a>
             </div>
@@ -186,7 +186,7 @@ export default function Layout({ children }: LayoutProps) {
                       ) : (
                         <Link
                           href={createPageUrl(item.path)}
-                          className={`px-4 py-4 font-medium rounded-lg transition-all duration-300 flex items-center gap-1 ${
+                          className={`px-3.5 py-3 font-medium rounded-lg transition-all duration-300 flex items-center gap-1 ${
                             item.label === 'Nos Contacts'
                               ? 'bg-[#03800a] text-white hover:bg-[#026707] shadow-lg'
                               : 'hover:bg-[#f8812f] hover:text-white'
@@ -378,35 +378,37 @@ export default function Layout({ children }: LayoutProps) {
       <ApplifeCTA />
 
       {/* Footer */}
-      <footer className="bg-[var(--dark-bg)] text-white">
+      <footer className="bg-white text-gray-800 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-16">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-[var(--primary-orange)] rounded-lg flex items-center justify-center">
-                  <Building2 className="w-7 h-7 text-white" />
-                </div>
-                <div className="text-xl font-bold">Treichville</div>
+                <img
+                  src="/images/logo/logo-t-1.png"
+                  alt="Logo Treichville"
+                  className="h-12 w-auto"
+                />
+                <div className="text-xl font-bold text-gray-900">Treichville</div>
               </div>
-              <p className="text-gray-400 leading-relaxed mb-6">
+              <p className="text-gray-600 leading-relaxed mb-6">
                 Commune dynamique d'Abidjan, au service de ses citoyens.
               </p>
               <div className="flex gap-3">
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-[var(--primary-orange)] rounded-lg flex items-center justify-center transition-colors">
+                <a href="#" className="w-10 h-10 border border-gray-200 hover:border-[var(--primary-orange)] hover:bg-[var(--primary-orange)] hover:text-white rounded-lg flex items-center justify-center transition-colors text-gray-600">
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-[var(--primary-orange)] rounded-lg flex items-center justify-center transition-colors">
+                <a href="#" className="w-10 h-10 border border-gray-200 hover:border-[var(--primary-orange)] hover:bg-[var(--primary-orange)] hover:text-white rounded-lg flex items-center justify-center transition-colors text-gray-600">
                   <Twitter className="w-5 h-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-[var(--primary-orange)] rounded-lg flex items-center justify-center transition-colors">
+                <a href="#" className="w-10 h-10 border border-gray-200 hover:border-[var(--primary-orange)] hover:bg-[var(--primary-orange)] hover:text-white rounded-lg flex items-center justify-center transition-colors text-gray-600">
                   <Instagram className="w-5 h-5" />
                 </a>
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-bold mb-6">Services</h3>
-              <ul className="space-y-3 text-gray-400">
+              <h3 className="text-lg font-bold text-gray-900 mb-6">Services</h3>
+              <ul className="space-y-3 text-gray-600">
                 <li><Link href={createPageUrl("EtatCivil")} className="hover:text-[var(--primary-orange)] transition-colors">État civil</Link></li>
                 <li><Link href={createPageUrl("Fiscalite")} className="hover:text-[var(--primary-orange)] transition-colors">Fiscalité et urbanisme</Link></li>
                 <li><Link href={createPageUrl("Services")} className="hover:text-[var(--primary-orange)] transition-colors">Organigrammes</Link></li>
@@ -414,8 +416,8 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             <div>
-              <h3 className="text-lg font-bold mb-6">Liens rapides</h3>
-              <ul className="space-y-3 text-gray-400">
+              <h3 className="text-lg font-bold text-gray-900 mb-6">Liens rapides</h3>
+              <ul className="space-y-3 text-gray-600">
                 <li><Link href={createPageUrl("Histoire")} className="hover:text-[var(--primary-orange)] transition-colors">Notre histoire</Link></li>
                 <li><Link href={createPageUrl("Actualites")} className="hover:text-[var(--primary-orange)] transition-colors">Actualités</Link></li>
                 <li><Link href={createPageUrl("Evenements")} className="hover:text-[var(--primary-orange)] transition-colors">Événements</Link></li>
@@ -424,8 +426,8 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             <div>
-              <h3 className="text-lg font-bold mb-6">Contact</h3>
-              <div className="space-y-4 text-gray-400">
+              <h3 className="text-lg font-bold text-gray-900 mb-6">Contact</h3>
+              <div className="space-y-4 text-gray-600">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-[var(--primary-orange)] mt-1 flex-shrink-0" />
                   <span>8X6P+3Q4, Av. Victor Biaka<br />Abidjan, Côte d'Ivoire</span>
@@ -442,7 +444,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
 
-          <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+          <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-500">
             <p>&copy; {new Date().getFullYear()} Mairie de Treichville. Tous droits réservés.</p>
           </div>
         </div>
