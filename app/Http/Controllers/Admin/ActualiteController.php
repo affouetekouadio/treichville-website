@@ -67,13 +67,13 @@ class ActualiteController extends Controller
             return response()->json([
                 'data' => $actualite,
                 'message' => 'Actualité créée avec succès',
-            ], 201)->with('success', 'Actualité créée avec succès');
+            ], 201);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création de l\'actualité: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la création de l\'actualité',
-            ], 500)->with('error', 'Une erreur est survenue lors de la création de l\'actualité');
+            ], 500);
         }
     }
 
@@ -118,13 +118,13 @@ class ActualiteController extends Controller
             return response()->json([
                 'data' => $actualite->fresh(),
                 'message' => 'Actualité mise à jour avec succès',
-            ])->with('success', 'Actualité mise à jour avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la mise à jour de l\'actualité: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la mise à jour de l\'actualité',
-            ], 500)->with('error', 'Une erreur est survenue lors de la mise à jour de l\'actualité');
+            ], 500);
         }
     }
 
@@ -144,13 +144,13 @@ class ActualiteController extends Controller
 
             return response()->json([
                 'message' => 'Actualité supprimée avec succès',
-            ])->with('success', 'Actualité supprimée avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression de l\'actualité: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la suppression de l\'actualité',
-            ], 500)->with('error', 'Une erreur est survenue lors de la suppression de l\'actualité');
+            ], 500);
         }
     }
 }

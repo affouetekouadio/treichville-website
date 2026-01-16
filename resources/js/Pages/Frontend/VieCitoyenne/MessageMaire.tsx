@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { Target, TrendingUp, Users, Heart, Award, CheckCircle2, Lightbulb, HandHeart, Building } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
@@ -50,7 +50,20 @@ const engagements = [
   "Promotion de la culture et du patrimoine local",
 ];
 
+type MessageMaireContent = {
+  intro?: {
+    background_image?: string | null;
+    image?: string | null;
+  };
+};
+
 const MessageMaire: FrontendPage = () => {
+  const { props } = usePage<{ content?: MessageMaireContent }>();
+  const intro = props.content?.intro;
+  const fallbackBackground =
+    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400";
+  const fallbackMayor = "/images/personnes/message-maire.jpg";
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero harmonisé */}
@@ -65,7 +78,7 @@ const MessageMaire: FrontendPage = () => {
         <div
           className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400')",
+            backgroundImage: `url('${intro?.background_image || fallbackBackground}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -83,7 +96,7 @@ const MessageMaire: FrontendPage = () => {
             <div className="relative">
               <div className="max-w-[520px] overflow-hidden rounded-3xl border-4 border-white">
                 <img
-                  src="/images/personnes/message-maire.jpg"
+                  src={intro?.image || fallbackMayor}
                   alt="Maire de Treichville"
                   className="w-full h-full object-cover"
                 />
@@ -134,7 +147,7 @@ const MessageMaire: FrontendPage = () => {
 
             {/* Signature */}
             <div className="mt-10 bg-white rounded-2xl p-6 shadow-lg max-w-xl">
-              <p className="text-gray-900 font-bold text-xl mb-1">François Albert Amichia</p>
+              <p className="text-gray-900 font-bold text-xl mb-1">François Albert <strong>AMICHIA</strong></p>
               <p className="text-[#03800a] font-semibold mb-4">Maire de Treichville</p>
               <div className="h-px bg-gradient-to-r from-[#f8812f] to-transparent mb-4" />
               <p className="text-gray-600 text-sm italic">"Ensemble, bâtissons une Treichville moderne, inclusive et prospère pour tous."</p>

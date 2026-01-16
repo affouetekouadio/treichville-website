@@ -1,18 +1,30 @@
+import ListingPagination from '@/components/listing/ListingPagination';
+import ListingToolbar from '@/components/listing/ListingToolbar';
+import { listingExport, listingVisit } from '@/lib/listing';
 import AppLayout from '@/layouts/app-layout';
 import type { FrontendPage } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Plus, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { Plus, X, Trash2, Edit, Eye, Image as ImageIcon } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import RichTextEditor from '@/components/Admin/RichTextEditor';
+import { useListingSearch } from '@/hooks/use-listing-search';
+import { useNotification } from '@/contexts/NotificationContext';
+import ConfirmDialog from '@/components/ConfirmDialog';
+import ImagePreviewModal from '@/components/ImagePreviewModal';
 
 type EvenementItem = {
   id: number;
   titre: string;
   categorie?: string | null;
   category_id?: number | null;
+  category?: { name: string } | null;
+  description?: string | null;
+  contenu?: string | null;
   status?: string | null;
   date_debut?: string | null;
   lieu?: string | null;
+  image_path?: string | null;
+  image_url?: string | null;
 };
 
 type Category = {
@@ -21,12 +33,70 @@ type Category = {
   type: 'actualite' | 'evenement';
 };
 
-const AdminEvenements: FrontendPage = () => {
-  const [items, setItems] = useState<EvenementItem[]>([]);
-  const [loading, setLoading] = useState(true);
+type ListingFilters = {
+  search?: string;
+  sort?: string;
+  direction?: 'asc' | 'desc';
+  per_page?: number;
+};
+
+type ListingPaginationMeta = {
+  page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
+};
+
+type EvenementsPageProps = {
+  evenements?: EvenementItem[];
+  categories?: Category[];
+  listing?: {
+    filters: ListingFilters;
+    pagination: ListingPaginationMeta;
+  };
+};
+
+const AdminEvenements: FrontendPage<EvenementsPageProps> = ({
+  evenements = [],
+  categories = [],
+  listing,
+}) => {
+  const { addNotification } = useNotification();
+  const { url } = usePage();
+  const baseUrl = url.split('?')[0];
+  const [search, setSearch] = useState(listing?.filters.search ?? '');
+  const sortValue = listing?.filters.sort ?? 'date_debut';
+  const sortDirection = listing?.filters.direction ?? 'desc';
+  const pagination = listing?.pagination ?? {
+    page: 1,
+    per_page: 15,
+    total: evenements.length,
+    last_page: 1,
+  };
+  const baseParams = useMemo(
+    () => ({
+      search,
+      sort: sortValue,
+      direction: sortDirection,
+      per_page: pagination.per_page,
+    }),
+    [pagination.per_page, search, sortDirection, sortValue]
+  );
+  useListingSearch(baseUrl, baseParams);
+
   const [openForm, setOpenForm] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; id: number | null }>({
+    open: false,
+    id: null,
+  });
+  const [deleting, setDeleting] = useState(false);
+  const [imageModal, setImageModal] = useState<{ open: boolean; url: string; title: string }>({
+    open: false,
+    url: '',
+    title: '',
+  });
   const [form, setForm] = useState({
     titre: '',
     categorie: '',
@@ -40,24 +110,37 @@ const AdminEvenements: FrontendPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch('/admin/api/evenements');
-        const json = await res.json();
-        setItems(json.data || []);
+  const resetForm = () => {
+    setForm({
+      titre: '',
+      categorie: '',
+      category_id: '',
+      status: 'published',
+      date_debut: '',
+      lieu: '',
+      description: '',
+      contenu: '',
+    });
+    setImageFile(null);
+    setPreviewUrl('');
+    setEditingId(null);
+  };
 
-        const resCat = await fetch('/admin/api/categories?type=evenement');
-        const jsonCat = await resCat.json();
-        setCategories(jsonCat.data || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const handleEdit = (item: EvenementItem) => {
+    setForm({
+      titre: item.titre || '',
+      categorie: item.categorie || '',
+      category_id: item.category_id ? String(item.category_id) : '',
+      status: item.status || 'published',
+      date_debut: item.date_debut ? item.date_debut.slice(0, 16) : '',
+      lieu: item.lieu || '',
+      description: item.description || '',
+      contenu: item.contenu || '',
+    });
+    setPreviewUrl(item.image_url || '');
+    setEditingId(item.id);
+    setOpenForm(true);
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +152,15 @@ const AdminEvenements: FrontendPage = () => {
       Object.entries(form).forEach(([key, val]) => fd.append(key, val ?? ''));
       if (imageFile) fd.append('image', imageFile);
 
-      const res = await fetch('/admin/api/evenements', {
+      const url = editingId
+        ? `/admin/api/evenements/${editingId}`
+        : '/admin/api/evenements';
+
+      if (editingId) {
+        fd.append('_method', 'PUT');
+      }
+
+      const res = await fetch(url, {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf,
@@ -79,16 +170,47 @@ const AdminEvenements: FrontendPage = () => {
       });
       if (!res.ok) throw new Error('Erreur de création');
       const json = await res.json();
-      setItems((prev) => [json.data, ...prev]);
       setOpenForm(false);
-      setForm({ titre: '', categorie: '', category_id: '', status: 'published', date_debut: '', lieu: '', description: '', contenu: '' });
-      setImageFile(null);
-      setPreviewUrl('');
+      resetForm();
+      addNotification('success', json.message || (editingId ? 'Événement modifié' : 'Événement créé'));
+      listingVisit(baseUrl, { ...baseParams, page: 1 });
     } catch (error) {
       console.error(error);
-      alert("Impossible de créer l'événement. Vérifie les champs obligatoires.");
+      addNotification('error', error instanceof Error ? error.message : "Impossible de sauvegarder l'événement.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteConfirm.id) return;
+
+    setDeleting(true);
+    try {
+      const csrf =
+        document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '';
+      const res = await fetch(`/admin/api/evenements/${deleteConfirm.id}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-TOKEN': csrf,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Erreur de suppression');
+      }
+
+      const json = await res.json();
+      addNotification('success', json.message || 'Événement supprimé');
+      setDeleteConfirm({ open: false, id: null });
+      listingVisit(baseUrl, baseParams);
+    } catch (error) {
+      console.error(error);
+      addNotification('error', error instanceof Error ? error.message : "Impossible de supprimer l'événement.");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -105,7 +227,10 @@ const AdminEvenements: FrontendPage = () => {
           </p>
         </div>
         <button
-          onClick={() => setOpenForm(true)}
+          onClick={() => {
+            resetForm();
+            setOpenForm(true);
+          }}
           className="inline-flex items-center gap-2 rounded-lg bg-[#f8812f] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-600"
         >
           <Plus className="h-4 w-4" />
@@ -113,40 +238,121 @@ const AdminEvenements: FrontendPage = () => {
         </button>
       </div>
 
+      <ListingToolbar
+        search={search}
+        perPage={pagination.per_page}
+        sort={{ value: sortValue, direction: sortDirection }}
+        sortOptions={[
+          { value: 'date_debut', label: 'Date debut' },
+          { value: 'created_at', label: 'Date creation' },
+          { value: 'titre', label: 'Titre' },
+          { value: 'status', label: 'Statut' },
+          { value: 'lieu', label: 'Lieu' },
+        ]}
+        onSearchChange={setSearch}
+        onSearchSubmit={() => listingVisit(baseUrl, { ...baseParams, page: 1 })}
+        onPerPageChange={(value) => listingVisit(baseUrl, { ...baseParams, per_page: value, page: 1 })}
+        onExport={(format) => listingExport(baseUrl, baseParams, format)}
+        onSortChange={(value, direction) => listingVisit(baseUrl, { ...baseParams, sort: value, direction })}
+      />
+
       <div className="rounded-xl border border-gray-200 bg-white p-0 shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
               <tr>
+                <th className="px-4 py-3">Image</th>
                 <th className="px-4 py-3">Titre</th>
                 <th className="px-4 py-3">Catégorie</th>
                 <th className="px-4 py-3">Lieu</th>
                 <th className="px-4 py-3">Date</th>
                 <th className="px-4 py-3">Statut</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-4 text-center text-gray-500">
-                    Chargement...
-                  </td>
-                </tr>
-              ) : items.length ? (
-                items.map((item) => (
+              {evenements.length ? (
+                evenements.map((item) => (
                   <tr key={item.id} className="border-t">
+                    <td className="px-4 py-3">
+                      {item.image_url ? (
+                        <button
+                          onClick={() =>
+                            setImageModal({
+                              open: true,
+                              url: item.image_url!,
+                              title: item.titre,
+                            })
+                          }
+                          className="relative group cursor-pointer"
+                          title="Cliquer pour agrandir"
+                        >
+                          <img
+                            src={item.image_url}
+                            alt={item.titre}
+                            className="h-12 w-20 rounded object-cover bg-gray-100 transition-all group-hover:ring-2 group-hover:ring-blue-500 group-hover:ring-offset-2"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
+                            <svg
+                              className="h-5 w-5 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                              />
+                            </svg>
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="flex h-12 w-20 items-center justify-center rounded bg-gray-100">
+                          <ImageIcon className="h-6 w-6 text-gray-400" />
+                        </div>
+                      )}
+                    </td>
                     <td className="px-4 py-3 font-medium text-gray-900">{item.titre}</td>
-                    <td className="px-4 py-3 text-gray-700">{item.categorie || '—'}</td>
+                    <td className="px-4 py-3 text-gray-700">
+                      {item.category?.name || item.categorie || '—'}
+                    </td>
                     <td className="px-4 py-3 text-gray-700">{item.lieu || '—'}</td>
                     <td className="px-4 py-3 text-gray-700">
                       {item.date_debut ? new Date(item.date_debut).toLocaleDateString() : '—'}
                     </td>
                     <td className="px-4 py-3 text-gray-700">{item.status || 'draft'}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/admin/evenements/${item.id}`}
+                          className="rounded p-1.5 text-gray-600 hover:bg-gray-100 transition-colors"
+                          title="Voir le détail"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                        <button
+                          onClick={() => handleEdit(item)}
+                          className="rounded p-1.5 text-blue-600 hover:bg-blue-50 transition-colors"
+                          title="Éditer"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirm({ open: true, id: item.id })}
+                          className="rounded p-1.5 text-red-600 hover:bg-red-50 transition-colors"
+                          title="Supprimer"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
+                  <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
                     Aucun événement pour le moment.
                   </td>
                 </tr>
@@ -156,9 +362,16 @@ const AdminEvenements: FrontendPage = () => {
         </div>
       </div>
 
+      <ListingPagination
+        page={pagination.page}
+        lastPage={pagination.last_page}
+        total={pagination.total}
+        onPageChange={(page) => listingVisit(baseUrl, { ...baseParams, page })}
+      />
+
       {openForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6 overflow-y-auto">
+          <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b px-6 py-4">
               <div>
                 <p className="text-xs uppercase tracking-wide text-gray-500">Nouvel événement</p>
@@ -271,25 +484,43 @@ const AdminEvenements: FrontendPage = () => {
               </div>
 
               <div className="flex items-center justify-end gap-3 border-t pt-4">
-                <button
-                  type="button"
-                  className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100"
-                  onClick={() => setOpenForm(false)}
-                >
-                  Annuler
-                </button>
+              <button
+                type="button"
+                className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100"
+                onClick={() => setOpenForm(false)}
+              >
+                Annuler
+              </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-lg bg-[#f8812f] px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 disabled:opacity-60"
-                >
-                  {saving ? 'Enregistrement...' : 'Enregistrer'}
-                </button>
-              </div>
-            </form>
-          </div>
+                className="rounded-lg bg-[#f8812f] px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 disabled:opacity-60"
+              >
+                {saving ? 'Enregistrement...' : 'Enregistrer'}
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
       )}
+
+      <ConfirmDialog
+        open={deleteConfirm.open}
+        onClose={() => setDeleteConfirm({ open: false, id: null })}
+        onConfirm={handleDeleteConfirm}
+        title="Supprimer cet événement ?"
+        message="Cette action est irréversible. L'événement sera définitivement supprimé."
+        confirmText="Supprimer"
+        type="danger"
+        loading={deleting}
+      />
+
+      <ImagePreviewModal
+        open={imageModal.open}
+        onClose={() => setImageModal({ open: false, url: '', title: '' })}
+        imageUrl={imageModal.url}
+        title={imageModal.title}
+      />
     </div>
   );
 };

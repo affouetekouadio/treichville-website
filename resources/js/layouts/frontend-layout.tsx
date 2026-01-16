@@ -34,8 +34,17 @@ export default function Layout({ children }: LayoutProps) {
     setIsMenuOpen(false);
   }, [url]);
 
+  const navDirections = (props as any).navDirections ?? [];
+
+  const resolveSubPath = (sub: { path?: string; href?: string; externalUrl?: string }) => {
+    if (sub.externalUrl) return sub.externalUrl;
+    if (sub.href) return sub.href;
+    if (sub.path) return createPageUrl(sub.path);
+    return "#";
+  };
+
   // Fonction pour vérifier si un menu est actif
-  const isMenuActive = (path: string, submenu?: { label: string; path: string }[]) => {
+  const isMenuActive = (path: string, submenu?: { label: string; path?: string; href?: string; externalUrl?: string }[]) => {
     const currentPath = url.toLowerCase();
     const menuPath = createPageUrl(path).toLowerCase();
 
@@ -44,7 +53,11 @@ export default function Layout({ children }: LayoutProps) {
 
     // Vérifier si c'est une page du sous-menu
     if (submenu) {
-      return submenu.some(sub => currentPath === createPageUrl(sub.path).toLowerCase());
+      return submenu.some(sub => {
+        if (sub.externalUrl) return false;
+        const subPath = resolveSubPath(sub).toLowerCase();
+        return currentPath === subPath;
+      });
     }
 
     return false;
@@ -81,10 +94,12 @@ export default function Layout({ children }: LayoutProps) {
       label: "Directions", 
       path: "Directions",
       submenu: [
-        { label: "Organigrammes et services", path: "Services" },
-        { label: "État civil", path: "EtatCivil" },
-        { label: "Fiscalité et urbanisme", path: "Fiscalite" }
-      ]
+        // { label: "Organigrammes et services", path: "Services" },
+        ...navDirections.map((direction: any) => ({
+          label: direction.label,
+          href: direction.path,
+        })),
+      ],
     },
     {
       label: "Communication",
@@ -207,10 +222,10 @@ export default function Layout({ children }: LayoutProps) {
                         <div className="bg-white rounded-lg shadow-xl py-2 min-w-[220px] border border-gray-100">
                           {item.submenu.map((sub) => {
                             const isExternal = Boolean((sub as any).externalUrl);
-                            const subHref = isExternal ? (sub as any).externalUrl : createPageUrl(sub.path);
-                            const isSubActive = !isExternal && url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
+                            const subHref = resolveSubPath(sub as any);
+                            const isSubActive = !isExternal && url.toLowerCase() === subHref.toLowerCase();
                             return (
-                              <React.Fragment key={sub.path}>
+                              <React.Fragment key={sub.href ?? sub.path ?? sub.label}>
                                 {isExternal ? (
                                   <a
                                     href={subHref}
@@ -319,10 +334,10 @@ export default function Layout({ children }: LayoutProps) {
                         <div className="bg-gray-50 border-t border-gray-100">
                           {item.submenu.map((sub) => {
                             const isExternal = Boolean((sub as any).externalUrl);
-                            const subHref = isExternal ? (sub as any).externalUrl : createPageUrl(sub.path);
-                            const isSubActive = !isExternal && url.toLowerCase() === createPageUrl(sub.path).toLowerCase();
+                            const subHref = resolveSubPath(sub as any);
+                            const isSubActive = !isExternal && url.toLowerCase() === subHref.toLowerCase();
                             return (
-                              <React.Fragment key={sub.path}>
+                              <React.Fragment key={sub.href ?? sub.path ?? sub.label}>
                                 {isExternal ? (
                                   <a
                                     href={subHref}

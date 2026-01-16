@@ -17,6 +17,7 @@ class Actualite extends Model
         'titre',
         'slug',
         'categorie',
+        'category_id',
         'description',
         'contenu',
         'image_path',
@@ -94,7 +95,9 @@ class Actualite extends Model
         return [
             'id' => $this->id,
             'titre' => $this->titre,
+            'slug' => $this->slug,
             'description' => $this->description ?? '',
+            'contenu' => $this->contenu ?? '',
             'categorie' => $this->category?->name ?? $this->categorie ?? 'Annonce',
             'category_id' => $this->category_id,
             'image_url' => $this->image_url,

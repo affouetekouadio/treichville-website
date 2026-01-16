@@ -72,9 +72,14 @@ function Counter({ value, inView }: { value: number; inView: boolean }) {
   return <>{count}</>;
 }
 
-export default function CityStatsSection() {
+type CityStatsSectionProps = {
+  backgroundImage?: string | null;
+};
+
+export default function CityStatsSection({ backgroundImage }: CityStatsSectionProps) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const fallbackBackground = "/images/treichville-1.jpeg";
 
   return (
     <section className="py-12 sm:py-20 relative overflow-hidden">
@@ -83,7 +88,7 @@ export default function CityStatsSection() {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           // backgroundImage: "url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600&q=80')",
-          backgroundImage: "url('/images/treichville-1.jpeg')",
+          backgroundImage: `url('${backgroundImage || fallbackBackground}')`,
         }}
       />
 

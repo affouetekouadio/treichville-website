@@ -3,15 +3,40 @@ import { motion } from "framer-motion";
 import { Calendar, Landmark, MapPin, Users, Award, Target, Briefcase, Heart, FileText, MessageCircle, ChevronRight } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { createPageUrl } from "@/utils";
 import PageBanner from "@/components/Frontend/PageBanner";
+import type { LucideIcon } from "lucide-react";
 
-const membres = [
-  { name: "Adjoint 1", role: "4ème adjoint", photo: "/images/personnes/1.jpg", focus: "Vie citoyenne & proximité", icon: Users },
-  { name: "Adjoint 2", role: "3ème adjoint", photo: "/images/personnes/2.jpg", focus: "Culture & patrimoine", icon: Landmark },
-  { name: "Adjoint 3", role: "2ème adjoint", photo: "/images/personnes/3.jpg", focus: "Urbanisme & cadre de vie", icon: MapPin },
-  { name: "Adjoint 4", role: "5ème adjoint", photo: "/images/personnes/4.jpg", focus: "Jeunesse & sports", icon: Award },
+interface Adjoint {
+  id: number;
+  nom: string;
+  role: string;
+  photo_url: string | null;
+  focus: string | null;
+  icon: string | null;
+  ordre: number;
+  actif: boolean;
+}
+
+// Mapping des icônes
+const iconMap: Record<string, LucideIcon> = {
+  Users,
+  Landmark,
+  MapPin,
+  Award,
+  Heart,
+  Briefcase,
+  Target,
+  FileText,
+};
+
+// Fallback membres for backward compatibility
+const fallbackMembres = [
+  { nom: "Adjoint 1", role: "4ème adjoint", photo_url: "/images/personnes/1.jpg", focus: "Vie citoyenne & proximité", icon: "Users", ordre: 1, actif: true, id: 1 },
+  { nom: "Adjoint 2", role: "3ème adjoint", photo_url: "/images/personnes/2.jpg", focus: "Culture & patrimoine", icon: "Landmark", ordre: 2, actif: true, id: 2 },
+  { nom: "Adjoint 3", role: "2ème adjoint", photo_url: "/images/personnes/3.jpg", focus: "Urbanisme & cadre de vie", icon: "MapPin", ordre: 3, actif: true, id: 3 },
+  { nom: "Adjoint 4", role: "5ème adjoint", photo_url: "/images/personnes/4.jpg", focus: "Jeunesse & sports", icon: "Award", ordre: 4, actif: true, id: 4 },
 ];
 
 const commissions = [
@@ -65,7 +90,26 @@ const missions = [
   },
 ];
 
+type ConseilContent = {
+  intro?: {
+    background_image?: string | null;
+    image?: string | null;
+  };
+};
+
+interface ConseilMunicipalProps {
+  content?: ConseilContent;
+  adjoints?: Adjoint[];
+}
+
 const ConseilMunicipal: FrontendPage = () => {
+  const { props } = usePage<ConseilMunicipalProps>();
+  const intro = props.content?.intro;
+  const membres = props.adjoints && props.adjoints.length > 0 ? props.adjoints : fallbackMembres;
+  const fallbackBackground =
+    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400";
+  const fallbackImage = "/images/autres/maire-1.png";
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
@@ -80,7 +124,7 @@ const ConseilMunicipal: FrontendPage = () => {
         <div
           className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400')",
+            backgroundImage: `url('${intro?.background_image || fallbackBackground}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -138,7 +182,7 @@ const ConseilMunicipal: FrontendPage = () => {
             >
               <div className="rounded-3xl overflow-hidden bg-transparent">
                 <img
-                  src="/images/autres/maire-1.png"
+                  src={intro?.image || fallbackImage}
                   alt="Conseil municipal"
                   className="w-full h-auto max-h-[540px] object-contain mx-auto"
                 />
@@ -201,47 +245,60 @@ const ConseilMunicipal: FrontendPage = () => {
             </h2>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {membres.map((membre, idx) => (
-              <motion.div
-                key={membre.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="group relative"
-              >
-                {/* Card */}
-                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
-                  {/* Photo */}
-                  <div className="relative h-80 overflow-hidden">
-                    <img
-                      src={membre.photo}
-                      alt={membre.name}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#03800a]/90 via-[#03800a]/40 to-transparent" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {membres.map((membre, idx) => {
+              const IconComponent = membre.icon && iconMap[membre.icon] ? iconMap[membre.icon] : Users;
 
-                    {/* Icon Badge */}
-                    <div className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                      <membre.icon className="w-6 h-6 text-[#03800a]" />
+              return (
+                <motion.div
+                  key={membre.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="group relative h-full"
+                >
+                  {/* Card */}
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 h-full flex flex-col">
+                    {/* Photo */}
+                    <div className="relative h-80 overflow-hidden flex-shrink-0">
+                      <a
+                        href={membre.photo_url || '/images/personnes/default.jpg'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block h-full w-full"
+                        aria-label={`Voir la photo de ${membre.nom}`}
+                      >
+                        <img
+                          src={membre.photo_url || '/images/personnes/default.jpg'}
+                          alt={membre.nom}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </a>
+
+                      {/* Icon Badge */}
+                      <div className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                        <IconComponent className="w-6 h-6 text-[#03800a]" />
+                      </div>
+                    </div>
+
+                    {/* Info */}
+                    <div className="p-6 flex-grow flex flex-col">
+                      <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-[#03800a] transition-colors">
+                        {membre.nom}
+                      </h3>
+                      <p className="text-[#f8812f] font-semibold text-sm mb-3">{membre.role}</p>
+                      {membre.focus && (
+                        <div className="flex items-start gap-2 text-gray-600">
+                          <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
+                          <p className="text-sm leading-relaxed">{membre.focus}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  {/* Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-[#03800a] transition-colors">
-                      {membre.name}
-                    </h3>
-                    <p className="text-[#f8812f] font-semibold text-sm mb-3">{membre.role}</p>
-                    <div className="flex items-start gap-2 text-gray-600">
-                      <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-sm leading-relaxed">{membre.focus}</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

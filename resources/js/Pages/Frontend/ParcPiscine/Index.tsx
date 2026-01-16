@@ -3,48 +3,81 @@ import { motion } from "framer-motion";
 import { Trees, Waves, MapPin, Clock, Users, Star } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
+import { usePage } from "@inertiajs/react";
 import PageBanner from "@/components/Frontend/PageBanner";
 
-const lieux = [
+interface Lieu {
+  id: number;
+  type: string;
+  nom: string;
+  description: string;
+  image_url: string | null;
+  horaires: string | null;
+  acces: string;
+  equipements: string[] | null;
+  ordre: number;
+  actif: boolean;
+}
+
+interface ParcPiscineProps {
+  lieux?: Lieu[];
+}
+
+// Fallback pour les anciennes données
+const fallbackLieux: Lieu[] = [
   {
+    id: 1,
     type: "Parc",
-    name: "Jardin Public de Treichville",
+    nom: "Jardin Public de Treichville",
     description: "Espace vert au cœur de la commune, idéal pour les promenades en famille et les activités de plein air.",
-    image: "https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?w=800",
+    image_url: "https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?w=800",
     horaires: "6h00 - 18h00",
     acces: "Gratuit",
-    equipements: ["Aires de jeux", "Bancs", "Espaces verts", "Allées piétonnes"]
+    equipements: ["Aires de jeux", "Bancs", "Espaces verts", "Allées piétonnes"],
+    ordre: 1,
+    actif: true,
   },
   {
+    id: 2,
     type: "Piscine",
-    name: "Piscine Municipale",
+    nom: "Piscine Municipale",
     description: "Complexe aquatique moderne avec bassins pour tous les âges et tous les niveaux.",
-    image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=800",
+    image_url: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=800",
     horaires: "8h00 - 20h00",
     acces: "Payant",
-    equipements: ["Grand bassin", "Bassin enfants", "Vestiaires", "Snack-bar"]
+    equipements: ["Grand bassin", "Bassin enfants", "Vestiaires", "Snack-bar"],
+    ordre: 2,
+    actif: true,
   },
   {
+    id: 3,
     type: "Parc",
-    name: "Square de la Jeunesse",
+    nom: "Square de la Jeunesse",
     description: "Espace dédié aux jeunes avec terrains de sport et zones de détente.",
-    image: "https://images.unsplash.com/photo-1551524164-687a55dd1126?w=800",
+    image_url: "https://images.unsplash.com/photo-1551524164-687a55dd1126?w=800",
     horaires: "7h00 - 19h00",
     acces: "Gratuit",
-    equipements: ["Terrain de basket", "Terrain de foot", "Skate park", "Gradins"]
+    equipements: ["Terrain de basket", "Terrain de foot", "Skate park", "Gradins"],
+    ordre: 3,
+    actif: true,
   },
   {
+    id: 4,
     type: "Piscine",
-    name: "Centre Aquatique du Port",
+    nom: "Centre Aquatique du Port",
     description: "Piscine olympique pour les nageurs confirmés et les compétitions.",
-    image: "https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=800",
+    image_url: "https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=800",
     horaires: "6h00 - 21h00",
     acces: "Payant",
-    equipements: ["Bassin olympique", "Tribunes", "Salle de musculation", "Sauna"]
+    equipements: ["Bassin olympique", "Tribunes", "Salle de musculation", "Sauna"],
+    ordre: 4,
+    actif: true,
   }
 ];
 
 const ParcsPiscines: FrontendPage = () => {
+  const { props } = usePage<ParcPiscineProps>();
+  const lieux = props.lieux && props.lieux.length > 0 ? props.lieux : fallbackLieux;
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
@@ -59,7 +92,7 @@ const ParcsPiscines: FrontendPage = () => {
           <div className="grid lg:grid-cols-2 gap-8">
             {lieux.map((lieu, index) => (
               <motion.div
-                key={lieu.name}
+                key={lieu.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -68,8 +101,8 @@ const ParcsPiscines: FrontendPage = () => {
               >
                 <div className="relative h-64">
                   <img
-                    src={lieu.image}
-                    alt={lieu.name}
+                    src={lieu.image_url || 'https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?w=800'}
+                    alt={lieu.nom}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-4 left-4">
@@ -88,11 +121,12 @@ const ParcsPiscines: FrontendPage = () => {
                     </span>
                   </div>
                 </div>
-                
+
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{lieu.name}</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{lieu.nom}</h3>
                   <p className="text-gray-600 mb-4">{lieu.description}</p>
                   
+                  {/*
                   <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4 text-[#f8812f]" />
@@ -111,6 +145,7 @@ const ParcsPiscines: FrontendPage = () => {
                       </span>
                     ))}
                   </div>
+                  */}
                 </div>
               </motion.div>
             ))}

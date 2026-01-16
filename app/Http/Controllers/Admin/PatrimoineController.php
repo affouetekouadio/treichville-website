@@ -59,13 +59,13 @@ class PatrimoineController extends Controller
             return response()->json([
                 'data' => $patrimoine,
                 'message' => 'Patrimoine créé avec succès',
-            ], 201)->with('success', 'Patrimoine créé avec succès');
+            ], 201);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création du patrimoine: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la création du patrimoine',
-            ], 500)->with('error', 'Une erreur est survenue lors de la création du patrimoine');
+            ], 500);
         }
     }
 
@@ -108,13 +108,13 @@ class PatrimoineController extends Controller
             return response()->json([
                 'data' => $patrimoine->fresh(),
                 'message' => 'Patrimoine mis à jour avec succès',
-            ])->with('success', 'Patrimoine mis à jour avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la mise à jour du patrimoine: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la mise à jour du patrimoine',
-            ], 500)->with('error', 'Une erreur est survenue lors de la mise à jour du patrimoine');
+            ], 500);
         }
     }
 
@@ -134,13 +134,13 @@ class PatrimoineController extends Controller
 
             return response()->json([
                 'message' => 'Patrimoine supprimé avec succès',
-            ])->with('success', 'Patrimoine supprimé avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression du patrimoine: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la suppression du patrimoine',
-            ], 500)->with('error', 'Une erreur est survenue lors de la suppression du patrimoine');
+            ], 500);
         }
     }
 }

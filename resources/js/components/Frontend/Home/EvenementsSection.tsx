@@ -1,21 +1,21 @@
 import React from "react";
+import { Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, MapPin, Clock, Euro } from "lucide-react";
+import { Calendar, MapPin, Clock } from "lucide-react";
 import type { Evenement } from "@/types/content";
+import { evenementDetailUrl, slugify } from "@/utils";
 
 type Props = {
   evenements?: Evenement[];
 };
 
 export default function EvenementsSection({ evenements = [] }: Props) {
-  const futurEvenements = evenements.filter((evt) => {
-    const start = evt.date_debut ? new Date(evt.date_debut) : null;
-    if (!start || Number.isNaN(start.getTime())) return false;
-    return start >= new Date();
-  });
-  const displayEvents = (futurEvenements.length ? futurEvenements : evenements).slice(0, 3);
+  const displayEvents = [...evenements]
+    .filter((evt) => evt.date_debut && !Number.isNaN(new Date(evt.date_debut).getTime()))
+    .sort((a, b) => new Date(b.date_debut).getTime() - new Date(a.date_debut).getTime())
+    .slice(0, 3);
   const accent = "#f8812f";
 
   return (
@@ -46,17 +46,19 @@ export default function EvenementsSection({ evenements = [] }: Props) {
             {displayEvents.map((evt, index) => {
               const eventStart = new Date(evt.date_debut);
               const eventEnd = evt.date_fin ? new Date(evt.date_fin) : null;
+              const detailSlug = evt.slug ?? slugify(evt.titre);
+              const detailUrl = evenementDetailUrl(detailSlug);
               return (
-                <motion.article
-                  key={evt.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
-                  className="relative overflow-hidden rounded-2xl border border-white shadow-xl bg-[#fff7ef] text-[#0f172a]"
-                  style={{ boxShadow: `0 14px 38px -16px ${accent}80` }}
-                >
+                <Link key={evt.id} href={detailUrl} className="block">
+                  <motion.article
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -10 }}
+                    className="relative overflow-hidden rounded-2xl border border-white shadow-xl bg-[#fff7ef] text-[#0f172a]"
+                    style={{ boxShadow: `0 14px 38px -16px ${accent}80` }}
+                  >
                   <div className="h-48 bg-gray-200 relative">
                     {evt.image_url ? (
                       <img
@@ -114,6 +116,7 @@ export default function EvenementsSection({ evenements = [] }: Props) {
                     style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
                   />
                 </motion.article>
+                </Link>
               );
             })}
           </div>

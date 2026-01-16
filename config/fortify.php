@@ -144,7 +144,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Features::registration(), // Désactivé : rend la création de compte inaccessible
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

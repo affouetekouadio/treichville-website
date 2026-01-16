@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Direction;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -46,6 +47,16 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'navDirections' => Direction::actives()
+                ->get(['id', 'nom', 'slug', 'ordre'])
+                ->map(function (Direction $direction) {
+                    return [
+                        'id' => $direction->id,
+                        'label' => $direction->nom,
+                        'path' => "/services/{$direction->slug}",
+                        'ordre' => $direction->ordre,
+                    ];
+                }),
         ];
     }
 }

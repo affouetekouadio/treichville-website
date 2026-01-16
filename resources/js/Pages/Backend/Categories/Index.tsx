@@ -1,8 +1,12 @@
+import ListingPagination from '@/components/listing/ListingPagination';
+import ListingToolbar from '@/components/listing/ListingToolbar';
+import { listingExport, listingVisit } from '@/lib/listing';
 import AppLayout from '@/layouts/app-layout';
 import type { FrontendPage } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Plus, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useListingSearch } from '@/hooks/use-listing-search';
 
 type CategoryItem = {
   id: number;
@@ -10,30 +14,60 @@ type CategoryItem = {
   type: 'actualite' | 'evenement';
 };
 
-const AdminCategories: FrontendPage = () => {
-  const [items, setItems] = useState<CategoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
+type ListingFilters = {
+  search?: string;
+  sort?: string;
+  direction?: 'asc' | 'desc';
+  per_page?: number;
+};
+
+type ListingPaginationMeta = {
+  page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
+};
+
+type CategoriesPageProps = {
+  categories?: CategoryItem[];
+  listing?: {
+    filters: ListingFilters;
+    pagination: ListingPaginationMeta;
+  };
+};
+
+const AdminCategories: FrontendPage<CategoriesPageProps> = ({
+  categories = [],
+  listing,
+}) => {
+  const { url } = usePage();
+  const baseUrl = url.split('?')[0];
+  const [search, setSearch] = useState(listing?.filters.search ?? '');
+  const sortValue = listing?.filters.sort ?? 'name';
+  const sortDirection = listing?.filters.direction ?? 'asc';
+  const pagination = listing?.pagination ?? {
+    page: 1,
+    per_page: 15,
+    total: categories.length,
+    last_page: 1,
+  };
+  const baseParams = useMemo(
+    () => ({
+      search,
+      sort: sortValue,
+      direction: sortDirection,
+      per_page: pagination.per_page,
+    }),
+    [pagination.per_page, search, sortDirection, sortValue]
+  );
+  useListingSearch(baseUrl, baseParams);
+
   const [openForm, setOpenForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: '',
     type: 'actualite',
   });
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch('/admin/api/categories');
-        const json = await res.json();
-        setItems(json.data || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,10 +87,10 @@ const AdminCategories: FrontendPage = () => {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Erreur création catégorie');
-      const json = await res.json();
-      setItems((prev) => [json.data, ...prev]);
+      await res.json();
       setOpenForm(false);
       setForm({ name: '', type: 'actualite' });
+      listingVisit(baseUrl, { ...baseParams, page: 1 });
     } catch (error) {
       console.error(error);
       alert("Impossible de créer la catégorie.");
@@ -86,6 +120,22 @@ const AdminCategories: FrontendPage = () => {
         </button>
       </div>
 
+      <ListingToolbar
+        search={search}
+        perPage={pagination.per_page}
+        sort={{ value: sortValue, direction: sortDirection }}
+        sortOptions={[
+          { value: 'name', label: 'Nom' },
+          { value: 'type', label: 'Type' },
+          { value: 'created_at', label: 'Date creation' },
+        ]}
+        onSearchChange={setSearch}
+        onSearchSubmit={() => listingVisit(baseUrl, { ...baseParams, page: 1 })}
+        onPerPageChange={(value) => listingVisit(baseUrl, { ...baseParams, per_page: value, page: 1 })}
+        onExport={(format) => listingExport(baseUrl, baseParams, format)}
+        onSortChange={(value, direction) => listingVisit(baseUrl, { ...baseParams, sort: value, direction })}
+      />
+
       <div className="rounded-xl border border-gray-200 bg-white p-0 shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
@@ -96,14 +146,8 @@ const AdminCategories: FrontendPage = () => {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={2} className="px-4 py-4 text-center text-gray-500">
-                    Chargement...
-                  </td>
-                </tr>
-              ) : items.length ? (
-                items.map((item) => (
+              {categories.length ? (
+                categories.map((item) => (
                   <tr key={item.id} className="border-t">
                     <td className="px-4 py-3 font-medium text-gray-900">{item.name}</td>
                     <td className="px-4 py-3 text-gray-700">
@@ -122,6 +166,13 @@ const AdminCategories: FrontendPage = () => {
           </table>
         </div>
       </div>
+
+      <ListingPagination
+        page={pagination.page}
+        lastPage={pagination.last_page}
+        total={pagination.total}
+        onPageChange={(page) => listingVisit(baseUrl, { ...baseParams, page })}
+      />
 
       {openForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">

@@ -8,6 +8,7 @@ use App\Models\DirectionContact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Contrôleur pour la gestion des directions/services et leurs contacts
@@ -25,7 +26,22 @@ class DirectionController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $items,
+            'data' => $items->map(function (Direction $direction) {
+                return [
+                    'id' => $direction->id,
+                    'nom' => $direction->nom,
+                    'slug' => $direction->slug,
+                    'description' => $direction->description,
+                    'short_description' => $direction->short_description,
+                    'contenu' => $direction->contenu,
+                    'icon' => $direction->icon,
+                    'responsable' => $direction->responsable,
+                    'adresse' => $direction->adresse,
+                    'ordre' => $direction->ordre,
+                    'actif' => $direction->actif,
+                    'contacts' => $direction->contacts,
+                ];
+            }),
         ]);
     }
 
@@ -50,6 +66,9 @@ class DirectionController extends Controller
             $validated = $request->validate([
                 'nom' => ['required', 'string', 'max:255'],
                 'description' => ['nullable', 'string'],
+                'short_description' => ['nullable', 'string', 'max:255'],
+                'contenu' => ['nullable', 'string'],
+                'icon' => ['nullable', 'string', 'max:100'],
                 'responsable' => ['nullable', 'string', 'max:255'],
                 'adresse' => ['nullable', 'string', 'max:500'],
                 'ordre' => ['nullable', 'integer', 'min:0'],
@@ -64,13 +83,16 @@ class DirectionController extends Controller
             DB::beginTransaction();
 
             // Génération du slug
-            $validated['slug'] = Str::slug($validated['nom']);
+            $validated['slug'] = Direction::generateUniqueSlug(Str::slug($validated['nom']));
 
             // Création de la direction
             $direction = Direction::create([
                 'nom' => $validated['nom'],
                 'slug' => $validated['slug'],
                 'description' => $validated['description'] ?? null,
+                'short_description' => $validated['short_description'] ?? null,
+                'contenu' => $validated['contenu'] ?? null,
+                'icon' => $validated['icon'] ?? null,
                 'responsable' => $validated['responsable'] ?? null,
                 'adresse' => $validated['adresse'] ?? null,
                 'ordre' => $validated['ordre'] ?? 0,
@@ -97,14 +119,20 @@ class DirectionController extends Controller
             return response()->json([
                 'data' => $direction,
                 'message' => 'Direction créée avec succès',
-            ], 201)->with('success', 'Direction créée avec succès');
+            ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation échouée',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Erreur lors de la création de la direction: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la création de la direction',
-            ], 500)->with('error', 'Une erreur est survenue lors de la création de la direction');
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -117,6 +145,9 @@ class DirectionController extends Controller
             $validated = $request->validate([
                 'nom' => ['sometimes', 'string', 'max:255'],
                 'description' => ['nullable', 'string'],
+                'short_description' => ['nullable', 'string', 'max:255'],
+                'contenu' => ['nullable', 'string'],
+                'icon' => ['nullable', 'string', 'max:100'],
                 'responsable' => ['nullable', 'string', 'max:255'],
                 'adresse' => ['nullable', 'string', 'max:500'],
                 'ordre' => ['nullable', 'integer', 'min:0'],
@@ -133,13 +164,16 @@ class DirectionController extends Controller
 
             // Mise à jour de la direction
             if (array_key_exists('nom', $validated)) {
-                $validated['slug'] = Str::slug($validated['nom']);
+                $validated['slug'] = Direction::generateUniqueSlug(Str::slug($validated['nom']), $direction->id);
             }
 
             $direction->update([
                 'nom' => $validated['nom'] ?? $direction->nom,
                 'slug' => $validated['slug'] ?? $direction->slug,
                 'description' => $validated['description'] ?? $direction->description,
+                'short_description' => $validated['short_description'] ?? $direction->short_description,
+                'contenu' => $validated['contenu'] ?? $direction->contenu,
+                'icon' => $validated['icon'] ?? $direction->icon,
                 'responsable' => $validated['responsable'] ?? $direction->responsable,
                 'adresse' => $validated['adresse'] ?? $direction->adresse,
                 'ordre' => $validated['ordre'] ?? $direction->ordre,
@@ -190,14 +224,20 @@ class DirectionController extends Controller
             return response()->json([
                 'data' => $direction,
                 'message' => 'Direction mise à jour avec succès',
-            ])->with('success', 'Direction mise à jour avec succès');
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation échouée',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Erreur lors de la mise à jour de la direction: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la mise à jour de la direction',
-            ], 500)->with('error', 'Une erreur est survenue lors de la mise à jour de la direction');
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -212,13 +252,13 @@ class DirectionController extends Controller
 
             return response()->json([
                 'message' => 'Direction supprimée avec succès',
-            ])->with('success', 'Direction supprimée avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression de la direction: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la suppression de la direction',
-            ], 500)->with('error', 'Une erreur est survenue lors de la suppression de la direction');
+            ], 500);
         }
     }
 }

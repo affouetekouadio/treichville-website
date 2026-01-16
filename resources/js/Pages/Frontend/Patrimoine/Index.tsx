@@ -7,39 +7,21 @@ import type { FrontendPage } from "@/types";
 
 const monuments = [
   {
-    name: "Le Port d'Abidjan",
-    description: "Premier port de la sous-région ouest-africaine, symbole du dynamisme économique de Treichville.",
-    image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800",
-    category: "Économique"
-  },
-  {
     name: "Le Marché de Treichville",
     description: "Haut lieu du commerce et de la vie quotidienne, reflet de la diversité culturelle de la commune.",
-    image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800",
+    image: "/marche-de-treichville",
     category: "Commerce"
   },
   {
-    name: "La Gare de Treichville",
-    description: "Vestige historique du chemin de fer Abidjan-Niger, témoin du passé colonial.",
-    image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=800",
-    category: "Historique"
-  },
-  {
-    name: "Place de la République",
+    name: "Palais de la culture",
     description: "Espace public central, lieu de rassemblement et de manifestations culturelles.",
-    image: "https://images.unsplash.com/photo-1517732306149-e8f829eb588a?w=800",
+    image: "/palais-de-la-culture.jpg",
     category: "Public"
-  },
-  {
-    name: "Cathédrale Saint-Paul",
-    description: "Édifice religieux remarquable, symbole de la foi et de l'architecture moderne.",
-    image: "https://images.unsplash.com/photo-1545987796-200677ee1011?w=800",
-    category: "Religieux"
   },
   {
     name: "Le Boulevard VGE",
     description: "Artère principale de la commune, vitrine du commerce et de l'animation urbaine.",
-    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800",
+    image: "/boulevard-vge.jpg",
     category: "Urbain"
   }
 ];
@@ -138,7 +120,7 @@ const Patrimoine: FrontendPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-[#03800a]">
+      {/* <section className="py-16 bg-[#03800a]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Camera className="w-16 h-16 text-white/80 mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-4">
@@ -148,7 +130,7 @@ const Patrimoine: FrontendPage = () => {
             Venez découvrir en personne les trésors de notre commune
           </p>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

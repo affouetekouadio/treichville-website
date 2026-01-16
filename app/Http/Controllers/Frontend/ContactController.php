@@ -49,8 +49,8 @@ class ContactController extends Controller
             ]);
 
             // Envoyer l'email à l'administration
-            $adminEmail = config('mail.admin_email', 'contact@treichville.ci');
-            Mail::to($adminEmail)->send(new ContactMessageMail($contact));
+            // $adminEmail = config('mail.admin_email', 'contact@treichville.ci');
+            // Mail::to($adminEmail)->send(new ContactMessageMail($contact));
 
             return back()->with('success', 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.');
         } catch (\Exception $e) {

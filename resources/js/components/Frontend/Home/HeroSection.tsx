@@ -1,9 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const slides = [
+type HeroSlide = {
+  id?: number;
+  title: string;
+  subtitle: string;
+  highlight: string;
+  description: string;
+  image: string | null;
+  cta: string;
+  cta_link?: string | null;
+};
+
+type HeroSectionProps = {
+  slides?: HeroSlide[];
+};
+
+const fallbackSlides: HeroSlide[] = [
  
   {
     title: "Bienvenue à Treichville ",
@@ -55,33 +70,55 @@ const slides = [
   }, 
 ];
 
-export default function HeroSection() {
+export default function HeroSection({ slides = [] }: HeroSectionProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
+  const activeSlides = useMemo(
+    () => (slides.length ? slides : fallbackSlides),
+    [slides]
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
       setDirection(1);
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [activeSlides.length]);
+
+  useEffect(() => {
+    if (currentSlide >= activeSlides.length) {
+      setCurrentSlide(0);
+    }
+  }, [activeSlides.length, currentSlide]);
 
   const nextSlide = () => {
     setDirection(1);
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
   };
 
   const prevSlide = () => {
     setDirection(-1);
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
   };
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  };
+  const handleCta = () => {
+    const link = activeSlides[currentSlide]?.cta_link;
+    if (!link) {
+      scrollToSection("services");
+      return;
+    }
+    if (link.startsWith("#")) {
+      scrollToSection(link.slice(1));
+      return;
+    }
+    window.location.href = link;
   };
 
   // Crossfade only to avoid revealing the section background between slides
@@ -107,8 +144,8 @@ export default function HeroSection() {
           {/* Background Image */}
           <div className="absolute inset-0">
             <img
-              src={slides[currentSlide].image}
-              alt={slides[currentSlide].title}
+              src={activeSlides[currentSlide].image ?? ""}
+              alt={activeSlides[currentSlide].title}
               className="w-full h-full object-cover"
             />
             {/* ça ajoute un peti fond sur les images */}
@@ -129,11 +166,11 @@ export default function HeroSection() {
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="text-5xl lg:text-7xl font-bold text-white leading-tight mb-6"
               >
-                {slides[currentSlide].title}
+                {activeSlides[currentSlide].title}
                 <br />
-                {slides[currentSlide].subtitle}{" "}
+                {activeSlides[currentSlide].subtitle}{" "}
                 <span className="text-[#f8812f]">
-                  {slides[currentSlide].highlight}
+                  {activeSlides[currentSlide].highlight}
                 </span>
               </motion.h1>
 
@@ -143,7 +180,7 @@ export default function HeroSection() {
                 transition={{ delay: 0.6, duration: 0.6 }}
                 className="text-xl text-gray-300 mb-8 leading-relaxed"
               >
-                {slides[currentSlide].description}
+                {activeSlides[currentSlide].description}
               </motion.p>
 
               <motion.div
@@ -152,10 +189,10 @@ export default function HeroSection() {
                 transition={{ delay: 0.8, duration: 0.6 }}
               >
                 <Button
-                  onClick={() => scrollToSection("services")}
+                  onClick={handleCta}
                   className="bg-[#f8812f] text-white hover:bg-orange-600 px-10 py-6 text-lg rounded-full font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl"
                 >
-                  {slides[currentSlide].cta}
+                  {activeSlides[currentSlide].cta}
                 </Button>
               </motion.div>
             </motion.div>
@@ -179,7 +216,7 @@ export default function HeroSection() {
 
       {/* Dots Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
-        {slides.map((_, index) => (
+        {activeSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => {

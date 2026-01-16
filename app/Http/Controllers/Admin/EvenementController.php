@@ -55,13 +55,13 @@ class EvenementController extends Controller
             return response()->json([
                 'data' => $evenement,
                 'message' => 'Événement créé avec succès',
-            ], 201)->with('success', 'Événement créé avec succès');
+            ], 201);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création de l\'événement: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la création de l\'événement',
-            ], 500)->with('error', 'Une erreur est survenue lors de la création de l\'événement');
+            ], 500);
         }
     }
 
@@ -105,13 +105,13 @@ class EvenementController extends Controller
             return response()->json([
                 'data' => $evenement->fresh(),
                 'message' => 'Événement mis à jour avec succès',
-            ])->with('success', 'Événement mis à jour avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la mise à jour de l\'événement: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la mise à jour de l\'événement',
-            ], 500)->with('error', 'Une erreur est survenue lors de la mise à jour de l\'événement');
+            ], 500);
         }
     }
 
@@ -131,13 +131,13 @@ class EvenementController extends Controller
 
             return response()->json([
                 'message' => 'Événement supprimé avec succès',
-            ])->with('success', 'Événement supprimé avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression de l\'événement: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la suppression de l\'événement',
-            ], 500)->with('error', 'Une erreur est survenue lors de la suppression de l\'événement');
+            ], 500);
         }
     }
 }

@@ -1,7 +1,11 @@
+import ListingPagination from '@/components/listing/ListingPagination';
+import ListingToolbar from '@/components/listing/ListingToolbar';
+import { listingExport, listingVisit } from '@/lib/listing';
 import AppLayout from '@/layouts/app-layout';
 import type { FrontendPage } from '@/types';
-import { Head } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { Head, usePage } from '@inertiajs/react';
+import { useMemo, useState } from 'react';
+import { useListingSearch } from '@/hooks/use-listing-search';
 
 type MediaItem = {
   id: number;
@@ -13,24 +17,50 @@ type MediaItem = {
   url?: string;
 };
 
-const AdminMedia: FrontendPage = () => {
-  const [items, setItems] = useState<MediaItem[]>([]);
-  const [loading, setLoading] = useState(true);
+type ListingFilters = {
+  search?: string;
+  sort?: string;
+  direction?: 'asc' | 'desc';
+  per_page?: number;
+};
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch('/admin/api/media');
-        const json = await res.json();
-        setItems(json.data || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+type ListingPaginationMeta = {
+  page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
+};
+
+type MediaPageProps = {
+  media?: MediaItem[];
+  listing?: {
+    filters: ListingFilters;
+    pagination: ListingPaginationMeta;
+  };
+};
+
+const AdminMedia: FrontendPage<MediaPageProps> = ({ media = [], listing }) => {
+  const { url } = usePage();
+  const baseUrl = url.split('?')[0];
+  const [search, setSearch] = useState(listing?.filters.search ?? '');
+  const sortValue = listing?.filters.sort ?? 'created_at';
+  const sortDirection = listing?.filters.direction ?? 'desc';
+  const pagination = listing?.pagination ?? {
+    page: 1,
+    per_page: 15,
+    total: media.length,
+    last_page: 1,
+  };
+  const baseParams = useMemo(
+    () => ({
+      search,
+      sort: sortValue,
+      direction: sortDirection,
+      per_page: pagination.per_page,
+    }),
+    [pagination.per_page, search, sortDirection, sortValue]
+  );
+  useListingSearch(baseUrl, baseParams);
 
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -43,6 +73,23 @@ const AdminMedia: FrontendPage = () => {
           Liste des fichiers envoyés (PDF du journal, images des pages).
         </p>
       </div>
+
+      <ListingToolbar
+        search={search}
+        perPage={pagination.per_page}
+        sort={{ value: sortValue, direction: sortDirection }}
+        sortOptions={[
+          { value: 'created_at', label: 'Date creation' },
+          { value: 'title', label: 'Titre' },
+          { value: 'collection', label: 'Collection' },
+          { value: 'size', label: 'Taille' },
+        ]}
+        onSearchChange={setSearch}
+        onSearchSubmit={() => listingVisit(baseUrl, { ...baseParams, page: 1 })}
+        onPerPageChange={(value) => listingVisit(baseUrl, { ...baseParams, per_page: value, page: 1 })}
+        onExport={(format) => listingExport(baseUrl, baseParams, format)}
+        onSortChange={(value, direction) => listingVisit(baseUrl, { ...baseParams, sort: value, direction })}
+      />
 
       <div className="rounded-xl border border-gray-200 bg-white p-0 shadow-sm">
         <div className="overflow-x-auto">
@@ -57,14 +104,8 @@ const AdminMedia: FrontendPage = () => {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-4 text-center text-gray-500">
-                    Chargement...
-                  </td>
-                </tr>
-              ) : items.length ? (
-                items.map((item) => (
+              {media.length ? (
+                media.map((item) => (
                   <tr key={item.id} className="border-t">
                     <td className="px-4 py-3 font-medium text-gray-900">{item.title || '—'}</td>
                     <td className="px-4 py-3 text-gray-700">{item.collection || 'default'}</td>
@@ -94,6 +135,13 @@ const AdminMedia: FrontendPage = () => {
           </table>
         </div>
       </div>
+
+      <ListingPagination
+        page={pagination.page}
+        lastPage={pagination.last_page}
+        total={pagination.total}
+        onPageChange={(page) => listingVisit(baseUrl, { ...baseParams, page })}
+      />
     </div>
   );
 };

@@ -18,6 +18,9 @@ class Direction extends Model
         'nom',
         'slug',
         'description',
+        'short_description',
+        'contenu',
+        'icon',
         'responsable',
         'adresse',
         'ordre',
@@ -36,9 +39,24 @@ class Direction extends Model
     {
         static::creating(function (self $direction): void {
             if (empty($direction->slug)) {
-                $direction->slug = Str::slug($direction->nom);
+                $direction->slug = static::generateUniqueSlug(Str::slug($direction->nom));
             }
         });
+    }
+
+    public static function generateUniqueSlug(string $baseSlug, ?int $ignoreId = null): string
+    {
+        $slug = $baseSlug;
+        $suffix = 1;
+
+        while (static::where('slug', $slug)
+            ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+            ->exists()) {
+            $suffix += 1;
+            $slug = $baseSlug . '-' . $suffix;
+        }
+
+        return $slug;
     }
 
     /**
@@ -85,6 +103,9 @@ class Direction extends Model
             'nom' => $this->nom,
             'slug' => $this->slug,
             'description' => $this->description ?? '',
+            'short_description' => $this->short_description ?? $this->description ?? '',
+            'contenu' => $this->contenu ?? '',
+            'icon' => $this->icon,
             'responsable' => $this->responsable,
             'adresse' => $this->adresse,
             'contacts' => $this->contacts->map(function ($contact) {

@@ -43,13 +43,13 @@ class CategoryController extends Controller
             return response()->json([
                 'data' => $category,
                 'message' => 'Catégorie créée avec succès',
-            ], 201)->with('success', 'Catégorie créée avec succès');
+            ], 201);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création de la catégorie: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la création de la catégorie',
-            ], 500)->with('error', 'Une erreur est survenue lors de la création de la catégorie');
+            ], 500);
         }
     }
 
@@ -73,13 +73,13 @@ class CategoryController extends Controller
             return response()->json([
                 'data' => $category->fresh(),
                 'message' => 'Catégorie mise à jour avec succès',
-            ])->with('success', 'Catégorie mise à jour avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la mise à jour de la catégorie: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la mise à jour de la catégorie',
-            ], 500)->with('error', 'Une erreur est survenue lors de la mise à jour de la catégorie');
+            ], 500);
         }
     }
 
@@ -93,20 +93,20 @@ class CategoryController extends Controller
             if ($category->actualites()->exists() || $category->evenements()->exists() || $category->patrimoines()->exists()) {
                 return response()->json([
                     'message' => 'Impossible de supprimer cette catégorie car elle est liée à des contenus',
-                ], 422)->with('error', 'Impossible de supprimer cette catégorie car elle est liée à des contenus');
+                ], 422);
             }
 
             $category->delete();
 
             return response()->json([
                 'message' => 'Catégorie supprimée avec succès',
-            ])->with('success', 'Catégorie supprimée avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression de la catégorie: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la suppression de la catégorie',
-            ], 500)->with('error', 'Une erreur est survenue lors de la suppression de la catégorie');
+            ], 500);
         }
     }
 }

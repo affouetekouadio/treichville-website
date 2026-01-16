@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { 
   FileText, Users, Building, Home, Sprout, Heart, Briefcase, Coins, 
-  ExternalLink, Search, ChevronRight, Loader2
+  ExternalLink, Search, ChevronRight, Loader2, MapPin, PhoneCall, Calendar
 } from "lucide-react";
+import { Link } from "@inertiajs/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Service as ServiceRecord } from "@/types/content";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
-import { createPageUrl } from "@/utils";
+import { createPageUrl, serviceDetailUrl } from "@/utils";
 import PageBanner from "@/components/Frontend/PageBanner";
 
 const iconMap = {
-  FileText, Users, Building, Home, Sprout, Heart, Briefcase, Coins
+  FileText, Users, Building, Home, Sprout, Heart, Briefcase, Coins, MapPin, PhoneCall, Calendar
 };
 
 const categoryInfo = {
@@ -22,7 +23,8 @@ const categoryInfo = {
   "Urbanisme": { color: "bg-amber-500", lightColor: "bg-amber-50", textColor: "text-amber-600" },
   "Social": { color: "bg-green-500", lightColor: "bg-green-50", textColor: "text-green-600" },
   "Culture": { color: "bg-pink-500", lightColor: "bg-pink-50", textColor: "text-pink-600" },
-  "Environnement": { color: "bg-[#03800a]", lightColor: "bg-emerald-50", textColor: "text-emerald-600" }
+  "Environnement": { color: "bg-[#03800a]", lightColor: "bg-emerald-50", textColor: "text-emerald-600" },
+  "Direction": { color: "bg-[#f8812f]", lightColor: "bg-orange-50", textColor: "text-orange-600" },
 };
 
 type ServicesPageProps = {
@@ -109,13 +111,21 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
     },
   ];
 
-  const categories = ["Tous", "Administratif", "État civil", "Urbanisme", "Social", "Culture", "Environnement"];
+  const categories = useMemo(() => {
+    const unique = new Set<string>();
+    servicesList.forEach((service) => {
+      unique.add(service.categorie ?? "Direction");
+    });
+    return ["Tous", ...Array.from(unique)];
+  }, [servicesList]);
 
   const filteredServices = servicesList.filter(service => {
-    const matchCategory = selectedCategory === "Tous" || service.categorie === selectedCategory;
+    const category = service.categorie ?? "Direction";
+    const matchCategory = selectedCategory === "Tous" || category === selectedCategory;
     const matchSearch = !searchQuery || 
       service.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      service.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      service.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      service.short_description?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCategory && matchSearch;
   });
 
@@ -179,14 +189,17 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
               
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredServices.map((service, index) => {
-                  const iconKey = (service.icone as keyof typeof iconMap) ?? "FileText";
+                  const iconKey = ((service.icone ?? service.icon) as keyof typeof iconMap) ?? "FileText";
                   const Icon = iconMap[iconKey] || FileText;
+                  const categoryLabel = service.categorie ?? "Direction";
                   const catInfo =
-                    categoryInfo[service.categorie as keyof typeof categoryInfo] || {
+                    categoryInfo[categoryLabel as keyof typeof categoryInfo] || {
                       color: "bg-gray-500",
                       lightColor: "bg-gray-50",
                       textColor: "text-gray-600",
                     };
+                  const detailUrl = service.slug ? serviceDetailUrl(service.slug) : service.lien_externe;
+                  const description = service.short_description || service.description || " ";
                   
                   return (
                     <motion.div
@@ -203,7 +216,7 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
                             <Icon className={`w-7 h-7 ${catInfo.textColor}`} />
                           </div>
                           <span className={`px-3 py-1 ${catInfo.lightColor} ${catInfo.textColor} text-xs font-semibold rounded-full`}>
-                            {service.categorie}
+                            {categoryLabel}
                           </span>
                         </div>
                         
@@ -213,20 +226,30 @@ const Services: FrontendPage<ServicesPageProps> = ({ services = [] }) => {
                         </h3>
                         
                         <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">
-                          {service.description}
+                          {description}
                         </p>
                         
                         {/* Action */}
-                        {service.lien_externe ? (
-                          <a
-                            href={service.lien_externe}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-[#f8812f] font-semibold text-sm group-hover:gap-3 transition-all"
-                          >
-                            Accéder au service
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
+                        {detailUrl ? (
+                          service.slug ? (
+                            <Link
+                              href={detailUrl}
+                              className="inline-flex items-center gap-2 text-[#f8812f] font-semibold text-sm group-hover:gap-3 transition-all"
+                            >
+                              Voir la direction
+                              <ChevronRight className="w-4 h-4" />
+                            </Link>
+                          ) : (
+                            <a
+                              href={detailUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-[#f8812f] font-semibold text-sm group-hover:gap-3 transition-all"
+                            >
+                              Accéder au service
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )
                         ) : (
                           <span className="inline-flex items-center gap-2 text-gray-400 text-sm">
                             <ChevronRight className="w-4 h-4" />

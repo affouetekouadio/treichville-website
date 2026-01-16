@@ -40,64 +40,68 @@ const FALLBACK_ACTUALITES: Actualite[] = [
   },
 ];
 
-const FALLBACK_EVENEMENTS: Evenement[] = [
-  {
-    id: 1,
-    titre: "Festival des saveurs de Treichville",
-    description: "Découverte de la gastronomie locale, concerts live et animations familiales.",
-    categorie: "Culture",
-    image_url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80",
-    date_debut: "2025-09-05T10:00:00Z",
-    date_fin: "2025-09-05T18:00:00Z",
-    lieu: "Esplanade de la mairie",
-    gratuit: true,
-  },
-  {
-    id: 2,
-    titre: "Course lagunaire solidaire",
-    description: "Parcours 5 km et 10 km le long des berges pour soutenir les associations locales.",
-    categorie: "Sport",
-    image_url: "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=1600&q=80",
-    date_debut: "2025-09-12T07:30:00Z",
-    date_fin: "2025-09-12T11:00:00Z",
-    lieu: "Berges lagunaires",
-    gratuit: true,
-  },
-  {
-    id: 3,
-    titre: "Nuit de la culture urbaine",
-    description: "Scènes ouvertes, graffiti et danse urbaine avec les artistes de la commune.",
-    categorie: "Événement",
-    // image_url: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80",
-    image_url: "/images/nuit-culture-urbaine.jpg",
-    date_debut: "2025-09-20T18:00:00Z",
-    date_fin: "2025-09-21T00:00:00Z",
-    lieu: "Centre culturel de Treichville",
-    gratuit: false,
-  },
-];
+type HomeSlide = {
+  id: number;
+  title: string;
+  subtitle: string;
+  highlight: string;
+  description: string;
+  image: string | null;
+  cta: string;
+  cta_link?: string | null;
+};
 
 type HomeProps = {
   services?: Service[];
+  homeContent?: {
+    welcome?: {
+      background_image?: string | null;
+      image?: string | null;
+    };
+    stats?: {
+      background_image?: string | null;
+    };
+  };
+  homeSlides?: HomeSlide[];
   homeActualites?: Actualite[];
   homeEvenements?: Evenement[];
+  homeDirections?: Array<{
+    id: number;
+    nom: string;
+    slug?: string | null;
+    short_description?: string | null;
+    icon?: string | null;
+    ordre?: number | null;
+  }>;
+  homeAdjoints?: {
+    id: number;
+    nom: string;
+    role: string;
+    photo_url: string | null;
+    ordre: number;
+  }[];
 };
 
 const Home: FrontendPage = () => {
   const { props } = usePage<HomeProps>();
   const services = props.services ?? [];
   const actualites = (props.homeActualites ?? FALLBACK_ACTUALITES);
-  const evenements = (props.homeEvenements ?? FALLBACK_EVENEMENTS);
+  const evenements = props.homeEvenements ?? [];
+  const adjoints = props.homeAdjoints ?? [];
+  const directions = props.homeDirections ?? [];
 
   return (
     <div>
-      <HeroSection />
-      <QuickServicesSection />
+      <HeroSection slides={props.homeSlides} />
+      <QuickServicesSection directions={directions} />
       <FlashInfoSection />
-      <AboutSection />
-      <TeamSection />
+      <AboutSection
+        backgroundImage={props.homeContent?.welcome?.background_image}
+        mayorImage={props.homeContent?.welcome?.image}
+      />
+      <TeamSection adjoints={adjoints} />
       <ServicesSection services={services} />
-      <CityStatsSection />
+      <CityStatsSection backgroundImage={props.homeContent?.stats?.background_image} />
       <ActualitesSection actualites={actualites} />
       <EvenementsSection evenements={evenements} />
     </div>

@@ -5,7 +5,18 @@ import { createPageUrl } from "@/utils";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function AboutSection() {
+type AboutSectionProps = {
+  backgroundImage?: string | null;
+  mayorImage?: string | null;
+};
+
+export default function AboutSection({
+  backgroundImage,
+  mayorImage,
+}: AboutSectionProps) {
+  const fallbackBackground = "images/autres/maire-14.jpg";
+  const fallbackMayor = "/images/personnes/maire-2.jpg";
+
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       <div
@@ -13,7 +24,7 @@ export default function AboutSection() {
         style={{
           backgroundImage:
             // "url('https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80')",
-            "url('images/autres/maire-14.jpg')",
+            `url('${backgroundImage || fallbackBackground}')`,
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-br from-white/85 via-white/70 to-white/80" />
@@ -30,7 +41,7 @@ export default function AboutSection() {
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
               <img
                 // src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
-                src="/images/personnes/maire-2.jpg"
+                src={mayorImage || fallbackMayor}
                 alt="Le Maire"
                 className="w-full h-full object-cover object-top"
               />

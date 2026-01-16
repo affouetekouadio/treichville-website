@@ -54,13 +54,14 @@ class SlideController extends Controller
             return response()->json([
                 'data' => $slide,
                 'message' => 'Slide créé avec succès',
-            ], 201)->with('success', 'Slide créé avec succès');
+            ], 201);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création du slide: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la création du slide',
-            ], 500)->with('error', 'Une erreur est survenue lors de la création du slide');
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -97,13 +98,14 @@ class SlideController extends Controller
             return response()->json([
                 'data' => $slide->fresh(),
                 'message' => 'Slide mis à jour avec succès',
-            ])->with('success', 'Slide mis à jour avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la mise à jour du slide: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la mise à jour du slide',
-            ], 500)->with('error', 'Une erreur est survenue lors de la mise à jour du slide');
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -123,13 +125,14 @@ class SlideController extends Controller
 
             return response()->json([
                 'message' => 'Slide supprimé avec succès',
-            ])->with('success', 'Slide supprimé avec succès');
+            ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression du slide: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Une erreur est survenue lors de la suppression du slide',
-            ], 500)->with('error', 'Une erreur est survenue lors de la suppression du slide');
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }

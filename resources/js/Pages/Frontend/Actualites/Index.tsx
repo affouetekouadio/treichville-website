@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -10,17 +11,25 @@ import type { Actualite } from "@/types/content";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import PageBanner from "@/components/Frontend/PageBanner";
+import { actualiteDetailUrl } from "@/utils";
 
 type ActualitesPageProps = {
   actualites?: Actualite[];
+  categories?: { id: number; name: string }[];
 };
 
-const Actualites: FrontendPage<ActualitesPageProps> = ({ actualites = [] }) => {
+const Actualites: FrontendPage<ActualitesPageProps> = ({
+  actualites = [],
+  categories = [],
+}) => {
   const [selectedCategory, setSelectedCategory] = useState("Toutes");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading] = useState(false);
 
-  const categories = ["Toutes", "Annonce", "Événement", "Travaux", "Culture", "Social", "Environnement"];
+  const categoryNames = categories.length
+    ? categories.map((cat) => cat.name)
+    : Array.from(new Set(actualites.map((actu) => actu.categorie).filter(Boolean)));
+  const categoryOptions = ["Toutes", ...categoryNames];
 
   const categoryColors = {
     "Annonce": "bg-blue-600",
@@ -31,7 +40,7 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({ actualites = [] }) => {
     "Environnement": "bg-emerald-600"
   };
 
-  const filteredActualites = actualites.filter(actu => {
+  const filteredActualites = actualites.filter((actu) => {
     const matchCategory = selectedCategory === "Toutes" || actu.categorie === selectedCategory;
     const matchSearch = !searchQuery || 
       actu.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -69,16 +78,16 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({ actualites = [] }) => {
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Filtres */}
-        <div className="bg-white rounded-xl p-6 shadow-lg mb-8">
+        <div className="bg-white rounded-xl p-6 shadow-lg mb-10">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
+              {categoryOptions.map((cat) => (
                 <Button
                   key={cat}
                   variant={selectedCategory === cat ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedCategory(cat)}
-                  className={selectedCategory === cat ? "bg-[#DC2626] hover:bg-red-700" : ""}
+                  className={selectedCategory === cat ? "bg-[var(--primary-orange)] hover:bg-orange-600" : ""}
                 >
                   {cat}
                 </Button>
@@ -99,47 +108,49 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({ actualites = [] }) => {
         {isLoading ? (
           <div className="text-center py-12">Chargement...</div>
         ) : filteredActualites.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {filteredActualites.map((actu, index) => {
               const badgeClass =
                 categoryColors[actu.categorie as keyof typeof categoryColors] || "bg-gray-600";
+              const detailUrl = actu.slug ? actualiteDetailUrl(actu.slug) : "#";
               return (
-              <motion.article
-                key={actu.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all group"
-              >
-                <div className="relative h-56 overflow-hidden bg-gray-200">
-                  {actu.image_url ? (
-                    <img
-                      src={actu.image_url}
-                      alt={actu.titre}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center">
-                      <Tag className="w-16 h-16 text-white/30" />
+              <Link key={actu.id} href={detailUrl} className="block">
+                <motion.article
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all group h-full flex flex-col"
+                >
+                  <div className="relative h-56 overflow-hidden bg-gray-200">
+                    {actu.image_url ? (
+                      <img
+                        src={actu.image_url}
+                        alt={actu.titre}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center">
+                        <Tag className="w-16 h-16 text-white/30" />
+                      </div>
+                    )}
+                    <div className="absolute top-4 left-4">
+                      <Badge className={`${badgeClass} text-white border-0`}>
+                        {actu.categorie}
+                      </Badge>
                     </div>
-                  )}
-                  <div className="absolute top-4 left-4">
-                    <Badge className={`${badgeClass} text-white border-0`}>
-                      {actu.categorie}
-                    </Badge>
                   </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                    <Calendar className="w-4 h-4" />
-                    <time>{format(new Date(actu.date_publication), "d MMMM yyyy", { locale: fr })}</time>
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                      <Calendar className="w-4 h-4" />
+                      <time>{format(new Date(actu.date_publication), "d MMMM yyyy", { locale: fr })}</time>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#DC2626] transition-colors line-clamp-2">
+                      {actu.titre}
+                    </h3>
+                    <p className="text-gray-600 line-clamp-3 flex-1">{actu.description}</p>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#DC2626] transition-colors line-clamp-2">
-                    {actu.titre}
-                  </h3>
-                  <p className="text-gray-600 line-clamp-3">{actu.description}</p>
-                </div>
-              </motion.article>
+                </motion.article>
+              </Link>
             );
           })}
           </div>

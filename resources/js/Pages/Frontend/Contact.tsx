@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,13 +17,49 @@ import {
   Calendar,
   PhoneCall,
   Heart,
+  Briefcase,
+  Coins,
+  Sprout,
+  Home,
 } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import { useForm } from "@inertiajs/react";
 import PageBanner from "@/components/Frontend/PageBanner";
 
-const Contact: FrontendPage = () => {
+type DirectionContact = {
+  type: string;
+  valeur: string;
+  label?: string | null;
+};
+
+type DirectionItem = {
+  id: number | string;
+  nom: string;
+  description?: string | null;
+  short_description?: string | null;
+  icon?: string | null;
+  contacts?: DirectionContact[];
+};
+
+type ContactPageProps = {
+  directionContacts?: DirectionItem[];
+};
+
+const iconMap = {
+  FileText,
+  Building,
+  Users,
+  Calendar,
+  PhoneCall,
+  Heart,
+  Briefcase,
+  Coins,
+  Sprout,
+  Home,
+};
+
+const Contact: FrontendPage<ContactPageProps> = ({ directionContacts = [] }) => {
   const [submitted, setSubmitted] = useState(false);
 
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -44,6 +80,74 @@ const Contact: FrontendPage = () => {
       },
     });
   };
+
+  const fallbackDirections = [
+    {
+      icon: "FileText",
+      title: "État civil",
+      description: "Actes, mariages, certificats et dossiers administratifs.",
+      phone: "27 21 24 08 09",
+      email: "etatcivil@treichville.ci",
+    },
+    {
+      icon: "Building",
+      title: "Fiscalité & urbanisme",
+      description: "Taxes locales, permis de construire et occupation du domaine public.",
+      phone: "27 21 24 10 22",
+      email: "fiscalite@treichville.ci",
+    },
+    {
+      icon: "Users",
+      title: "Conseil municipal",
+      description: "Cabinet du Maire, protocoles, prises de rendez-vous.",
+      phone: "27 21 24 00 11",
+      email: "cabinet@treichville.ci",
+    },
+    {
+      icon: "Calendar",
+      title: "Événements & culture",
+      description: "Programmation culturelle, locations d'espaces, partenariats.",
+      phone: "27 21 24 12 30",
+      email: "culture@treichville.ci",
+    },
+    {
+      icon: "PhoneCall",
+      title: "Numéros utiles",
+      description: "Sécurité, urgences sanitaires et interventions rapides.",
+      phone: "170 / 180",
+      email: "urgence@treichville.ci",
+    },
+    {
+      icon: "Heart",
+      title: "Solidarité & santé",
+      description: "Aide sociale, santé communautaire et accompagnement des familles.",
+      phone: "27 21 24 14 45",
+      email: "solidarite@treichville.ci",
+    },
+  ];
+
+  const directions = useMemo(() => {
+    if (directionContacts.length) {
+      return directionContacts.map((direction) => ({
+        id: direction.id,
+        icon: direction.icon ?? "FileText",
+        title: direction.nom,
+        description: direction.short_description ?? direction.description ?? " ",
+        contacts: direction.contacts ?? [],
+      }));
+    }
+
+    return fallbackDirections.map((direction, index) => ({
+      id: index,
+      icon: direction.icon,
+      title: direction.title,
+      description: direction.description,
+      contacts: [
+        { type: "telephone", valeur: direction.phone, label: "Téléphone" },
+        { type: "email", valeur: direction.email, label: "Email" },
+      ],
+    }));
+  }, [directionContacts]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -214,52 +318,15 @@ const Contact: FrontendPage = () => {
             </div>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                icon: FileText,
-                title: "État civil",
-                description: "Actes, mariages, certificats et dossiers administratifs.",
-                phone: "27 21 24 08 09",
-                email: "etatcivil@treichville.ci",
-              },
-              {
-                icon: Building,
-                title: "Fiscalité & urbanisme",
-                description: "Taxes locales, permis de construire et occupation du domaine public.",
-                phone: "27 21 24 10 22",
-                email: "fiscalite@treichville.ci",
-              },
-              {
-                icon: Users,
-                title: "Conseil municipal",
-                description: "Cabinet du Maire, protocoles, prises de rendez-vous.",
-                phone: "27 21 24 00 11",
-                email: "cabinet@treichville.ci",
-              },
-              {
-                icon: Calendar,
-                title: "Événements & culture",
-                description: "Programmation culturelle, locations d'espaces, partenariats.",
-                phone: "27 21 24 12 30",
-                email: "culture@treichville.ci",
-              },
-              {
-                icon: PhoneCall,
-                title: "Numéros utiles",
-                description: "Sécurité, urgences sanitaires et interventions rapides.",
-                phone: "170 / 180",
-                email: "urgence@treichville.ci",
-              },
-              {
-                icon: Heart,
-                title: "Solidarité & santé",
-                description: "Aide sociale, santé communautaire et accompagnement des familles.",
-                phone: "27 21 24 14 45",
-                email: "solidarite@treichville.ci",
-              },
-            ].map((dir, idx) => (
+            {directions.map((dir, idx) => {
+              const iconKey = (dir.icon as keyof typeof iconMap) ?? "FileText";
+              const Icon = iconMap[iconKey] || FileText;
+              const phones = dir.contacts.filter((contact) => contact.type === "telephone");
+              const emails = dir.contacts.filter((contact) => contact.type === "email");
+
+              return (
               <motion.div
-                key={dir.title}
+                key={`${dir.id}-${idx}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -267,28 +334,50 @@ const Contact: FrontendPage = () => {
                 className="p-6 rounded-2xl bg-white shadow-lg border border-gray-100"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(29,133,149,0.12)" }}>
-                  <dir.icon className="w-6 h-6" style={{ color: "#03800a" }} />
+                  <Icon className="w-6 h-6" style={{ color: "#03800a" }} />
                 </div>
                 <h4 className="text-lg font-bold text-[#0f172a]">{dir.title}</h4>
                 <p className="text-sm text-[#1f2937] mt-2 mb-4 leading-relaxed">{dir.description}</p>
                 <div className="space-y-2 text-sm">
-                  <a
-                    className="flex items-center gap-2 text-[#0f172a] hover:text-[#03800a] transition-colors font-semibold"
-                    href={`tel:${dir.phone.replace(/\s+/g, "")}`}
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>{dir.phone}</span>
-                  </a>
-                  <a
-                    className="flex items-center gap-2 text-[#0f172a] hover:text-[#03800a] transition-colors font-semibold break-words"
-                    href={`mailto:${dir.email}`}
-                  >
-                    <Mail className="w-4 h-4" />
-                    <span>{dir.email}</span>
-                  </a>
+                  {phones.length > 0 ? (
+                    phones.map((contact, contactIndex) => (
+                      <a
+                        key={`phone-${contactIndex}`}
+                        className="flex items-center gap-2 text-[#0f172a] hover:text-[#03800a] transition-colors font-semibold"
+                        href={`tel:${contact.valeur.replace(/\s+/g, "")}`}
+                      >
+                        <Phone className="w-4 h-4" />
+                        <span>{contact.valeur}</span>
+                      </a>
+                    ))
+                  ) : (
+                    <div className="flex items-center gap-2 text-gray-400">
+                      <Phone className="w-4 h-4" />
+                      <span>Aucun téléphone disponible</span>
+                    </div>
+                  )}
+
+                  {emails.length > 0 ? (
+                    emails.map((contact, contactIndex) => (
+                      <a
+                        key={`email-${contactIndex}`}
+                        className="flex items-center gap-2 text-[#0f172a] hover:text-[#03800a] transition-colors font-semibold break-words"
+                        href={`mailto:${contact.valeur}`}
+                      >
+                        <Mail className="w-4 h-4" />
+                        <span>{contact.valeur}</span>
+                      </a>
+                    ))
+                  ) : (
+                    <div className="flex items-center gap-2 text-gray-400">
+                      <Mail className="w-4 h-4" />
+                      <span>Aucun email disponible</span>
+                    </div>
+                  )}
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

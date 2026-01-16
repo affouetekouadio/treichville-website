@@ -4,26 +4,27 @@ import { Download, FileText } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import PageBanner from "@/components/Frontend/PageBanner";
+import { usePage } from "@inertiajs/react";
 
-const editions = [
-  {
-    title: "Journal municipal - Édition Juin 2024",
-    size: "0.6 Mo - PDF",
-    url: "/pdfs/journal-2024-06.pdf",
-  },
-  {
-    title: "Journal municipal - Édition Mars 2024",
-    size: "0.6 Mo - PDF",
-    url: "/pdfs/journal-2024-03.pdf",
-  },
-  {
-    title: "Journal municipal - Édition Décembre 2023",
-    size: "0.7 Mo - PDF",
-    url: "/pdfs/journal-2023-12.pdf",
-  },
-];
+type JournalEdition = {
+  id: number;
+  title: string;
+  description?: string | null;
+  size?: string | null;
+  url: string;
+  download_url?: string | null;
+  cover_image?: string | null;
+  published_at?: string | null;
+};
+
+type JournalProps = {
+  editions?: JournalEdition[];
+};
 
 const Journal: FrontendPage = () => {
+  const { props } = usePage<JournalProps>();
+  const editions = props.editions ?? [];
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <PageBanner
@@ -39,20 +40,33 @@ const Journal: FrontendPage = () => {
         <div className="grid gap-6 md:grid-cols-3">
           {editions.map((edition, idx) => (
             <motion.div
-              key={edition.title}
+              key={edition.id}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.05 }}
               className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 flex flex-col"
             >
-              <div className="w-12 h-12 rounded-xl bg-[#f8812f]/15 text-[#f8812f] flex items-center justify-center mb-4">
-                <FileText className="w-6 h-6" />
-              </div>
+              {edition.cover_image ? (
+                <div className="mb-4 overflow-hidden rounded-xl border border-gray-100">
+                  <img
+                    src={edition.cover_image}
+                    alt={edition.title}
+                    className="h-40 w-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-12 h-12 rounded-xl bg-[#f8812f]/15 text-[#f8812f] flex items-center justify-center mb-4">
+                  <FileText className="w-6 h-6" />
+                </div>
+              )}
               <h2 className="text-lg font-bold text-gray-900 mb-2">{edition.title}</h2>
-              <p className="text-sm text-gray-500 mb-6">{edition.size}</p>
+              <p className="text-sm text-gray-500 mb-2">{edition.size || 'PDF'}</p>
+              {edition.description && (
+                <p className="text-sm text-gray-600 mb-4">{edition.description}</p>
+              )}
               <a
-                href={edition.url}
+                href={edition.download_url || edition.url}
                 className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#f8812f] text-white font-semibold hover:bg-orange-600 transition-colors"
                 download
               >

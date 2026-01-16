@@ -36,7 +36,7 @@ export default function AuthSimpleLayout({
                             className="inline-flex items-center gap-3 mb-8"
                         >
                             <img
-                                src="/images/logo-mairie.png"
+                                src="/images/logo/logo-t-1.png"
                                 alt="Mairie de Treichville"
                                 className="h-16 w-auto"
                             />
@@ -69,6 +69,16 @@ export default function AuthSimpleLayout({
                             ))}
                         </div>
 
+                        {/* Image d'illustration pour la page de connexion */}
+                        <div className="mt-10 overflow-hidden rounded-2xl border border-gray-200 shadow-lg">
+                            <img
+                                src="/images/bannieres/banniere-1.jpg"
+                                alt="Treichville"
+                                className="h-48 w-full object-cover"
+                                loading="lazy"
+                            />
+                        </div>
+
                         {/* Decorative Element */}
                         <div className="mt-12 relative">
                             <div className="absolute -top-4 -left-4 w-24 h-24 bg-[#03800a]/20 rounded-full blur-2xl" />
@@ -88,7 +98,7 @@ export default function AuthSimpleLayout({
                             <div className="lg:hidden flex justify-center mb-8">
                                 <Link href={createPageUrl("Home")}>
                                     <img
-                                        src="/images/logo-mairie.png"
+                                        src="/images/logo/logo-t-1.png"
                                         alt="Mairie de Treichville"
                                         className="h-16 w-auto"
                                     />

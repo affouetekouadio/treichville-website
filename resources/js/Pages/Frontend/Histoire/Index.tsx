@@ -17,11 +17,11 @@ const Histoire: FrontendPage = () => {
     {
       id: 1,
       main: {
-        url: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
+        url: "/images/treichville-4.jpg",
         alt: "Treichville - Vue principale",
       },
       secondary: {
-        url: "https://images.unsplash.com/photo-1549144511-f099e773c147?w=600",
+        url: "/images/treichville-1.jpeg",
         alt: "Treichville - Architecture",
       },
     },

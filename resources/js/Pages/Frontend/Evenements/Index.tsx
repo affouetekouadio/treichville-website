@@ -1,253 +1,48 @@
 import React from "react";
+import { Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, MapPin, Clock, Tag, Users, Sparkles, CheckCircle } from "lucide-react";
+import { Calendar, MapPin, Clock, Tag, Users, Sparkles, CheckCircle, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import type { Evenement } from "@/types/content";
 import FrontendLayout from "@/layouts/frontend-layout";
 import PageBanner from "@/components/Frontend/PageBanner";
 import type { FrontendPage } from "@/types";
+import { evenementDetailUrl, slugify } from "@/utils";
 
 type EvenementsPageProps = {
   evenements?: Evenement[];
+  categories?: { id: number; name: string }[];
 };
 
-const fallbackImages = [
-  // Événements culturels
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1400&q=80",
-
-  // Événements sportifs
-  "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1400&q=80",
-
-  // Événements festifs
-  "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1400&q=80",
-
-  // Événements citoyens/sociaux
-  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1400&q=80",
-
-  // Événements variés
-  "https://images.unsplash.com/photo-1515165562835-c3b8e0ea7d83?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1400&q=80",
-];
-
-function futureIso(daysFromNow: number, hour: number) {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + daysFromNow);
-  d.setHours(hour, 0, 0, 0);
-  return d.toISOString();
-}
-
-function pastIso(daysAgo: number, hour: number) {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() - daysAgo);
-  d.setHours(hour, 0, 0, 0);
-  return d.toISOString();
-}
-
-const fallbackEvents: Evenement[] = [
-  // ÉVÉNEMENTS À VENIR
-  {
-    id: 1,
-    titre: "Festival des saveurs de Treichville",
-    description: "Découverte de la gastronomie locale, concerts live et animations familiales. Venez déguster les meilleurs plats de notre commune.",
-    categorie: "Culturel",
-    image_url: fallbackImages[0],
-    date_debut: futureIso(14, 10),
-    date_fin: futureIso(14, 18),
-    lieu: "Esplanade de la mairie",
-    gratuit: false,
-  },
-  {
-    id: 2,
-    titre: "Course lagunaire solidaire",
-    description: "Parcours 5 km et 10 km le long des berges pour soutenir les associations locales. Inscription sur place.",
-    categorie: "Sportif",
-    image_url: fallbackImages[3],
-    date_debut: futureIso(28, 7),
-    date_fin: futureIso(28, 11),
-    lieu: "Berges lagunaires",
-    gratuit: false,
-  },
-  {
-    id: 3,
-    titre: "Nuit de la culture urbaine",
-    description: "Scènes ouvertes, graffiti et danse urbaine avec les artistes de la commune. Une soirée exceptionnelle.",
-    categorie: "Festif",
-    image_url: fallbackImages[6],
-    date_debut: futureIso(42, 18),
-    date_fin: futureIso(42, 23),
-    lieu: "Centre culturel de Treichville",
-    gratuit: false,
-  },
-  {
-    id: 4,
-    titre: "Forum des associations",
-    description: "Rencontre des associations locales, ateliers participatifs et débats citoyens pour construire ensemble l'avenir.",
-    categorie: "Citoyen",
-    image_url: fallbackImages[9],
-    date_debut: futureIso(7, 9),
-    date_fin: futureIso(7, 16),
-    lieu: "Maison des jeunes",
-    gratuit: true,
-  },
-  {
-    id: 5,
-    titre: "Salon de l'emploi jeunes",
-    description: "Entreprises, formations et coaching pour l'insertion professionnelle. Plus de 50 entreprises présentes.",
-    categorie: "Citoyen",
-    image_url: fallbackImages[11],
-    date_debut: futureIso(21, 9),
-    date_fin: futureIso(21, 17),
-    lieu: "Salle des fêtes municipale",
-    gratuit: true,
-  },
-  {
-    id: 6,
-    titre: "Concert lagunaire",
-    description: "Concert en plein air avec des artistes locaux et animations familiales. Restauration sur place.",
-    categorie: "Festif",
-    image_url: fallbackImages[8],
-    date_debut: futureIso(35, 18),
-    date_fin: futureIso(35, 23),
-    lieu: "Berges de Treichville",
-    gratuit: false,
-  },
-  {
-    id: 7,
-    titre: "Tournoi de football inter-quartiers",
-    description: "Compétition amicale entre les équipes des différents quartiers de Treichville. Venez supporter votre équipe !",
-    categorie: "Sportif",
-    image_url: fallbackImages[4],
-    date_debut: futureIso(49, 14),
-    date_fin: futureIso(49, 18),
-    lieu: "Stade municipal",
-    gratuit: true,
-  },
-  {
-    id: 8,
-    titre: "Exposition d'art contemporain",
-    description: "Découvrez les œuvres d'artistes locaux émergents. Vernissage en présence des artistes.",
-    categorie: "Culturel",
-    image_url: fallbackImages[2],
-    date_debut: futureIso(56, 15),
-    date_fin: futureIso(56, 20),
-    lieu: "Galerie municipale",
-    gratuit: true,
-  },
-
-  // ÉVÉNEMENTS PASSÉS
-  {
-    id: 101,
-    titre: "Journée citoyenne du nettoyage",
-    description: "Mobilisation générale pour nettoyer nos quartiers et embellir notre commune. Plus de 300 participants.",
-    categorie: "Citoyen",
-    image_url: fallbackImages[10],
-    date_debut: pastIso(7, 8),
-    date_fin: pastIso(7, 12),
-    lieu: "Divers quartiers",
-    gratuit: true,
-  },
-  {
-    id: 102,
-    titre: "Concert de jazz au clair de lune",
-    description: "Une soirée magique avec les meilleurs jazzmen de la région. Ambiance conviviale garantie.",
-    categorie: "Festif",
-    image_url: fallbackImages[7],
-    date_debut: pastIso(14, 19),
-    date_fin: pastIso(14, 23),
-    lieu: "Place de la République",
-    gratuit: false,
-  },
-  {
-    id: 103,
-    titre: "Marathon de Treichville",
-    description: "5ème édition du marathon annuel avec plus de 2000 participants. Parcours au bord de la lagune.",
-    categorie: "Sportif",
-    image_url: fallbackImages[5],
-    date_debut: pastIso(21, 7),
-    date_fin: pastIso(21, 13),
-    lieu: "Départ Esplanade de la mairie",
-    gratuit: false,
-  },
-  {
-    id: 104,
-    titre: "Fête de la musique",
-    description: "Concerts gratuits dans toute la commune avec plus de 30 groupes. Une journée exceptionnelle.",
-    categorie: "Culturel",
-    image_url: fallbackImages[1],
-    date_debut: pastIso(35, 14),
-    date_fin: pastIso(35, 23),
-    lieu: "Divers lieux",
-    gratuit: true,
-  },
-  {
-    id: 105,
-    titre: "Salon du livre et de la lecture",
-    description: "Rencontres avec des auteurs, dédicaces et ateliers d'écriture. Plus de 50 auteurs présents.",
-    categorie: "Culturel",
-    image_url: fallbackImages[14],
-    date_debut: pastIso(42, 10),
-    date_fin: pastIso(42, 18),
-    lieu: "Bibliothèque municipale",
-    gratuit: true,
-  },
-  {
-    id: 106,
-    titre: "Carnaval de Treichville",
-    description: "Défilé haut en couleur avec chars, costumes et musique. Plus de 5000 spectateurs.",
-    categorie: "Festif",
-    image_url: fallbackImages[15],
-    date_debut: pastIso(56, 15),
-    date_fin: pastIso(56, 20),
-    lieu: "Boulevard principal",
-    gratuit: true,
-  },
-  {
-    id: 107,
-    titre: "Forum santé et bien-être",
-    description: "Dépistages gratuits, conseils nutrition et activités physiques. Stands d'information.",
-    categorie: "Citoyen",
-    image_url: fallbackImages[16],
-    date_debut: pastIso(63, 9),
-    date_fin: pastIso(63, 16),
-    lieu: "Centre de santé communautaire",
-    gratuit: true,
-  },
-  {
-    id: 108,
-    titre: "Gala de danse urbaine",
-    description: "Spectacle de hip-hop, breakdance et afro-fusion par les jeunes talents de la commune.",
-    categorie: "Festif",
-    image_url: fallbackImages[17],
-    date_debut: pastIso(70, 19),
-    date_fin: pastIso(70, 22),
-    lieu: "Salle polyvalente",
-    gratuit: false,
-  },
-];
-
-const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
+const Evenements: FrontendPage<EvenementsPageProps> = ({
+  evenements = [],
+  categories = [],
+}) => {
   const isLoading = false;
-  const dataset = (evenements?.length ?? 0) > 0 ? evenements : fallbackEvents;
-  const eventsWithImages = dataset.map((evt, idx) => ({
+  const [selectedCategory, setSelectedCategory] = React.useState("Toutes");
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const eventsWithImages = (evenements ?? []).map((evt) => ({
     ...evt,
-    image_url: evt.image_url || fallbackImages[idx % fallbackImages.length],
+    slug: evt.slug ?? slugify(evt.titre),
   }));
+
+  const categoryNames = categories.length
+    ? categories.map((cat) => cat.name)
+    : Array.from(new Set(eventsWithImages.map((evt) => evt.categorie).filter(Boolean)));
+  const categoryOptions = ["Toutes", ...categoryNames];
+
+  const filteredEvents = eventsWithImages.filter((evt) => {
+    const matchCategory = selectedCategory === "Toutes" || evt.categorie === selectedCategory;
+    const matchSearch =
+      !searchQuery ||
+      evt.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      evt.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchCategory && matchSearch;
+  });
 
   const categoryColors = {
     "Culturel": "bg-purple-600",
@@ -260,10 +55,9 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const upcomingEventsBase = eventsWithImages.filter((e) => new Date(e.date_debut) >= today);
-  const pastEvents = eventsWithImages.filter((e) => new Date(e.date_debut) < today);
-  const fallbackUpcoming = fallbackEvents.filter((e) => new Date(e.date_debut) >= today);
-  const upcomingEvents = upcomingEventsBase.length ? upcomingEventsBase : fallbackUpcoming;
+  const upcomingEventsBase = filteredEvents.filter((e) => new Date(e.date_debut) >= today);
+  const pastEvents = filteredEvents.filter((e) => new Date(e.date_debut) < today);
+  const upcomingEvents = upcomingEventsBase;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -274,6 +68,32 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
       />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="bg-white rounded-xl p-6 shadow-lg mb-10">
+          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+            <div className="flex flex-wrap gap-2">
+              {categoryOptions.map((cat) => (
+                <Button
+                  key={cat}
+                  variant={selectedCategory === cat ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(cat)}
+                  className={selectedCategory === cat ? "bg-[var(--primary-orange)] hover:bg-orange-600" : ""}
+                >
+                  {cat}
+                </Button>
+              ))}
+            </div>
+            <div className="relative w-full lg:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Rechercher..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+        </div>
         {isLoading ? (
           <div className="text-center py-12">Chargement...</div>
         ) : (
@@ -299,21 +119,28 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
                     const badgeClass =
                       categoryColors[event.categorie as keyof typeof categoryColors] || "bg-gray-600";
                     const eventStart = new Date(event.date_debut);
+                    const detailUrl = evenementDetailUrl(event.slug ?? slugify(event.titre));
                     return (
-                      <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1 }}
-                        className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-                      >
+                      <Link key={event.id} href={detailUrl} className="block">
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.1 }}
+                          className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                        >
                         <div className="relative h-56 overflow-hidden">
-                          <img
-                            src={event.image_url}
-                            alt={event.titre}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
+                          {event.image_url ? (
+                            <img
+                              src={event.image_url}
+                              alt={event.titre}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-400">
+                              <Tag className="h-8 w-8" />
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
                           {/* Badge Gratuit */}
@@ -350,6 +177,7 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
                           </div>
                         </div>
                       </motion.div>
+                      </Link>
                     );
                   })}
                 </div>
@@ -382,21 +210,28 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
                     const badgeClass =
                       categoryColors[event.categorie as keyof typeof categoryColors] || "bg-gray-600";
                     const eventStart = new Date(event.date_debut);
+                    const detailUrl = evenementDetailUrl(event.slug ?? slugify(event.titre));
                     return (
-                      <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1 }}
-                        className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
+                      <Link key={event.id} href={detailUrl} className="block">
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.1 }}
+                          className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+                        >
                         <div className="relative h-48 overflow-hidden">
-                          <img
-                            src={event.image_url}
-                            alt={event.titre}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
-                          />
+                          {event.image_url ? (
+                            <img
+                              src={event.image_url}
+                              alt={event.titre}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-400">
+                              <Tag className="h-7 w-7" />
+                            </div>
+                          )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20" />
 
                           {/* Badge Terminé */}
@@ -421,6 +256,7 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({ evenements = [] }) => {
                           </div>
                         </div>
                       </motion.div>
+                      </Link>
                     );
                   })}
                 </div>

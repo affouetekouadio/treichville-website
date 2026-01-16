@@ -36,6 +36,7 @@ export default function ServicesSection({ services = [] }: Props) {
       id: "etat-civil",
       nom: "État civil",
       description: "Actes de naissance, mariage, décès et mise à jour des documents officiels.",
+      categorie: "Service municipal",
       icone: "FileText",
       lien_externe: createPageUrl("EtatCivil"),
     },
@@ -43,6 +44,7 @@ export default function ServicesSection({ services = [] }: Props) {
       id: "urbanisme",
       nom: "Urbanisme & permis",
       description: "Permis de construire, conformité et suivi des chantiers dans la commune.",
+      categorie: "Service municipal",
       icone: "Building",
       lien_externe: createPageUrl("Fiscalite"),
     },
@@ -50,6 +52,7 @@ export default function ServicesSection({ services = [] }: Props) {
       id: "fiscalite",
       nom: "Fiscalité locale",
       description: "Paiement des taxes, fiscalité des marchés et des entreprises locales.",
+      categorie: "Service municipal",
       icone: "Coins",
       lien_externe: createPageUrl("Fiscalite"),
     },
@@ -57,6 +60,7 @@ export default function ServicesSection({ services = [] }: Props) {
       id: "solidarite",
       nom: "Solidarité & santé",
       description: "Aides sociales, accompagnement des familles et santé communautaire.",
+      categorie: "Service municipal",
       icone: "Heart",
       lien_externe: createPageUrl("Services"),
     },
@@ -64,6 +68,7 @@ export default function ServicesSection({ services = [] }: Props) {
       id: "jeunesse",
       nom: "Jeunesse & sport",
       description: "Équipements sportifs, agenda des clubs et programmes pour la jeunesse.",
+      categorie: "Service municipal",
       icone: "Users",
       lien_externe: createPageUrl("Evenements"),
     },
@@ -71,6 +76,7 @@ export default function ServicesSection({ services = [] }: Props) {
       id: "environnement",
       nom: "Environnement",
       description: "Propreté urbaine, collecte des déchets et initiatives écologiques.",
+      categorie: "Service municipal",
       icone: "Sprout",
       lien_externe: createPageUrl("ParcsPiscines"),
     },
@@ -143,6 +149,7 @@ export default function ServicesSection({ services = [] }: Props) {
             const iconKey = (service.icone as keyof typeof iconMap) ?? "FileText";
             const Icon = iconMap[iconKey] || FileText;
             const bgImage = bgImagesByKey[iconKey] ?? "/images/treichville-4.jpg";
+            const description = service.short_description ?? service.description;
             return (
               <motion.div
                 key={service.id}
@@ -179,7 +186,7 @@ export default function ServicesSection({ services = [] }: Props) {
                     <Icon className="w-6 h-6" style={{ color: "#c75d0d" }} />
                   </div>
                   <h3 className="text-lg font-bold leading-tight">{service.nom}</h3>
-                  <p className="text-[#1f2937] leading-relaxed text-sm">{service.description}</p>
+                  <p className="text-[#1f2937] leading-relaxed text-sm">{description}</p>
                   {service.lien_externe && (
                     <a
                       href={service.lien_externe}

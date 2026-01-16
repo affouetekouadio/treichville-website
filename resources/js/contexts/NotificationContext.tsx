@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { usePage } from '@inertiajs/react';
 
 /**
@@ -39,6 +39,9 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: ReactNode }) {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const { props } = usePage();
+    // Anti-spam: mémorise les notifications récentes pour éviter les doublons.
+    const recentNotifications = useRef<Map<string, number>>(new Map());
+    const dedupeWindowMs = 1500;
 
     /**
      * Ajoute une nouvelle notification
@@ -46,31 +49,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
      * @param message - Message à afficher
      * @param duration - Durée d'affichage en ms (par défaut: 5000ms)
      */
-    const addNotification = useCallback((
-        type: NotificationType,
-        message: string,
-        duration: number = 5000
-    ) => {
-        // Génère un ID unique pour la notification
-        const id = `${Date.now()}-${Math.random()}`;
-
-        const notification: Notification = {
-            id,
-            type,
-            message,
-            duration,
-        };
-
-        setNotifications((prev) => [...prev, notification]);
-
-        // Supprime automatiquement la notification après la durée spécifiée
-        if (duration > 0) {
-            setTimeout(() => {
-                removeNotification(id);
-            }, duration);
-        }
-    }, []);
-
     /**
      * Supprime une notification spécifique
      * @param id - ID de la notification à supprimer
@@ -78,6 +56,51 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     const removeNotification = useCallback((id: string) => {
         setNotifications((prev) => prev.filter((notif) => notif.id !== id));
     }, []);
+
+    const addNotification = useCallback((
+        type: NotificationType,
+        message: string,
+        duration: number = 5000
+    ) => {
+        const normalizedMessage = message.trim();
+        const key = `${type}:${normalizedMessage}`;
+        const now = Date.now();
+
+        // Évite d'empiler plusieurs toasts identiques lors d'actions répétées.
+        const lastShown = recentNotifications.current.get(key);
+        if (lastShown && now - lastShown < dedupeWindowMs) {
+            return;
+        }
+
+        recentNotifications.current.set(key, now);
+        // Nettoie les entrées trop anciennes pour éviter de grossir en mémoire.
+        recentNotifications.current.forEach((timestamp, mapKey) => {
+            if (now - timestamp > dedupeWindowMs * 3) {
+                recentNotifications.current.delete(mapKey);
+            }
+        });
+
+        // Génère un ID unique pour la notification
+        const id = `${Date.now()}-${Math.random()}`;
+
+        const notification: Notification = {
+            id,
+            type,
+            message: normalizedMessage,
+            duration,
+        };
+
+        // Affiche un seul toast à la fois pour éviter l'empilement visuel.
+        // On remplace l'éventuel toast courant par le nouveau.
+        setNotifications([notification]);
+
+        // Supprime automatiquement la notification après la durée spécifiée
+        if (duration > 0) {
+            setTimeout(() => {
+                removeNotification(id);
+            }, duration);
+        }
+    }, [removeNotification, dedupeWindowMs]);
 
     /**
      * Supprime toutes les notifications
