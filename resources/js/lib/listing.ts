@@ -6,6 +6,9 @@ export type ListingQueryParams = {
   direction?: 'asc' | 'desc';
   per_page?: number;
   page?: number;
+  category?: string | number;
+  year?: string | number;
+  month?: string | number;
   export?: 'csv' | 'xls';
 };
 

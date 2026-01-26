@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "@inertiajs/react";
+import React, { useEffect } from "react";
+import { Link, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -12,20 +12,42 @@ import FrontendLayout from "@/layouts/frontend-layout";
 import PageBanner from "@/components/Frontend/PageBanner";
 import type { FrontendPage } from "@/types";
 import { evenementDetailUrl, slugify } from "@/utils";
+import ListingPagination from "@/components/listing/ListingPagination";
+import { listingVisit } from "@/lib/listing";
 
 type EvenementsPageProps = {
   evenements?: Evenement[];
   categories?: { id: number; name: string }[];
+  pagination?: {
+    page: number;
+    per_page: number;
+    total: number;
+    last_page: number;
+  };
+  filters?: {
+    search?: string;
+    category?: string;
+  };
 };
 
-const Evenements: FrontendPage<EvenementsPageProps> = ({
-  evenements = [],
-  categories = [],
-}) => {
+const Evenements: FrontendPage<EvenementsPageProps> = () => {
+  const { props, url } = usePage<EvenementsPageProps>();
+  const baseUrl = url.split("?")[0];
+  const evenements = props.evenements ?? [];
+  const categories = props.categories ?? [];
+  const pagination = props.pagination ?? {
+    page: 1,
+    per_page: 12,
+    total: evenements.length,
+    last_page: 1,
+  };
+  const filters = props.filters ?? {};
   const isLoading = false;
-  const [selectedCategory, setSelectedCategory] = React.useState("Toutes");
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const eventsWithImages = (evenements ?? []).map((evt) => ({
+  const [selectedCategory, setSelectedCategory] = React.useState(
+    filters.category && filters.category.trim() !== "" ? filters.category : "Toutes"
+  );
+  const [searchQuery, setSearchQuery] = React.useState(filters.search ?? "");
+  const eventsWithImages = evenements.map((evt) => ({
     ...evt,
     slug: evt.slug ?? slugify(evt.titre),
   }));
@@ -35,14 +57,23 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({
     : Array.from(new Set(eventsWithImages.map((evt) => evt.categorie).filter(Boolean)));
   const categoryOptions = ["Toutes", ...categoryNames];
 
-  const filteredEvents = eventsWithImages.filter((evt) => {
-    const matchCategory = selectedCategory === "Toutes" || evt.categorie === selectedCategory;
-    const matchSearch =
-      !searchQuery ||
-      evt.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      evt.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchCategory && matchSearch;
-  });
+  useEffect(() => {
+    setSelectedCategory(
+      filters.category && filters.category.trim() !== "" ? filters.category : "Toutes"
+    );
+    setSearchQuery(filters.search ?? "");
+  }, [filters.category, filters.search]);
+
+  const applyFilters = (nextCategory = selectedCategory) => {
+    const normalizedCategory =
+      !nextCategory || nextCategory === "Toutes" ? "" : nextCategory;
+    listingVisit(baseUrl, {
+      search: searchQuery.trim(),
+      category: normalizedCategory,
+      page: 1,
+      per_page: pagination.per_page,
+    });
+  };
 
   const categoryColors = {
     "Culturel": "bg-purple-600",
@@ -55,8 +86,8 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const upcomingEventsBase = filteredEvents.filter((e) => new Date(e.date_debut) >= today);
-  const pastEvents = filteredEvents.filter((e) => new Date(e.date_debut) < today);
+  const upcomingEventsBase = eventsWithImages.filter((e) => new Date(e.date_debut) >= today);
+  const pastEvents = eventsWithImages.filter((e) => new Date(e.date_debut) < today);
   const upcomingEvents = upcomingEventsBase;
 
   return (
@@ -68,7 +99,13 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({
       />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="bg-white rounded-xl p-6 shadow-lg mb-10">
+        <form
+          className="bg-white rounded-xl p-6 shadow-lg mb-10"
+          onSubmit={(event) => {
+            event.preventDefault();
+            applyFilters();
+          }}
+        >
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="flex flex-wrap gap-2">
               {categoryOptions.map((cat) => (
@@ -76,7 +113,11 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({
                   key={cat}
                   variant={selectedCategory === cat ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedCategory(cat)}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    applyFilters(cat);
+                  }}
                   className={selectedCategory === cat ? "bg-[var(--primary-orange)] hover:bg-orange-600" : ""}
                 >
                   {cat}
@@ -92,8 +133,11 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({
                 className="pl-10"
               />
             </div>
+            <Button type="submit" className="bg-[var(--primary-orange)] hover:bg-orange-600">
+              Rechercher
+            </Button>
           </div>
-        </div>
+        </form>
         {isLoading ? (
           <div className="text-center py-12">Chargement...</div>
         ) : (
@@ -262,6 +306,20 @@ const Evenements: FrontendPage<EvenementsPageProps> = ({
                 </div>
               </div>
             )}
+
+            <ListingPagination
+              page={pagination.page}
+              lastPage={pagination.last_page}
+              total={pagination.total}
+              onPageChange={(page) =>
+                listingVisit(baseUrl, {
+                  search: searchQuery.trim(),
+                  category: selectedCategory === "Toutes" ? "" : selectedCategory,
+                  page,
+                  per_page: pagination.per_page,
+                })
+              }
+            />
           </>
         )}
       </div>

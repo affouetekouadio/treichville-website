@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\EvenementController;
 use App\Http\Controllers\Admin\JournalEditionController;
 use App\Http\Controllers\Admin\LieuController;
 use App\Http\Controllers\Admin\MediaFileController;
+use App\Http\Controllers\Admin\MessageMaireController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SlideController;
 use App\Models\Actualite;
@@ -23,6 +24,7 @@ use App\Models\Evenement;
 use App\Models\JournalEdition;
 use App\Models\Lieu;
 use App\Models\MediaFile;
+use App\Models\MessageMaire;
 use App\Models\Slide;
 use App\Support\Listing\ListingQuery;
 use Illuminate\Http\Request;
@@ -253,9 +255,70 @@ Route::get('/contact', function () {
 
 Route::post('/contact', [App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
 
-Route::get('/actualites', function () use ($loadActualites) {
+Route::get('/actualites', function (Request $request) use ($loadActualites) {
+    $perPage = 12;
+    $search = trim((string) $request->query('search', ''));
+    $category = trim((string) $request->query('category', ''));
+    $hasFilters = $search !== '' || $category !== '';
+
+    if (! $hasFilters && ! Actualite::published()->exists()) {
+        $fallback = $loadActualites()->values();
+
+        return Inertia::render('Frontend/Actualites/Index', [
+            'actualites' => $fallback,
+            'pagination' => [
+                'page' => 1,
+                'per_page' => $perPage,
+                'total' => $fallback->count(),
+                'last_page' => 1,
+            ],
+            'filters' => [
+                'search' => $search,
+                'category' => $category,
+            ],
+            'categories' => Category::query()
+                ->where('type', 'actualite')
+                ->orderBy('name')
+                ->get(['id', 'name']),
+        ]);
+    }
+
+    $query = Actualite::published()->with('category')->orderByDesc('published_at');
+
+    if ($search !== '') {
+        $query->where(function ($builder) use ($search) {
+            $builder->where('titre', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        });
+    }
+
+    if ($category !== '') {
+        $query->where(function ($builder) use ($category) {
+            $builder->where('categorie', $category)
+                ->orWhereHas('category', function ($relation) use ($category) {
+                    $relation->where('name', $category);
+                });
+        });
+    }
+
+    $paginator = $query->paginate($perPage)->withQueryString();
+    $actualites = $paginator
+        ->getCollection()
+        ->map(fn (Actualite $actualite) => $actualite->toFrontendArray())
+        ->values();
+
     return Inertia::render('Frontend/Actualites/Index', [
-        'actualites' => $loadActualites(),
+        'actualites' => $actualites,
+        'pagination' => [
+            'page' => $paginator->currentPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'last_page' => $paginator->lastPage(),
+        ],
+        'filters' => [
+            'search' => $search,
+            'category' => $category,
+        ],
         'categories' => Category::query()
             ->where('type', 'actualite')
             ->orderBy('name')
@@ -263,9 +326,71 @@ Route::get('/actualites', function () use ($loadActualites) {
     ]);
 })->name('actualites.index');
 
-Route::get('/evenements', function () use ($loadEvenements) {
+Route::get('/evenements', function (Request $request) use ($loadEvenements) {
+    $perPage = 12;
+    $search = trim((string) $request->query('search', ''));
+    $category = trim((string) $request->query('category', ''));
+    $hasFilters = $search !== '' || $category !== '';
+
+    if (! $hasFilters && ! Evenement::published()->exists()) {
+        $fallback = $loadEvenements()->values();
+
+        return Inertia::render('Frontend/Evenements/Index', [
+            'evenements' => $fallback,
+            'pagination' => [
+                'page' => 1,
+                'per_page' => $perPage,
+                'total' => $fallback->count(),
+                'last_page' => 1,
+            ],
+            'filters' => [
+                'search' => $search,
+                'category' => $category,
+            ],
+            'categories' => Category::query()
+                ->where('type', 'evenement')
+                ->orderBy('name')
+                ->get(['id', 'name']),
+        ]);
+    }
+
+    $query = Evenement::published()->with('category')->orderBy('date_debut');
+
+    if ($search !== '') {
+        $query->where(function ($builder) use ($search) {
+            $builder->where('titre', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')
+                ->orWhere('lieu', 'like', '%' . $search . '%');
+        });
+    }
+
+    if ($category !== '') {
+        $query->where(function ($builder) use ($category) {
+            $builder->where('categorie', $category)
+                ->orWhereHas('category', function ($relation) use ($category) {
+                    $relation->where('name', $category);
+                });
+        });
+    }
+
+    $paginator = $query->paginate($perPage)->withQueryString();
+    $evenements = $paginator
+        ->getCollection()
+        ->map(fn (Evenement $evenement) => $evenement->toFrontendArray())
+        ->values();
+
     return Inertia::render('Frontend/Evenements/Index', [
-        'evenements' => $loadEvenements(),
+        'evenements' => $evenements,
+        'pagination' => [
+            'page' => $paginator->currentPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'last_page' => $paginator->lastPage(),
+        ],
+        'filters' => [
+            'search' => $search,
+            'category' => $category,
+        ],
         'categories' => Category::query()
             ->where('type', 'evenement')
             ->orderBy('name')
@@ -368,9 +493,93 @@ Route::get('/communication', function () {
     return Inertia::render('Frontend/Communication/Index');
 })->name('communication');
 
-Route::get('/communication/journal', function () use ($loadJournals) {
+Route::get('/communication/journal', function (Request $request) use ($loadJournals) {
+    $perPage = 12;
+    $search = trim((string) $request->query('search', ''));
+    $year = (string) $request->query('year', '');
+    $month = (string) $request->query('month', '');
+    if ($year !== '' && ! preg_match('/^\d{4}$/', $year)) {
+        $year = '';
+    }
+
+    if ($month !== '' && ! preg_match('/^(0[1-9]|1[0-2])$/', $month)) {
+        $month = '';
+    }
+
+    $hasFilters = $search !== '' || $year !== '' || $month !== '';
+
+    if (! $hasFilters && ! JournalEdition::actifs()->exists()) {
+        $fallback = $loadJournals()->values();
+
+        return Inertia::render('Frontend/Communication/Journal', [
+            'editions' => $fallback,
+            'pagination' => [
+                'page' => 1,
+                'per_page' => $perPage,
+                'total' => $fallback->count(),
+                'last_page' => 1,
+            ],
+            'filters' => [
+                'search' => $search,
+                'year' => $year,
+                'month' => $month,
+            ],
+            'available_years' => $fallback
+                ->pluck('published_at')
+                ->filter()
+                ->map(fn (string $date) => substr($date, 0, 4))
+                ->unique()
+                ->sortDesc()
+                ->values(),
+        ]);
+    }
+
+    $query = JournalEdition::actifs();
+
+    if ($search !== '') {
+        $query->where(function ($builder) use ($search) {
+            $builder->where('title', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        });
+    }
+
+    if ($year !== '') {
+        $query->whereYear('published_at', $year);
+    }
+
+    if ($month !== '') {
+        $query->whereMonth('published_at', $month);
+    }
+
+    $paginator = $query->paginate($perPage)->withQueryString();
+    $editions = $paginator
+        ->getCollection()
+        ->map(fn (JournalEdition $edition) => $edition->toFrontendArray())
+        ->values();
+
+    $availableYears = JournalEdition::actifs()
+        ->whereNotNull('published_at')
+        ->selectRaw('YEAR(published_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->map(fn ($value) => (string) $value)
+        ->values();
+
     return Inertia::render('Frontend/Communication/Journal', [
-        'editions' => $loadJournals()->values(),
+        'editions' => $editions,
+        'pagination' => [
+            'page' => $paginator->currentPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'last_page' => $paginator->lastPage(),
+        ],
+        'filters' => [
+            'search' => $search,
+            'year' => $year,
+            'month' => $month,
+        ],
+        'available_years' => $availableYears,
     ]);
 })->name('communication.journal');
 
@@ -410,8 +619,10 @@ Route::get('/vie-citoyenne', function () {
 
 Route::get('/vie-citoyenne/message-du-maire', function () use ($loadContentBlocks) {
     $blocks = $loadContentBlocks('message-maire');
+    $messageMaire = MessageMaire::actif()->first();
 
     return Inertia::render('Frontend/VieCitoyenne/MessageMaire', [
+        'messageMaire' => $messageMaire?->toFrontendArray(),
         'content' => [
             'intro' => $blocks->get('intro'),
         ],
@@ -808,6 +1019,10 @@ Route::middleware(['auth', 'verified', 'admin'])
             return Inertia::render('Backend/Adjoints/Index');
         })->name('adjoints.index');
 
+        Route::get('/messages-maire', function () {
+            return Inertia::render('Backend/MessagesMaire/Index');
+        })->name('messages-maire.index');
+
         Route::get('/directions', function (Request $request) {
             $listing = ListingQuery::make($request, Direction::query(), [
                 'search' => [
@@ -977,6 +1192,13 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::put('/api/adjoints/{adjoint}', [AdjointController::class, 'update'])->name('api.adjoints.update');
         Route::delete('/api/adjoints/{adjoint}', [AdjointController::class, 'destroy'])->name('api.adjoints.destroy');
         Route::post('/api/adjoints/update-order', [AdjointController::class, 'updateOrder'])->name('api.adjoints.update-order');
+
+        // Gestion des messages du maire
+        Route::get('/api/messages-maire', [MessageMaireController::class, 'index'])->name('api.messages-maire.index');
+        Route::post('/api/messages-maire', [MessageMaireController::class, 'store'])->name('api.messages-maire.store');
+        Route::put('/api/messages-maire/{messageMaire}', [MessageMaireController::class, 'update'])->name('api.messages-maire.update');
+        Route::delete('/api/messages-maire/{messageMaire}', [MessageMaireController::class, 'destroy'])->name('api.messages-maire.destroy');
+        Route::post('/api/messages-maire/{messageMaire}/toggle-actif', [MessageMaireController::class, 'toggleActif'])->name('api.messages-maire.toggle-actif');
 
         // Gestion des lieux
         Route::get('/api/lieux', [LieuController::class, 'index'])->name('api.lieux.index');

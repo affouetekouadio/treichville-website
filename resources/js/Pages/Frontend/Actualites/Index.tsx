@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "@inertiajs/react";
+import React, { useEffect, useState } from "react";
+import { Link, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -12,18 +12,40 @@ import FrontendLayout from "@/layouts/frontend-layout";
 import type { FrontendPage } from "@/types";
 import PageBanner from "@/components/Frontend/PageBanner";
 import { actualiteDetailUrl } from "@/utils";
+import ListingPagination from "@/components/listing/ListingPagination";
+import { listingVisit } from "@/lib/listing";
 
 type ActualitesPageProps = {
   actualites?: Actualite[];
   categories?: { id: number; name: string }[];
+  pagination?: {
+    page: number;
+    per_page: number;
+    total: number;
+    last_page: number;
+  };
+  filters?: {
+    search?: string;
+    category?: string;
+  };
 };
 
-const Actualites: FrontendPage<ActualitesPageProps> = ({
-  actualites = [],
-  categories = [],
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState("Toutes");
-  const [searchQuery, setSearchQuery] = useState("");
+const Actualites: FrontendPage<ActualitesPageProps> = () => {
+  const { props, url } = usePage<ActualitesPageProps>();
+  const baseUrl = url.split("?")[0];
+  const actualites = props.actualites ?? [];
+  const categories = props.categories ?? [];
+  const pagination = props.pagination ?? {
+    page: 1,
+    per_page: 12,
+    total: actualites.length,
+    last_page: 1,
+  };
+  const filters = props.filters ?? {};
+  const [selectedCategory, setSelectedCategory] = useState(
+    filters.category && filters.category.trim() !== "" ? filters.category : "Toutes"
+  );
+  const [searchQuery, setSearchQuery] = useState(filters.search ?? "");
   const [isLoading] = useState(false);
 
   const categoryNames = categories.length
@@ -40,13 +62,23 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({
     "Environnement": "bg-emerald-600"
   };
 
-  const filteredActualites = actualites.filter((actu) => {
-    const matchCategory = selectedCategory === "Toutes" || actu.categorie === selectedCategory;
-    const matchSearch = !searchQuery || 
-      actu.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      actu.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchCategory && matchSearch;
-  });
+  useEffect(() => {
+    setSelectedCategory(
+      filters.category && filters.category.trim() !== "" ? filters.category : "Toutes"
+    );
+    setSearchQuery(filters.search ?? "");
+  }, [filters.category, filters.search]);
+
+  const applyFilters = (nextCategory = selectedCategory) => {
+    const normalizedCategory =
+      !nextCategory || nextCategory === "Toutes" ? "" : nextCategory;
+    listingVisit(baseUrl, {
+      search: searchQuery.trim(),
+      category: normalizedCategory,
+      page: 1,
+      per_page: pagination.per_page,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -78,7 +110,13 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Filtres */}
-        <div className="bg-white rounded-xl p-6 shadow-lg mb-10">
+        <form
+          className="bg-white rounded-xl p-6 shadow-lg mb-10"
+          onSubmit={(event) => {
+            event.preventDefault();
+            applyFilters();
+          }}
+        >
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="flex flex-wrap gap-2">
               {categoryOptions.map((cat) => (
@@ -86,7 +124,11 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({
                   key={cat}
                   variant={selectedCategory === cat ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedCategory(cat)}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    applyFilters(cat);
+                  }}
                   className={selectedCategory === cat ? "bg-[var(--primary-orange)] hover:bg-orange-600" : ""}
                 >
                   {cat}
@@ -102,14 +144,17 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({
                 className="pl-10"
               />
             </div>
+            <Button type="submit" className="bg-[var(--primary-orange)] hover:bg-orange-600">
+              Rechercher
+            </Button>
           </div>
-        </div>
+        </form>
 
         {isLoading ? (
           <div className="text-center py-12">Chargement...</div>
-        ) : filteredActualites.length > 0 ? (
+        ) : actualites.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-            {filteredActualites.map((actu, index) => {
+            {actualites.map((actu, index) => {
               const badgeClass =
                 categoryColors[actu.categorie as keyof typeof categoryColors] || "bg-gray-600";
               const detailUrl = actu.slug ? actualiteDetailUrl(actu.slug) : "#";
@@ -160,6 +205,20 @@ const Actualites: FrontendPage<ActualitesPageProps> = ({
             <p className="text-gray-500">Aucune actualité trouvée</p>
           </div>
         )}
+
+        <ListingPagination
+          page={pagination.page}
+          lastPage={pagination.last_page}
+          total={pagination.total}
+          onPageChange={(page) =>
+            listingVisit(baseUrl, {
+              search: searchQuery.trim(),
+              category: selectedCategory === "Toutes" ? "" : selectedCategory,
+              page,
+              per_page: pagination.per_page,
+            })
+          }
+        />
       </div>
     </div>
   );

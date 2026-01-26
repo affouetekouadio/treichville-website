@@ -22,7 +22,7 @@ const visions = [
     color: "from-blue-500 to-cyan-500",
   },
   {
-    title: "Une économie dynamique",
+    title: "Une économie dynamique", 
     description: "Soutenir les entrepreneurs locaux, créer des opportunités d'emploi et développer l'attractivité économique de Treichville.",
     icon: TrendingUp,
     color: "from-[#f8812f] to-amber-500",
@@ -50,6 +50,20 @@ const engagements = [
   "Promotion de la culture et du patrimoine local",
 ];
 
+type MessageMaireData = {
+  id: string;
+  photo_url: string | null;
+  image_fond_url: string | null;
+  titre_vision: string;
+  salutation: string;
+  contenu_message: string;
+  texte_conclusion: string | null;
+  nom_maire: string;
+  titre_maire: string;
+  citation: string | null;
+  actif: boolean;
+};
+
 type MessageMaireContent = {
   intro?: {
     background_image?: string | null;
@@ -58,11 +72,17 @@ type MessageMaireContent = {
 };
 
 const MessageMaire: FrontendPage = () => {
-  const { props } = usePage<{ content?: MessageMaireContent }>();
+  const { props } = usePage<{ messageMaire?: MessageMaireData; content?: MessageMaireContent }>();
+  const msg = props.messageMaire;
   const intro = props.content?.intro;
-  const fallbackBackground =
-    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400";
-  const fallbackMayor = "/images/personnes/message-maire.jpg";
+
+  const backgroundImage = msg?.image_fond_url || intro?.background_image || "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400";
+  const mayorPhoto = msg?.photo_url || intro?.image || "/images/personnes/message-maire.jpg";
+  const titreVision = msg?.titre_vision || "Vision 2025-2030";
+  const salutation = msg?.salutation || "Chères Treichvilloises, chers Treichvillois,";
+  const nomMaire = msg?.nom_maire || "François Albert AMICHIA";
+  const titreMaire = msg?.titre_maire || "Maire de Treichville";
+  const citation = msg?.citation || "Ensemble, bâtissons une Treichville moderne, inclusive et prospère pour tous.";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -78,7 +98,7 @@ const MessageMaire: FrontendPage = () => {
         <div
           className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: `url('${intro?.background_image || fallbackBackground}')`,
+            backgroundImage: `url('${backgroundImage}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -96,8 +116,8 @@ const MessageMaire: FrontendPage = () => {
             <div className="relative">
               <div className="max-w-[520px] overflow-hidden rounded-3xl border-4 border-white">
                 <img
-                  src={intro?.image || fallbackMayor}
-                  alt="Maire de Treichville"
+                  src={mayorPhoto}
+                  alt={nomMaire}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -116,7 +136,7 @@ const MessageMaire: FrontendPage = () => {
                 <Lightbulb className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-[#f8812f] font-semibold text-sm">Vision 2025-2030</p>
+                <p className="text-[#f8812f] font-semibold text-sm">{titreVision}</p>
                 <h2 className="text-2xl font-bold text-gray-900">Message aux citoyens</h2>
               </div>
             </div>
@@ -124,33 +144,44 @@ const MessageMaire: FrontendPage = () => {
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <p className="text-lg">
                 <span className="text-5xl text-[#03800a] font-serif float-left mr-3 mt-1">"</span>
-                Chères Treichvilloises, chers Treichvillois,
+                {salutation}
               </p>
-              <p>
-                C'est avec une profonde gratitude et un engagement renouvelé que je m'adresse à vous aujourd'hui.
-                Notre commune, riche de son histoire et de sa diversité, traverse une période de transformation sans précédent.
-              </p>
-              <p>
-                Ensemble, nous avons lancé des projets ambitieux qui changent concrètement votre quotidien :
-                modernisation de nos infrastructures, amélioration des services publics, soutien aux entreprises locales,
-                et valorisation de notre magnifique patrimoine culturel.
-              </p>
-              <p>
-                Mais notre travail ne fait que commencer. Nous devons poursuivre nos efforts pour faire de Treichville
-                une commune moderne, inclusive et prospère où chaque citoyen trouve sa place et peut s'épanouir.
-              </p>
-              <p className="font-semibold text-gray-900">
-                Votre participation, vos idées et votre engagement sont essentiels à notre réussite collective.
-                Ensemble, construisons la Treichville de demain.
-              </p>
+              {msg?.contenu_message ? (
+                <>
+                  <div className="whitespace-pre-line">{msg.contenu_message}</div>
+                  {msg.texte_conclusion && (
+                    <p className="font-semibold text-gray-900">{msg.texte_conclusion}</p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p>
+                    C'est avec une profonde gratitude et un engagement renouvelé que je m'adresse à vous aujourd'hui.
+                    Notre commune, riche de son histoire et de sa diversité, traverse une période de transformation sans précédent.
+                  </p>
+                  <p>
+                    Ensemble, nous avons lancé des projets ambitieux qui changent concrètement votre quotidien :
+                    modernisation de nos infrastructures, amélioration des services publics, soutien aux entreprises locales,
+                    et valorisation de notre magnifique patrimoine culturel.
+                  </p>
+                  <p>
+                    Mais notre travail ne fait que commencer. Nous devons poursuivre nos efforts pour faire de Treichville
+                    une commune moderne, inclusive et prospère où chaque citoyen trouve sa place et peut s'épanouir.
+                  </p>
+                  <p className="font-semibold text-gray-900">
+                    Votre participation, vos idées et votre engagement sont essentiels à notre réussite collective.
+                    Ensemble, construisons la Treichville de demain.
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Signature */}
             <div className="mt-10 bg-white rounded-2xl p-6 shadow-lg max-w-xl">
-              <p className="text-gray-900 font-bold text-xl mb-1">François Albert <strong>AMICHIA</strong></p>
-              <p className="text-[#03800a] font-semibold mb-4">Maire de Treichville</p>
+              <p className="text-gray-900 font-bold text-xl mb-1">{nomMaire}</p>
+              <p className="text-[#03800a] font-semibold mb-4">{titreMaire}</p>
               <div className="h-px bg-gradient-to-r from-[#f8812f] to-transparent mb-4" />
-              <p className="text-gray-600 text-sm italic">"Ensemble, bâtissons une Treichville moderne, inclusive et prospère pour tous."</p>
+              <p className="text-gray-600 text-sm italic">"{citation}"</p>
             </div>
           </motion.div>
         </div>

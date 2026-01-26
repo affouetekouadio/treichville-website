@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, CalendarDays, Folder, Images, LayoutGrid, Mail, MapPin, Megaphone, PanelsTopLeft, Presentation, Settings, Tag, Users, Network } from 'lucide-react';
+import { BookOpen, CalendarDays, Folder, Images, LayoutGrid, Mail, MapPin, Megaphone, MessageSquare, PanelsTopLeft, Presentation, Settings, Tag, Users, Network } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -66,6 +66,11 @@ const mainNavItems: NavItem[] = [
         title: 'Adjoints',
         href: '/admin/adjoints',
         icon: Users,
+    },
+    {
+        title: 'Message du Maire',
+        href: '/admin/messages-maire',
+        icon: MessageSquare,
     },
     {
         title: 'Directions',
