@@ -75,8 +75,8 @@ export default function AboutSection({
 
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
               Treichville, berceau historique d'Abidjan, est une commune riche de son histoire, 
-              de sa diversité culturelle et du dynamisme de ses habitants. Ensemble, nous œuvrons 
-              chaque jour pour améliorer votre cadre de vie et promouvoir le développement de notre territoire.
+              de sa diversité culturelle et du dynamisme de ses habitants. La Mairie œuvre chaque jour pour l’amélioration du cadre 
+              de vie des populations et pour la promotion du développement de la cité N’zassa.
             </p>
 
             {/* Features List */}

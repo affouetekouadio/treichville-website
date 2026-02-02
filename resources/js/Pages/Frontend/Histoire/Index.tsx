@@ -997,81 +997,84 @@ const Histoire: FrontendPage = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Dynamique économique locale</h2>
           </motion.div>
 
-          <div className="space-y-8">
+          <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 items-start">
             {/* Texte principal */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="prose prose-lg max-w-none"
+              className="space-y-5"
             >
-              <p className="text-gray-700 leading-relaxed mb-4">
-                La commune constitue un <strong>moteur économique majeur</strong>, grâce à :
-              </p>
-              <ul className="space-y-2 text-gray-700 mb-8">
-                <li>Un tissu commercial dense et une structure diversifiée</li>
-                <li>Des activités industrielles dans différents secteurs</li>
-                <li>L'importance des PME et de l'économie informelle</li>
-                <li>Des initiatives d'insertion professionnelle et d'entrepreneuriat jeunesse</li>
-              </ul>
+              <div className="relative">
+                <div
+                  className="absolute inset-0 opacity-[0.06] bg-no-repeat bg-left-top bg-contain pointer-events-none"
+                  style={{ backgroundImage: "url('/logo.png')" }}
+                />
+                <div className="relative space-y-4">
+                  <p className="text-gray-700 leading-relaxed text-lg">
+                    La commune constitue un <strong>moteur économique majeur</strong>, grâce à :
+                  </p>
+                  <ul className="space-y-3 text-gray-700 leading-relaxed text-lg">
+                    {[
+                      "Un tissu commercial dense et une structure diversifiée",
+                      "Des activités industrielles dans différents secteurs",
+                      "L'importance des PME et de l'économie informelle",
+                      "Des initiatives d'insertion professionnelle et d'entrepreneuriat jeunesse",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-1.5 h-3 w-3 rounded-full bg-[#f8812f]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </motion.div>
 
-            {/* Pôles économiques - Layout compact avec images */}
+            {/* Pôles économiques */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="grid md:grid-cols-2 gap-6"
+              className="grid sm:grid-cols-2 gap-4"
             >
-              {/* Marché de téléphones */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                <div className="aspect-[16/10] relative overflow-hidden">
-                  <img
-                    src="/marche-telephone.jpg"
-                    alt="Marché de téléphones"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center gap-1.5 bg-[#03800a] text-white px-3 py-1 rounded-full text-xs font-semibold">
-                      <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
-                      Pôle technologique
-                    </span>
+              {[
+                {
+                  image: "/marche-telephone.jpg",
+                  title: "Marché de téléphones",
+                  badge: "Pôle technologique",
+                  badgeColor: "bg-[#03800a]",
+                  text:
+                    "Pôle informel majeur de la téléphonie mobile, reconnu pour la diversité de l’offre et le savoir-faire.",
+                },
+                {
+                  image: "/centre-artisanal.png",
+                  title: "CAVA",
+                  badge: "Artisanat & Culture",
+                  badgeColor: "bg-[#f8812f]",
+                  text:
+                    "Centre Artisanal de la Ville d'Abidjan, vitrine de l’artisanat local ivoirien et africain.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="space-y-3">
+                  <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200 relative">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-52 object-cover"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className={`inline-flex items-center gap-1.5 ${item.badgeColor} text-white px-3 py-1 rounded-full text-xs font-semibold`}>
+                        <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
+                        {item.badge}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-sm text-gray-700 leading-relaxed">
+                    <strong className="text-gray-900">{item.title}</strong> — {item.text}
                   </div>
                 </div>
-                <div className="p-5">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Marché de téléphones</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    Le <strong>marché de téléphones</strong> s'impose comme l'un des principaux pôles informels
-                    de la téléphonie mobile à Abidjan, reconnu pour la diversité de son offre, des prix compétitifs
-                    et le savoir-faire de ses techniciens.
-                  </p>
-                </div>
-              </div>
-
-              {/* CAVA */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                <div className="aspect-[16/10] relative overflow-hidden">
-                  <img
-                    src="/centre-artisanal.png"
-                    alt="CAVA - Centre Artisanal"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center gap-1.5 bg-[#f8812f] text-white px-3 py-1 rounded-full text-xs font-semibold">
-                      <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
-                      Artisanat & Culture
-                    </span>
-                  </div>
-                </div>
-                <div className="p-5">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">CAVA</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    Le <strong>CAVA</strong> (Centre Artisanal de la Ville d'Abidjan) est le plus grand marché
-                    d'artisans de la commune, situé à la rue du canal. Il représente une véritable vitrine
-                    de l'artisanat local ivoirien et africain.
-                  </p>
-                </div>
-              </div>
+              ))}
             </motion.div>
           </div>
         </div>
