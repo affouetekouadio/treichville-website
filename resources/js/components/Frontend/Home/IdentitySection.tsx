@@ -37,7 +37,7 @@ export default function IdentitySection({
   return (
     <section className="relative py-16 overflow-hidden bg-[#F8FAFC]">
       <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white/95" />
-      <div className="max-w-6xl mx-auto px-6 relative">
+      <div className="max-w-7xl mx-auto px-6 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,7 +45,7 @@ export default function IdentitySection({
           transition={{ duration: 0.6 }}
           className="py-8 lg:py-10"
         >
-          <div className="grid lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] gap-10 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#03800a]/10 text-[#03800a] text-xs font-semibold uppercase tracking-wider mb-4">
                 Carte d'identite
@@ -79,9 +79,9 @@ export default function IdentitySection({
               <div className="relative">
                 <div className="absolute -inset-6 bg-[#03800a]/10 rounded-full blur-3xl" />
                 <img
-                  src="/logo.png"
-                  alt="Logo Treichville"
-                  className="relative w-48 sm:w-56 lg:w-64 h-auto opacity-80"
+                  src="/maisnon-nzassa.jpg"
+                  alt="Commune N'zassa"
+                  className="relative w-full max-w-[360px] sm:max-w-[480px] lg:max-w-[640px] h-[260px] sm:h-[320px] lg:h-[380px] object-cover opacity-95 rounded-3xl shadow-2xl"
                 />
               </div>
             </div>
