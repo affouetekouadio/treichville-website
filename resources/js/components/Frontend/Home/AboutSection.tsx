@@ -15,7 +15,7 @@ export default function AboutSection({
   mayorImage,
 }: AboutSectionProps) {
   const fallbackBackground = "images/autres/maire-14.jpg";
-  const fallbackMayor = "/images/personnes/maire-2.jpg";
+  const fallbackMayor = "/maire-officiel.png";
 
   return (
     <section className="py-24 bg-white relative overflow-hidden">

@@ -114,7 +114,7 @@ const MessageMaire: FrontendPage = () => {
             className="lg:col-span-2"
           >
             <div className="relative">
-              <div className="max-w-[520px] overflow-hidden rounded-3xl border-4 border-white">
+              <div className="max-w-[520px] overflow-hidden rounded-3xl border-4 border-white h-[440px] sm:h-[520px] lg:h-[640px]">
                 <img
                   src={mayorPhoto}
                   alt={nomMaire}
@@ -193,7 +193,7 @@ const MessageMaire: FrontendPage = () => {
 
       {/* Chiffres clés */}
       {/* <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-16 relative overflow-hidden"> */}
-      <section className="bg-gradient-to-br from-green-700 to-green-700 py-16 relative overflow-hidden">
+      {/* <section className="bg-gradient-to-br from-green-700 to-green-700 py-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8812f] rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#03800a] rounded-full blur-3xl" />
@@ -229,7 +229,7 @@ const MessageMaire: FrontendPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Vision et Priorités */}
       <section className="max-w-7xl mx-auto px-6 py-16">

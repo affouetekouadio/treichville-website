@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, MapPin, Users, Building, Ship, ShoppingBag, Landmark, Map, Heart, Home, ChevronLeft, ChevronRight, Award, School, Briefcase, Palette, TrendingUp, Target } from "lucide-react";
+import { Calendar, MapPin, Users, Building, Ship, ShoppingBag, Landmark, Map, Heart, Home, ChevronLeft, ChevronRight, Award, School, Palette, TrendingUp, Target } from "lucide-react";
 import FrontendLayout from "@/layouts/frontend-layout";
 import PageBanner from "@/components/Frontend/PageBanner";
 import type { FrontendPage } from "@/types";
@@ -898,295 +898,182 @@ const Histoire: FrontendPage = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Infrastructures et équipements structurants</h2>
           </motion.div>
 
-          <div className="space-y-10">
-            <div>
-              <p className="text-gray-700 leading-relaxed">
-                Treichville dispose de nombreux équipements structurants, parmi lesquels :
-              </p>
-              <ul className="mt-4 space-y-3 text-gray-700 leading-relaxed">
-                {[
-                  "Des bâtiments administratifs municipaux",
-                  "Des établissements scolaires et des centres de formation",
-                  "Des centres de santé publics et privés, ainsi qu’un dispensaire municipal offrant des soins gratuits",
-                  "Des infrastructures sportives et culturelles",
-                  "Des marchés, des gares routières et des espaces de loisirs",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="mt-2 h-2 w-2 rounded-full bg-gray-900" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <div className="rounded-xl overflow-hidden shadow-lg">
-                  <img
-                    src="/ecole-maternelle.jpeg"
-                    alt="Ecole maternelle Marguerite Sakoum"
-                    className="w-full h-56 object-cover"
-                  />
-                </div>
-                <p className="text-gray-700 leading-relaxed">
-                  <strong>Ecole maternelle Marguerite Sakoum</strong> est l’un des établissements
-                  préscolaires municipaux de la commune.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="rounded-xl overflow-hidden shadow-lg">
-                  <img
-                    src="/dispensaire-municipal.png"
-                    alt="Dispensaire municipal"
-                    className="w-full h-56 object-cover"
-                  />
-                </div>
-                <p className="text-gray-700 leading-relaxed">
-                  Situé au sein de la mairie, le <strong>dispensaire municipal</strong> est une structure de santé
-                  de proximité mise en place pour rapprocher les soins des populations.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="rounded-xl overflow-hidden shadow-lg">
-                <img
-                  src="/stade-cheick-konate.png"
-                  alt="Stade Cheick Konaté Anzoumana"
-                  className="w-full h-72 object-cover"
+          <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 items-start">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-5"
+            >
+              <div className="relative">
+                <div
+                  className="absolute inset-0 opacity-[0.06] bg-no-repeat bg-left-top bg-contain pointer-events-none"
+                  style={{ backgroundImage: "url('/logo.png')" }}
                 />
+                <div className="relative space-y-4">
+                  <p className="text-gray-700 leading-relaxed text-lg">
+                    Treichville dispose de nombreux équipements structurants, parmi lesquels :
+                  </p>
+                  <ul className="space-y-3 text-gray-700 leading-relaxed text-lg">
+                    {[
+                      "Des bâtiments administratifs municipaux",
+                      "Des établissements scolaires et des centres de formation",
+                      "Des centres de santé publics et privés, ainsi qu’un dispensaire municipal offrant des soins gratuits",
+                      "Des infrastructures sportives et culturelles",
+                      "Des marchés, des gares routières et des espaces de loisirs",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-1.5 h-3 w-3 rounded-full bg-[#f8812f]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <p className="text-gray-700 leading-relaxed text-center">
-                <strong>Stade Cheick Konaté Anzoumana</strong> situé au quartier Yobou Lambert ex Biafra.
-              </p>
-            </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="grid sm:grid-cols-2 gap-4"
+            >
+              {[
+                {
+                  src: "/ecole-maternelle.jpeg",
+                  title: "Ecole maternelle Marguerite Sakoum",
+                  caption:
+                    "Etablissement prescolaire municipal de la commune.",
+                },
+                {
+                  src: "/dispensaire-municipal.png",
+                  title: "Dispensaire municipal",
+                  caption:
+                    "Structure de sante de proximite pour rapprocher les soins.",
+                },
+              ].map((item) => (
+                <div key={item.src} className="space-y-3">
+                  <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200">
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="w-full h-52 object-cover"
+                    />
+                  </div>
+                  <div className="text-sm text-gray-700 leading-relaxed">
+                    <strong className="text-gray-900">{item.title}</strong> {item.caption}
+                  </div>
+                </div>
+              ))}
+
+              <div className="sm:col-span-2 space-y-3">
+                <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200">
+                  <img
+                    src="/stade-cheick-konate.png"
+                    alt="Stade Cheick Konaté Anzoumana"
+                    className="w-full h-64 object-cover"
+                  />
+                </div>
+                <div className="text-sm text-gray-700 leading-relaxed text-center">
+                  <strong className="text-gray-900">Stade Cheick Konaté Anzoumana</strong> situé au quartier
+                  Yobou Lambert ex Biafra.
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Dynamique économique locale */}
-      <section className="py-16 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.04] bg-no-repeat bg-center bg-contain"
-          style={{ backgroundImage: "url('/logo.png')" }}
-        />
-
-        <div className="max-w-7xl mx-auto px-6 relative">
+      <section className="py-16 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-10"
           >
             <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Économie locale</p>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Dynamique économique locale</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              La commune constitue un moteur économique majeur, offrant un environnement propice aux affaires et aux investissements.
-            </p>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Dynamique économique locale</h2>
           </motion.div>
 
-          {/* Atouts économiques - Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
-          >
-            {[
-              {
-                icon: ShoppingBag,
-                title: "Tissu commercial dense",
-                desc: "Structure commerciale dynamique",
-                color: "from-blue-500 to-cyan-500",
-              },
-              {
-                icon: Building,
-                title: "Activités industrielles",
-                desc: "Secteurs diversifiés",
-                color: "from-purple-500 to-pink-500",
-              },
-              {
-                icon: Users,
-                title: "PME et économie informelle",
-                desc: "Entrepreneuriat local fort",
-                color: "from-[#f8812f] to-amber-500",
-              },
-              {
-                icon: Briefcase,
-                title: "Entrepreneuriat jeunesse",
-                desc: "Insertion professionnelle",
-                color: "from-[#03800a] to-emerald-700",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
-              >
-                <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <item.icon className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600 text-sm">{item.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Pôles économiques - Grande mise en avant */}
-          <div className="space-y-12">
-            {/* Marché de téléphones */}
+          <div className="space-y-8">
+            {/* Texte principal */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="grid lg:grid-cols-[1fr_1.2fr] gap-8 items-center"
+              className="prose prose-lg max-w-none"
             >
-              <div className="order-2 lg:order-1 space-y-4">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#03800a]/10 to-emerald-100 px-4 py-2 rounded-full">
-                  <span className="w-2 h-2 bg-[#03800a] rounded-full animate-pulse"></span>
-                  <span className="text-[#03800a] font-semibold text-sm">Pôle technologique</span>
-                </div>
-                <h3 className="text-2xl lg:text-3xl font-bold text-gray-900">Marché de téléphones</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Le <strong>marché de téléphones</strong> s'impose comme l'un des principaux pôles informels
-                  de la téléphonie mobile à Abidjan, reconnu pour la diversité de son offre, des prix compétitifs
-                  et le savoir-faire de ses techniciens.
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  Attirant une clientèle locale, métropolitaine et nationale, ce marché incarne le dynamisme
-                  entrepreneurial et l'innovation au service de l'économie populaire.
-                </p>
-                <div className="flex items-center gap-4 pt-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-[#f8812f]/10 rounded-lg flex items-center justify-center">
-                      <Users className="w-5 h-5 text-[#f8812f]" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-gray-900">1000+</div>
-                      <div className="text-xs text-gray-600">Commerçants</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-[#03800a]/10 rounded-lg flex items-center justify-center">
-                      <ShoppingBag className="w-5 h-5 text-[#03800a]" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-gray-900">5000+</div>
-                      <div className="text-xs text-gray-600">Clients/jour</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="order-1 lg:order-2 relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-[#03800a]/20 to-emerald-200/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                  <div className="aspect-[4/3] bg-gray-200">
-                    <img
-                      src="/marche-telephone.jpg"
-                      alt="Marché de téléphones de Treichville"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4">
-                      <p className="text-sm font-semibold text-gray-900">Marché de téléphones - Zone 4</p>
-                      <p className="text-xs text-gray-600 mt-1">Le hub technologique de Treichville</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                La commune constitue un <strong>moteur économique majeur</strong>, grâce à :
+              </p>
+              <ul className="space-y-2 text-gray-700 mb-8">
+                <li>Un tissu commercial dense et une structure diversifiée</li>
+                <li>Des activités industrielles dans différents secteurs</li>
+                <li>L'importance des PME et de l'économie informelle</li>
+                <li>Des initiatives d'insertion professionnelle et d'entrepreneuriat jeunesse</li>
+              </ul>
             </motion.div>
 
-            {/* CAVA - Centre Artisanal */}
+            {/* Pôles économiques - Layout compact avec images */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="grid lg:grid-cols-[1.2fr_1fr] gap-8 items-center"
+              className="grid md:grid-cols-2 gap-6"
             >
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-[#f8812f]/20 to-amber-200/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                  <div className="aspect-[4/3] bg-gray-200">
-                    <img
-                      src="/centre-artisanal.png"
-                      alt="CAVA - Centre Artisanal de la Ville d'Abidjan"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
+              {/* Marché de téléphones */}
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                <div className="aspect-[16/10] relative overflow-hidden">
+                  <img
+                    src="/marche-telephone.jpg"
+                    alt="Marché de téléphones"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <span className="inline-flex items-center gap-1.5 bg-[#03800a] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
+                      Pôle technologique
+                    </span>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4">
-                      <p className="text-sm font-semibold text-gray-900">CAVA - Rue du Canal</p>
-                      <p className="text-xs text-gray-600 mt-1">Vitrine de l'artisanat ivoirien</p>
-                    </div>
-                  </div>
+                </div>
+                <div className="p-5">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Marché de téléphones</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Le <strong>marché de téléphones</strong> s'impose comme l'un des principaux pôles informels
+                    de la téléphonie mobile à Abidjan, reconnu pour la diversité de son offre, des prix compétitifs
+                    et le savoir-faire de ses techniciens.
+                  </p>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#f8812f]/10 to-amber-100 px-4 py-2 rounded-full">
-                  <span className="w-2 h-2 bg-[#f8812f] rounded-full animate-pulse"></span>
-                  <span className="text-[#f8812f] font-semibold text-sm">Artisanat & Culture</span>
+
+              {/* CAVA */}
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                <div className="aspect-[16/10] relative overflow-hidden">
+                  <img
+                    src="/centre-artisanal.png"
+                    alt="CAVA - Centre Artisanal"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <span className="inline-flex items-center gap-1.5 bg-[#f8812f] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
+                      Artisanat & Culture
+                    </span>
+                  </div>
                 </div>
-                <h3 className="text-2xl lg:text-3xl font-bold text-gray-900">
-                  CAVA - Centre Artisanal de la Ville d'Abidjan
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Le <strong>CAVA</strong> est le plus grand marché d'artisans de la commune, situé à la rue du canal.
-                  Il représente une véritable vitrine de l'artisanat local ivoirien et africain.
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  De la sculpture sur bois aux tissus traditionnels, en passant par la bijouterie et la maroquinerie,
-                  le CAVA concentre le savoir-faire ancestral et contemporain des artisans de la région.
-                </p>
-                <div className="flex items-center gap-4 pt-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-[#f8812f]/10 rounded-lg flex items-center justify-center">
-                      <Palette className="w-5 h-5 text-[#f8812f]" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-gray-900">500+</div>
-                      <div className="text-xs text-gray-600">Artisans</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-[#03800a]/10 rounded-lg flex items-center justify-center">
-                      <Building className="w-5 h-5 text-[#03800a]" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-gray-900">100+</div>
-                      <div className="text-xs text-gray-600">Boutiques</div>
-                    </div>
-                  </div>
+                <div className="p-5">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">CAVA</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Le <strong>CAVA</strong> (Centre Artisanal de la Ville d'Abidjan) est le plus grand marché
+                    d'artisans de la commune, situé à la rue du canal. Il représente une véritable vitrine
+                    de l'artisanat local ivoirien et africain.
+                  </p>
                 </div>
               </div>
             </motion.div>
           </div>
-
-          {/* Citation finale */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-16 bg-gradient-to-r from-[#03800a] to-emerald-700 rounded-2xl p-8 lg:p-12 text-center text-white shadow-2xl"
-          >
-            <div className="max-w-3xl mx-auto">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <TrendingUp className="w-8 h-8 text-white" />
-              </div>
-              <p className="text-xl lg:text-2xl font-semibold mb-4">
-                "Treichville offre un environnement propice aux affaires et aux investissements"
-              </p>
-              <p className="text-white/80">
-                Un écosystème économique dynamique où tradition et modernité se rencontrent
-              </p>
-            </div>
-          </motion.div>
         </div>
       </section>
 
