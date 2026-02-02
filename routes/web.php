@@ -231,6 +231,7 @@ Route::get('/', function () use ($loadActualites, $loadEvenements, $loadSlides, 
         'homeSlides' => $loadSlides()->values(),
         'homeContent' => [
             'welcome' => $homeBlocks->get('welcome'),
+            'identity' => $homeBlocks->get('identity'),
             'stats' => $homeBlocks->get('stats'),
         ],
         'homeActualites' => $loadActualites()->take(3)->values(),

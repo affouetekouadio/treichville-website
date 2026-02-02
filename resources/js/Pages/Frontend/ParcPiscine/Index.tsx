@@ -82,7 +82,7 @@ const ParcsPiscines: FrontendPage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
       <PageBanner
-        title="Endroits à découvrir"
+        title="Endroit à découvrir"
         variant="compact"
       />
 

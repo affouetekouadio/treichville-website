@@ -14,7 +14,7 @@ type Stat = {
 const stats: Stat[] = [
   {
     icon: Users,
-    value: 137,
+    value: 100,
     suffix: "K",
     label: "Habitants",
     color: "text-blue-500",
@@ -22,7 +22,7 @@ const stats: Stat[] = [
   },
   {
     icon: Building2,
-    value: 12,
+    value: 48,
     suffix: "",
     label: "Quartiers",
     color: "text-[#f8812f]",
@@ -30,17 +30,17 @@ const stats: Stat[] = [
   },
   {
     icon: TrendingUp,
-    value: 8,
-    suffix: "K+",
-    label: "Entreprises",
+    value: 9,
+    suffix: "km²",
+    label: "Superficie",
     color: "text-[#03800a]",
     bgGradient: "from-[#03800a]/20 to-[#03800a]/10",
   },
   {
     icon: Heart,
-    value: 250,
-    suffix: "+",
-    label: "Services publics",
+    value: 50,
+    suffix: "",
+    label: "Elus municipaux",
     color: "text-rose-500",
     bgGradient: "from-rose-500/20 to-pink-500/10",
   },
@@ -179,13 +179,13 @@ export default function CityStatsSection({ backgroundImage }: CityStatsSectionPr
         >
           <div className="inline-flex items-center gap-3 bg-white/95 backdrop-blur-sm rounded-full px-6 py-3 shadow-xl border border-white/20">
             <div className="flex -space-x-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 border-2 border-white" />
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 border-2 border-white" />
+              <div className="w-8 h-8 rounded-full bg-white border-2 border-gray-200" />
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#03800a] to-[#03800a] border-2 border-white" />
             </div>
             <span className="text-gray-900 font-medium">
-              Plus de <span className="font-bold text-[#f8812f]">400 000</span> citoyens dans le
-              district
+              Environ <span className="font-bold text-[#f8812f]">100 000</span> citoyens dans la
+              commune
             </span>
           </div>
         </motion.div>

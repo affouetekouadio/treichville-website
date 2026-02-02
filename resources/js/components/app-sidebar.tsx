@@ -78,7 +78,7 @@ const mainNavItems: NavItem[] = [
         icon: Network,
     },
     {
-        title: 'Lieux',
+        title: 'Endroit à découvrir',
         href: '/admin/lieux',
         icon: MapPin,
     },

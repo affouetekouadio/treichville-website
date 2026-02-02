@@ -148,7 +148,10 @@ const MessageMaire: FrontendPage = () => {
               </p>
               {msg?.contenu_message ? (
                 <>
-                  <div className="whitespace-pre-line">{msg.contenu_message}</div>
+                  <div
+                    className="rich-content"
+                    dangerouslySetInnerHTML={{ __html: msg.contenu_message }}
+                  />
                   {msg.texte_conclusion && (
                     <p className="font-semibold text-gray-900">{msg.texte_conclusion}</p>
                   )}

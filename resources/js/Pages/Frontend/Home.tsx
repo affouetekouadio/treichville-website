@@ -4,6 +4,7 @@ import HeroSection from "@/components/Frontend/Home/HeroSection";
 import FlashInfoSection from "@/components/Frontend/Home/FlashInfoSection";
 import QuickServicesSection from "@/components/Frontend/Home/QuickServicesSection";
 import AboutSection from "@/components/Frontend/Home/AboutSection";
+import IdentitySection from "@/components/Frontend/Home/IdentitySection";
 import TeamSection from "@/components/Frontend/Home/TeamSection";
 import ServicesSection from "@/components/Frontend/Home/ServicesSection";
 import ActualitesSection from "@/components/Frontend/Home/ActualitesSection";
@@ -58,6 +59,12 @@ type HomeProps = {
       background_image?: string | null;
       image?: string | null;
     };
+    identity?: {
+      title?: string | null;
+      content?: string | null;
+      cta_text?: string | null;
+      cta_link?: string | null;
+    };
     stats?: {
       background_image?: string | null;
     };
@@ -98,6 +105,12 @@ const Home: FrontendPage = () => {
       <AboutSection
         backgroundImage={props.homeContent?.welcome?.background_image}
         mayorImage={props.homeContent?.welcome?.image}
+      />
+      <IdentitySection
+        title={props.homeContent?.identity?.title}
+        content={props.homeContent?.identity?.content}
+        ctaText={props.homeContent?.identity?.cta_text}
+        ctaLink={props.homeContent?.identity?.cta_link}
       />
       <TeamSection adjoints={adjoints} />
       <ServicesSection services={services} />

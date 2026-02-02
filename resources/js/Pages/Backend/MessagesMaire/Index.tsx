@@ -6,6 +6,7 @@ import { MessageSquare, Plus, Edit, Trash2, Eye, X, Upload, ToggleLeft, ToggleRi
 import { useNotification } from '@/contexts/NotificationContext';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import ImagePreviewModal from '@/components/ImagePreviewModal';
+import RichTextEditor from '@/components/Admin/RichTextEditor';
 
 interface MessageMaireItem {
   id: string;
@@ -477,13 +478,9 @@ const MessagesMaireIndex: FrontendPage = () => {
               {/* Message */}
               <div>
                 <label className="text-sm font-medium text-gray-700">Contenu du message *</label>
-                <textarea
-                  required
-                  rows={8}
+                <RichTextEditor
                   value={form.contenu_message}
-                  onChange={(e) => setForm({ ...form, contenu_message: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-green-200"
-                  placeholder="Le corps du message du maire..."
+                  onChange={(val) => setForm({ ...form, contenu_message: val })}
                 />
                 {formErrors.contenu_message?.[0] && (
                   <p className="mt-1 text-xs text-red-600">{formErrors.contenu_message[0]}</p>

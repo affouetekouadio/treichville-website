@@ -107,7 +107,7 @@ const EvenementDetails: FrontendPage<EvenementDetailsProps> = ({
 
           <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 lg:p-8">
             <div
-              className="prose max-w-none"
+              className="rich-content"
               dangerouslySetInnerHTML={{ __html: detailContent }}
             />
           </div>

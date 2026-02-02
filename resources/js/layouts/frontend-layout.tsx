@@ -115,7 +115,7 @@ export default function Layout({ children }: LayoutProps) {
       path: "QueFaire",
       submenu: [
         { label: "Events et expos", path: "Evenements" },
-        { label: "Endroits à découvrir", path: "ParcsPiscines" }
+        { label: "Endroit à découvrir", path: "ParcsPiscines" }
       ]
     },
     { label: "Nos Contacts", path: "Contact" }

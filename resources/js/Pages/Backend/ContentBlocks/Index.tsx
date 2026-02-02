@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useNotification } from '@/contexts/NotificationContext';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import ImagePreviewModal from '@/components/ImagePreviewModal';
+import RichTextEditor from '@/components/Admin/RichTextEditor';
 
 type ContentBlockItem = {
   id: number;
@@ -29,6 +30,7 @@ const pageSuggestions = [
 
 const sectionSuggestions = [
   'welcome',
+  'identity',
   'stats',
   'intro',
 ];
@@ -435,13 +437,7 @@ const AdminContentBlocks: FrontendPage = () => {
 
               <div>
                 <label className="text-sm font-medium text-gray-700">Contenu</label>
-                <textarea
-                  value={form.content}
-                  onChange={(e) => setForm({ ...form, content: e.target.value })}
-                  rows={4}
-                  className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-[#03800a]/20"
-                  placeholder="Texte ou description"
-                />
+                <RichTextEditor value={form.content} onChange={(val) => setForm({ ...form, content: val })} />
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">

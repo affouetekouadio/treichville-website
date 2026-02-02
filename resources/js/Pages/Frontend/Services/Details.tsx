@@ -98,7 +98,7 @@ const ServicesDetails: FrontendPage<DirectionDetailsProps> = ({
           </div>
 
           <div
-            className="prose max-w-none mt-6"
+            className="rich-content mt-6"
             dangerouslySetInnerHTML={{ __html: detailContent }}
           />
         </article>

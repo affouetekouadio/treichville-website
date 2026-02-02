@@ -318,7 +318,7 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
   return (
     <>
       <div className="flex flex-col gap-6 p-4">
-        <Head title="Endroits à découvrir" />
+        <Head title="Endroit à découvrir" />
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -326,7 +326,7 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
               <MapPin className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Endroits à découvrir</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Endroit à découvrir</h1>
               <p className="text-sm text-gray-500">Gestion des parcs et piscines (ordre modifiable par glisser-déposer)</p>
             </div>
           </div>
