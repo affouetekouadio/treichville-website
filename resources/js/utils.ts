@@ -5,6 +5,7 @@ const PAGE_ROUTES: Record<string, string> = {
   ConseilMunicipal: "/vie-citoyenne/conseil-municipal",
   QueFaire: "/que-faire",
   Histoire: "/histoire",
+  HistoireAnnexes: "/histoire/annexes",
   Patrimoine: "/patrimoine",
   Actualites: "/actualites",
   ActualiteDetails: "/actualites",

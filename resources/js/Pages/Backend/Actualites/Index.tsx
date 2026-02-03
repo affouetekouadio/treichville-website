@@ -104,6 +104,7 @@ const AdminActualites: FrontendPage<ActualitesPageProps> = ({
     published_at: '',
     description: '',
     contenu: '',
+    est_flash_info: false,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -116,6 +117,7 @@ const AdminActualites: FrontendPage<ActualitesPageProps> = ({
       published_at: '',
       description: '',
       contenu: '',
+      est_flash_info: false,
     });
     setImageFile(null);
     setEditingId(null);
@@ -174,6 +176,7 @@ const AdminActualites: FrontendPage<ActualitesPageProps> = ({
       published_at: item.published_at ? item.published_at.split('T')[0] : '',
       description: item.description || '',
       contenu: item.contenu || '',
+      est_flash_info: (item as any).est_flash_info || false,
     });
     setEditingId(item.id);
     setOpenForm(true);
@@ -442,6 +445,18 @@ const AdminActualites: FrontendPage<ActualitesPageProps> = ({
                   <option value="published">Publié</option>
                   <option value="draft">Brouillon</option>
                 </select>
+              </div>
+              <div>
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.est_flash_info}
+                    onChange={(e) => setForm({ ...form, est_flash_info: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300 text-[#03800a] focus:ring-2 focus:ring-[#03800a]/20"
+                  />
+                  <span>Afficher en flash info</span>
+                </label>
+                <p className="mt-1 text-xs text-gray-500">Afficher cette actualité dans le bandeau flash info de la page d'accueil</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700">Description courte</label>

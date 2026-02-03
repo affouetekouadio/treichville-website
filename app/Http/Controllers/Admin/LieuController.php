@@ -31,6 +31,7 @@ class LieuController extends Controller
                 'equipements' => $lieu->equipements,
                 'ordre' => $lieu->ordre,
                 'actif' => $lieu->actif,
+                'is_flash_info' => $lieu->is_flash_info,
                 'created_at' => $lieu->created_at,
             ];
         });
@@ -55,11 +56,17 @@ class LieuController extends Controller
                 'equipements.*' => 'string|max:255',
                 'ordre' => 'nullable|integer',
                 'actif' => 'nullable',
+                'is_flash_info' => 'nullable',
             ]);
 
             // Convertir actif en booléen
             if (isset($validated['actif'])) {
                 $validated['actif'] = filter_var($validated['actif'], FILTER_VALIDATE_BOOLEAN);
+            }
+
+            // Convertir is_flash_info en booléen
+            if ($request->has('is_flash_info')) {
+                $validated['is_flash_info'] = filter_var($request->input('is_flash_info'), FILTER_VALIDATE_BOOLEAN);
             }
 
             // Gérer l'upload de l'image
@@ -86,6 +93,7 @@ class LieuController extends Controller
                     'equipements' => $lieu->equipements,
                     'ordre' => $lieu->ordre,
                     'actif' => $lieu->actif,
+                    'is_flash_info' => $lieu->is_flash_info,
                 ],
             ], 201);
 
@@ -121,11 +129,17 @@ class LieuController extends Controller
                 'equipements.*' => 'string|max:255',
                 'ordre' => 'nullable|integer',
                 'actif' => 'nullable',
+                'is_flash_info' => 'nullable',
             ]);
 
             // Convertir actif en booléen
             if (isset($validated['actif'])) {
                 $validated['actif'] = filter_var($validated['actif'], FILTER_VALIDATE_BOOLEAN);
+            }
+
+            // Convertir is_flash_info en booléen
+            if ($request->has('is_flash_info')) {
+                $validated['is_flash_info'] = filter_var($request->input('is_flash_info'), FILTER_VALIDATE_BOOLEAN);
             }
 
             // Gérer l'upload de l'image
@@ -157,6 +171,7 @@ class LieuController extends Controller
                     'equipements' => $lieu->equipements,
                     'ordre' => $lieu->ordre,
                     'actif' => $lieu->actif,
+                    'is_flash_info' => $lieu->is_flash_info,
                 ],
             ], 200);
 

@@ -42,10 +42,16 @@ class EvenementController extends Controller
                 'image' => ['nullable', 'file', 'image', 'max:4096'],
                 'meta_title' => ['nullable', 'string', 'max:255'],
                 'meta_description' => ['nullable', 'string'],
+                'is_flash_info' => ['nullable', 'boolean'],
             ]);
 
             if ($request->hasFile('image')) {
                 $validated['image_path'] = $request->file('image')->store('evenements', 'public');
+            }
+
+            // Convertir is_flash_info en booléen
+            if ($request->has('is_flash_info')) {
+                $validated['is_flash_info'] = filter_var($request->input('is_flash_info'), FILTER_VALIDATE_BOOLEAN);
             }
 
             $validated['slug'] = Str::slug($validated['titre']);
@@ -85,10 +91,16 @@ class EvenementController extends Controller
                 'image' => ['nullable', 'file', 'image', 'max:4096'],
                 'meta_title' => ['nullable', 'string', 'max:255'],
                 'meta_description' => ['nullable', 'string'],
+                'is_flash_info' => ['nullable', 'boolean'],
             ]);
 
             if (array_key_exists('titre', $validated)) {
                 $validated['slug'] = Str::slug($validated['titre']);
+            }
+
+            // Convertir is_flash_info en booléen
+            if ($request->has('is_flash_info')) {
+                $validated['is_flash_info'] = filter_var($request->input('is_flash_info'), FILTER_VALIDATE_BOOLEAN);
             }
 
             if ($request->hasFile('image')) {

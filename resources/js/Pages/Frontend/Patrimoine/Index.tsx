@@ -5,28 +5,19 @@ import FrontendLayout from "@/layouts/frontend-layout";
 import PageBanner from "@/components/Frontend/PageBanner";
 import type { FrontendPage } from "@/types";
 
-const monuments = [
-  {
-    name: "Le Marché de Treichville",
-    description: "Haut lieu du commerce et de la vie quotidienne, reflet de la diversité culturelle de la commune.",
-    image: "/marche-de-treichville",
-    category: "Commerce"
-  },
-  {
-    name: "Palais de la culture",
-    description: "Espace public central, lieu de rassemblement et de manifestations culturelles.",
-    image: "/palais-de-la-culture.jpg",
-    category: "Public"
-  },
-  {
-    name: "Le Boulevard VGE",
-    description: "Artère principale de la commune, vitrine du commerce et de l'animation urbaine.",
-    image: "/boulevard-vge.jpg",
-    category: "Urbain"
-  }
-];
+type PatrimoineItem = {
+  id: number;
+  titre: string;
+  description?: string | null;
+  image_url?: string | null;
+  lieu?: string | null;
+};
 
-const Patrimoine: FrontendPage = () => {
+type PatrimoinePageProps = {
+  patrimoines?: PatrimoineItem[];
+};
+
+const Patrimoine: FrontendPage<PatrimoinePageProps> = ({ patrimoines = [] }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
@@ -78,10 +69,15 @@ const Patrimoine: FrontendPage = () => {
       {/* Monuments Grid */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {monuments.map((monument, index) => (
+          {patrimoines.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-10 text-center text-gray-500">
+              Aucun patrimoine publié pour le moment.
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {patrimoines.map((monument, index) => (
               <motion.div
-                key={monument.name}
+                key={monument.id ?? monument.titre}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -91,31 +87,36 @@ const Patrimoine: FrontendPage = () => {
                 <div className="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
                   <div className="relative h-56 overflow-hidden">
                     <img
-                      src={monument.image}
-                      alt={monument.name}
+                      src={monument.image_url || "/images/treichville-1.jpeg"}
+                      alt={monument.titre}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-block px-3 py-1 bg-[#03800a] text-white text-xs font-semibold rounded-full">
-                        {monument.category}
-                      </span>
-                    </div>
                     <div className="absolute bottom-4 left-4 right-4">
-                      <h3 className="text-xl font-bold text-white">{monument.name}</h3>
+                      <h3 className="text-xl font-bold text-white">{monument.titre}</h3>
                     </div>
                   </div>
                   <div className="p-6">
-                    <p className="text-gray-600">{monument.description}</p>
-                    <div className="mt-4 flex items-center gap-2 text-[#f8812f]">
-                      <MapPin className="w-4 h-4" />
-                      <span className="text-sm font-medium">Treichville, Abidjan</span>
-                    </div>
+                    {monument.description ? (
+                      <div
+                        className="text-gray-600 rich-content"
+                        dangerouslySetInnerHTML={{ __html: monument.description }}
+                      />
+                    ) : (
+                      <p className="text-gray-600">Description non disponible.</p>
+                    )}
+                    {monument.lieu && (
+                      <div className="mt-4 flex items-center gap-2 text-[#f8812f]">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm font-medium">{monument.lieu}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

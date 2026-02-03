@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, CalendarDays, Folder, Images, LayoutGrid, Mail, MapPin, Megaphone, MessageSquare, PanelsTopLeft, Presentation, Settings, Tag, Users, Network } from 'lucide-react';
+import { BookOpen, CalendarDays, Folder, Images, LayoutGrid, Mail, MapPin, Megaphone, MessageSquare, PanelsTopLeft, Presentation, Settings, Tag, Users, Network, Landmark } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -41,6 +41,11 @@ const mainNavItems: NavItem[] = [
         title: 'Événements',
         href: '/admin/evenements',
         icon: CalendarDays,
+    },
+    {
+        title: 'Patrimoines',
+        href: '/admin/patrimoines',
+        icon: Landmark,
     },
     {
         title: 'Médias',

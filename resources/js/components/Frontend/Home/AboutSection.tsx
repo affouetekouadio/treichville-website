@@ -32,10 +32,10 @@ export default function AboutSection({
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Image Side */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -80 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: false, amount: 0.4 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
             className="relative"
           >
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
@@ -60,10 +60,10 @@ export default function AboutSection({
 
           {/* Content Side */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 80 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: false, amount: 0.4 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
           >
             <div className="inline-block px-4 py-2 bg-[#f8812f]/10 rounded-full mb-4">
               <span className="text-[#f8812f] font-semibold text-sm tracking-wider uppercase">Le Maire</span>

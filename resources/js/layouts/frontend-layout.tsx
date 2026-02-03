@@ -78,7 +78,8 @@ export default function Layout({ children }: LayoutProps) {
       path: "Histoire",
       submenu: [
         { label: "Présentation et Historique", path: "Histoire" },
-        { label: "Patrimoine et Monuments", path: "Patrimoine" }
+        { label: "Patrimoine et Monuments", path: "Patrimoine" },
+        { label: "Annexes", path: "HistoireAnnexes" }
       ]
     },
     // { 

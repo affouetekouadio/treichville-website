@@ -24,13 +24,7 @@ export default function IdentitySection({
     "la fraternite, l\u2019hospitalite et l\u2019union des peuples s\u2019expriment au quotidien. " +
     "Cette realite a valu a la commune le surnom de <strong>Commune N\u2019zassa</strong>, " +
     "attribue par son Premier Magistrat, le Maire Francois Albert Amichia. " +
-    "En langue akan, <strong>N\u2019zassa</strong> signifie le brassage, le metissage et l\u2019union des peuples.</p>" +
-    "<p><strong>Ancien village Ebrie denommee Anoumabo</strong>, signifiant \"foret aux roussettes\", " +
-    "Treichville est riche d\u2019une histoire marquee par de profondes mutations. " +
-    "Apres avoir porte le nom du premier explorateur francais en Cote d\u2019Ivoire, Treich-Laplene, " +
-    "la commune s\u2019est affirmee comme un territoire de luttes, de migrations et d\u2019emancipation. " +
-    "Elle a notamment accueilli les premiers Europeens a l\u2019epoque coloniale, " +
-    "amorcant ainsi les premieres transformations demographiques et economiques.</p>";
+    "En langue akan, <strong>N\u2019zassa</strong> signifie le brassage, le metissage et l\u2019union des peuples.</p>";
   const link = ctaLink || createPageUrl("Histoire");
   const buttonText = ctaText || "Découvrir l'histoire";
 
@@ -41,12 +35,17 @@ export default function IdentitySection({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false, amount: 0.4 }}
           transition={{ duration: 0.6 }}
           className="py-8 lg:py-10"
         >
           <div className="grid lg:grid-cols-2 gap-10 items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -80 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, amount: 0.4 }}
+              transition={{ duration: 0.9, ease: "easeOut" }}
+            >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#03800a]/10 text-[#03800a] text-xs font-semibold uppercase tracking-wider mb-4">
                 Carte d'identite
               </div>
@@ -73,18 +72,24 @@ export default function IdentitySection({
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative">
+            <motion.div
+              initial={{ opacity: 0, x: 80 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, amount: 0.4 }}
+              transition={{ duration: 0.9, ease: "easeOut" }}
+              className="flex justify-center lg:justify-end"
+            >
+              <div className="relative group">
                 <div className="absolute -inset-6 bg-[#03800a]/10 rounded-full blur-3xl" />
                 <img
                   src="/maisnon-nzassa.jpg"
                   alt="Commune N'zassa"
-                  className="relative w-full max-w-[360px] sm:max-w-[480px] lg:max-w-[640px] h-[260px] sm:h-[320px] lg:h-[380px] object-cover opacity-95 rounded-3xl shadow-2xl"
+                  className="relative w-full max-w-[360px] sm:max-w-[480px] lg:max-w-[640px] h-[260px] sm:h-[320px] lg:h-[380px] object-cover opacity-95 rounded-3xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.04]"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>

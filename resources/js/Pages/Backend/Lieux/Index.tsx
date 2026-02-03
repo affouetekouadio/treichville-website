@@ -75,6 +75,7 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
     acces: 'Gratuit',
     equipements: [''],
     actif: true,
+    is_flash_info: false,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [draggingId, setDraggingId] = useState<number | null>(null);
@@ -115,6 +116,7 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
       acces: 'Gratuit',
       equipements: [''],
       actif: true,
+      is_flash_info: false,
     });
     setImageFile(null);
     setImagePreview(null);
@@ -130,6 +132,7 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
       acces: lieu.acces,
       equipements: lieu.equipements && lieu.equipements.length > 0 ? lieu.equipements : [''],
       actif: lieu.actif,
+      is_flash_info: (lieu as any).is_flash_info || false,
     });
     setImageFile(null);
     setImagePreview(lieu.image_url);
@@ -149,6 +152,7 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
       formData.append('horaires', form.horaires || '');
       formData.append('acces', form.acces);
       formData.append('actif', form.actif ? '1' : '0');
+      formData.append('is_flash_info', form.is_flash_info ? '1' : '0');
 
       // Ajouter les équipements
       const equipementsFiltered = form.equipements.filter(eq => eq.trim() !== '');
@@ -637,6 +641,22 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
                   Actif (visible sur le site)
                 </label>
               </div>
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="is_flash_info"
+                  checked={form.is_flash_info}
+                  onChange={(e) => setForm({ ...form, is_flash_info: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 text-[#f8812f] focus:ring-[#f8812f]"
+                />
+                <label htmlFor="is_flash_info" className="text-sm font-medium text-gray-700">
+                  Afficher en flash info
+                </label>
+              </div>
+              <p className="text-xs text-gray-500 -mt-2 ml-7">
+                Afficher ce lieu dans le bandeau flash info de la page d'accueil
+              </p>
 
               <div className="flex items-center justify-end gap-3 border-t pt-4">
                 <button

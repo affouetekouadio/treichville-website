@@ -4,7 +4,19 @@ import { Link } from "@inertiajs/react";
 import { Megaphone } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
-const flashItems = [
+export interface FlashInfo {
+  id: string;
+  type: "actualite" | "evenement" | "lieu";
+  titre: string;
+  description: string;
+  url: string;
+}
+
+interface FlashInfoSectionProps {
+  flashInfos?: FlashInfo[];
+}
+
+const defaultFlashItems = [
   {
     label: "Alerte",
     message: "Coupure d'eau prévue ce soir de 20h à 23h dans les quartiers Arras et Biafra.",
@@ -22,8 +34,20 @@ const flashItems = [
   },
 ];
 
-export default function FlashInfoSection() {
-  const items = [...flashItems, ...flashItems];
+const getTypeLabel = (type: FlashInfo["type"]) => {
+  switch (type) {
+    case "actualite":
+      return "Actualité";
+    case "evenement":
+      return "Événement";
+    case "lieu":
+      return "À découvrir";
+    default:
+      return "Info";
+  }
+};
+
+export default function FlashInfoSection({ flashInfos = [] }: FlashInfoSectionProps) {
   const [duration, setDuration] = useState(18);
 
   useEffect(() => {
@@ -35,6 +59,27 @@ export default function FlashInfoSection() {
     window.addEventListener("resize", updateDuration);
     return () => window.removeEventListener("resize", updateDuration);
   }, []);
+
+  // Si pas de flash infos en BD, utiliser les données par défaut
+  const hasDbFlashInfos = flashInfos.length > 0;
+
+  // Construire les items à afficher
+  const displayItems = hasDbFlashInfos
+    ? flashInfos.map((item) => ({
+        id: item.id,
+        label: getTypeLabel(item.type),
+        message: item.titre,
+        url: item.url,
+      }))
+    : defaultFlashItems.map((item, index) => ({
+        id: `default-${index}`,
+        label: item.label,
+        message: item.message,
+        url: createPageUrl(item.link),
+      }));
+
+  // Dupliquer pour l'effet de défilement infini
+  const items = [...displayItems, ...displayItems];
 
   return (
     <section className="relative z-30 py-4">
@@ -54,8 +99,8 @@ export default function FlashInfoSection() {
               >
                 {items.map((item, index) => (
                   <Link
-                    key={`${item.label}-${index}`}
-                    href={createPageUrl(item.link)}
+                    key={`${item.id}-${index}`}
+                    href={item.url}
                     className="flex items-center gap-3 text-sm font-medium hover:text-white/80 transition-colors"
                   >
                     <span className="px-2 py-1 rounded-full bg-white/15 border border-white/20">

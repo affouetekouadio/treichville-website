@@ -1,7 +1,7 @@
 import React from "react";
 import { usePage } from "@inertiajs/react";
 import HeroSection from "@/components/Frontend/Home/HeroSection";
-import FlashInfoSection from "@/components/Frontend/Home/FlashInfoSection";
+import FlashInfoSection, { type FlashInfo } from "@/components/Frontend/Home/FlashInfoSection";
 import QuickServicesSection from "@/components/Frontend/Home/QuickServicesSection";
 import AboutSection from "@/components/Frontend/Home/AboutSection";
 import IdentitySection from "@/components/Frontend/Home/IdentitySection";
@@ -87,6 +87,7 @@ type HomeProps = {
     photo_url: string | null;
     ordre: number;
   }[];
+  flashInfos?: FlashInfo[];
 };
 
 const Home: FrontendPage = () => {
@@ -96,12 +97,13 @@ const Home: FrontendPage = () => {
   const evenements = props.homeEvenements ?? [];
   const adjoints = props.homeAdjoints ?? [];
   const directions = props.homeDirections ?? [];
+  const flashInfos = props.flashInfos ?? [];
 
   return (
     <div>
       <HeroSection slides={props.homeSlides} />
       <QuickServicesSection directions={directions} />
-      <FlashInfoSection />
+      <FlashInfoSection flashInfos={flashInfos} />
       <AboutSection
         backgroundImage={props.homeContent?.welcome?.background_image}
         mayorImage={props.homeContent?.welcome?.image}

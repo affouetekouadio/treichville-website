@@ -28,12 +28,14 @@ class Evenement extends Model
         'status',
         'meta_title',
         'meta_description',
+        'is_flash_info',
     ];
 
     protected $casts = [
         'gratuit' => 'boolean',
         'date_debut' => 'datetime',
         'date_fin' => 'datetime',
+        'is_flash_info' => 'boolean',
     ];
 
     protected $appends = [
@@ -62,6 +64,13 @@ class Evenement extends Model
     public function scopePublished($query)
     {
         return $query->where('status', 'published')->whereNotNull('date_debut');
+    }
+
+    public function scopeFlashInfos($query)
+    {
+        return $query->where('is_flash_info', true)
+            ->published()
+            ->orderBy('date_debut', 'desc');
     }
 
     public function getImageUrlAttribute(): ?string

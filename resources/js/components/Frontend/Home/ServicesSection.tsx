@@ -187,7 +187,7 @@ export default function ServicesSection({ services = [] }: Props) {
                   </div>
                   <h3 className="text-lg font-bold leading-tight">{service.nom}</h3>
                   <p className="text-[#1f2937] leading-relaxed text-sm">{description}</p>
-                  {service.lien_externe && (
+                  {/* {service.lien_externe && (
                     <a
                       href={service.lien_externe}
                       target="_blank"
@@ -197,7 +197,7 @@ export default function ServicesSection({ services = [] }: Props) {
                     >
                       En savoir plus →
                     </a>
-                  )}
+                  )} */}
                 </div>
               </motion.div>
             );

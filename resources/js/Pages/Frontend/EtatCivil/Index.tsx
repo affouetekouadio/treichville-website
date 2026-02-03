@@ -124,7 +124,7 @@ const EtatCivil: FrontendPage = () => {
       />
 
       {/* Stats Section */}
-      <section className="py-12 -mt-12 relative z-10">
+      {/* <section className="py-12 -mt-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {stats.map((stat, idx) => (
@@ -145,14 +145,14 @@ const EtatCivil: FrontendPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Info Cards */}
-      <section className="py-16">
+      {/* <section className="py-16">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-8"> */}
             {/* Horaires & Contact */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -206,10 +206,10 @@ const EtatCivil: FrontendPage = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.div> */}
 
             {/* File d'attente */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -252,7 +252,7 @@ const EtatCivil: FrontendPage = () => {
             </motion.div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Services Section */}
       <section className="py-16 bg-gray-50">
@@ -430,7 +430,7 @@ const EtatCivil: FrontendPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-[#f8812f] to-orange-600 text-white">
+      {/* <section className="py-16 bg-gradient-to-br from-[#f8812f] to-orange-600 text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -459,7 +459,7 @@ const EtatCivil: FrontendPage = () => {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

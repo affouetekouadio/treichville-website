@@ -5,6 +5,7 @@ import { Head, Link } from '@inertiajs/react';
 const cards = [
   { title: 'Actualités', description: 'Gérez les articles et visuels.', href: '/admin/actualites' },
   { title: 'Événements', description: 'Dates, lieux et affiches.', href: '/admin/evenements' },
+  { title: 'Patrimoines', description: 'Monuments et lieux emblématiques.', href: '/admin/patrimoines' },
   { title: 'Médias', description: 'Images et PDF du site.', href: '/admin/media' },
 ];
 

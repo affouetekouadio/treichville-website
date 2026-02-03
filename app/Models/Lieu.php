@@ -22,12 +22,14 @@ class Lieu extends Model
         'equipements',
         'ordre',
         'actif',
+        'is_flash_info',
     ];
 
     protected $casts = [
         'equipements' => 'array',
         'actif' => 'boolean',
         'ordre' => 'integer',
+        'is_flash_info' => 'boolean',
     ];
 
     /**
@@ -44,6 +46,16 @@ class Lieu extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('ordre', 'asc');
+    }
+
+    /**
+     * Scope pour récupérer les lieux flash info
+     */
+    public function scopeFlashInfos($query)
+    {
+        return $query->where('is_flash_info', true)
+            ->where('actif', true)
+            ->orderBy('ordre', 'asc');
     }
 
     /**

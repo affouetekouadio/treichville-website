@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\JournalEditionController;
 use App\Http\Controllers\Admin\LieuController;
 use App\Http\Controllers\Admin\MediaFileController;
 use App\Http\Controllers\Admin\MessageMaireController;
+use App\Http\Controllers\Admin\PatrimoineController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SlideController;
 use App\Models\Actualite;
@@ -25,6 +26,7 @@ use App\Models\JournalEdition;
 use App\Models\Lieu;
 use App\Models\MediaFile;
 use App\Models\MessageMaire;
+use App\Models\Patrimoine;
 use App\Models\Slide;
 use App\Support\Listing\ListingQuery;
 use Illuminate\Http\Request;
@@ -201,6 +203,46 @@ $loadContentBlocks = function (string $page) {
 
 Route::get('/', function () use ($loadActualites, $loadEvenements, $loadSlides, $loadContentBlocks) {
     $homeBlocks = $loadContentBlocks('home');
+
+    // Récupérer les flash infos depuis les 3 sources
+    $flashInfos = collect();
+
+    // Flash infos des actualités
+    $flashActualites = Actualite::flashInfos()->get()->map(function ($item) {
+        return [
+            'id' => 'actualite-' . $item->id,
+            'type' => 'actualite',
+            'titre' => $item->titre,
+            'description' => $item->description,
+            'url' => route('actualites.show', $item->slug),
+        ];
+    });
+    $flashInfos = $flashInfos->merge($flashActualites);
+
+    // Flash infos des événements
+    $flashEvenements = Evenement::flashInfos()->get()->map(function ($item) {
+        return [
+            'id' => 'evenement-' . $item->id,
+            'type' => 'evenement',
+            'titre' => $item->titre,
+            'description' => $item->description,
+            'url' => route('evenements.show', $item->slug),
+        ];
+    });
+    $flashInfos = $flashInfos->merge($flashEvenements);
+
+    // Flash infos des lieux
+    $flashLieux = Lieu::flashInfos()->get()->map(function ($item) {
+        return [
+            'id' => 'lieu-' . $item->id,
+            'type' => 'lieu',
+            'titre' => $item->nom,
+            'description' => $item->description,
+            'url' => route('decouvrir.index'),
+        ];
+    });
+    $flashInfos = $flashInfos->merge($flashLieux);
+
     $homeDirections = Direction::actives()
         ->get()
         ->map(function (Direction $direction) {
@@ -238,6 +280,7 @@ Route::get('/', function () use ($loadActualites, $loadEvenements, $loadSlides, 
         'homeEvenements' => $loadEvenements()->take(3)->values(),
         'homeDirections' => $homeDirections,
         'homeAdjoints' => $adjoints,
+        'flashInfos' => $flashInfos->values(),
     ]);
 })->name('home');
 
@@ -450,8 +493,44 @@ Route::get('/histoire', function () {
     return Inertia::render('Frontend/Histoire/Index');
 })->name('histoire');
 
+Route::get('/histoire/annexes', function () {
+    return Inertia::render('Frontend/Histoire/Annexes');
+})->name('histoire.annexes');
+
 Route::get('/patrimoine', function () {
-    return Inertia::render('Frontend/Patrimoine/Index');
+    $items = Patrimoine::published()
+        ->orderByDesc('published_at')
+        ->orderByDesc('created_at')
+        ->get()
+        ->map(fn (Patrimoine $patrimoine) => $patrimoine->toFrontendArray());
+
+    $fallback = collect([
+        [
+            'id' => 1,
+            'titre' => "Le Marché de Treichville",
+            'description' => "Haut lieu du commerce et de la vie quotidienne, reflet de la diversité culturelle de la commune.",
+            'image_url' => "/grand-marche-treichville.png",
+            'lieu' => "Treichville, Abidjan",
+        ],
+        [
+            'id' => 2,
+            'titre' => "Palais de la culture",
+            'description' => "Espace public central, lieu de rassemblement et de manifestations culturelles.",
+            'image_url' => "/palais-de-la-culture.jpg",
+            'lieu' => "Treichville, Abidjan",
+        ],
+        [
+            'id' => 3,
+            'titre' => "Le Port Autonome d'Abidjan",
+            'description' => "Pôle économique majeur, structurant la vie urbaine et commerciale de la commune.",
+            'image_url' => "/port-abidjan.jpg",
+            'lieu' => "Treichville, Abidjan",
+        ],
+    ]);
+
+    return Inertia::render('Frontend/Patrimoine/Index', [
+        'patrimoines' => $items->isNotEmpty() ? $items : $fallback,
+    ]);
 })->name('patrimoine');
 
 Route::get('/etat-civil', function () {
@@ -843,6 +922,46 @@ Route::middleware(['auth', 'verified', 'admin'])
             ]);
         })->name('evenements.show');
 
+        Route::get('/patrimoines', function (Request $request) {
+            $listing = ListingQuery::make($request, Patrimoine::query(), [
+                'search' => [
+                    'columns' => ['titre', 'description', 'lieu'],
+                ],
+                'sort' => [
+                    'allowed' => ['created_at', 'published_at', 'titre', 'status'],
+                    'default' => ['created_at', 'desc'],
+                ],
+                'pagination' => [
+                    'default' => 15,
+                    'max' => 100,
+                ],
+                'export' => [
+                    'filename' => 'patrimoines',
+                    'columns' => [
+                        'created_at' => 'Date creation',
+                        'titre' => 'Titre',
+                        'lieu' => 'Lieu',
+                        'status' => 'Statut',
+                        'published_at' => 'Publie le',
+                    ],
+                ],
+            ]);
+
+            if ($export = $listing->exportIfRequested()) {
+                return $export;
+            }
+
+            $paginator = $listing->paginate();
+
+            return Inertia::render('Backend/Patrimoines/Index', [
+                'patrimoines' => $paginator->items(),
+                'listing' => [
+                    'filters' => $listing->filters(),
+                    'pagination' => $listing->paginationMeta($paginator),
+                ],
+            ]);
+        })->name('patrimoines.index');
+
         Route::get('/media', function (Request $request) {
             $listing = ListingQuery::make($request, MediaFile::query(), [
                 'search' => [
@@ -1146,6 +1265,11 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::post('/api/evenements', [EvenementController::class, 'store'])->name('api.evenements.store');
         Route::put('/api/evenements/{evenement}', [EvenementController::class, 'update'])->name('api.evenements.update');
         Route::delete('/api/evenements/{evenement}', [EvenementController::class, 'destroy'])->name('api.evenements.destroy');
+
+        Route::get('/api/patrimoines', [PatrimoineController::class, 'index'])->name('api.patrimoines.index');
+        Route::post('/api/patrimoines', [PatrimoineController::class, 'store'])->name('api.patrimoines.store');
+        Route::put('/api/patrimoines/{patrimoine}', [PatrimoineController::class, 'update'])->name('api.patrimoines.update');
+        Route::delete('/api/patrimoines/{patrimoine}', [PatrimoineController::class, 'destroy'])->name('api.patrimoines.destroy');
 
         Route::get('/api/media', [MediaFileController::class, 'index'])->name('api.media.index');
         Route::post('/api/media', [MediaFileController::class, 'store'])->name('api.media.store');

@@ -236,6 +236,86 @@ const Histoire: FrontendPage = () => {
     }),
   };
 
+  // Variantes d'animation pour les effets de scroll
+  const fadeInUp = {
+    hidden: {
+      opacity: 0,
+      y: 60,
+      scale: 0.95
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1] as const, // Cubic bezier pour un mouvement fluide
+      }
+    }
+  };
+
+  const fadeInLeft = {
+    hidden: {
+      opacity: 0,
+      x: -80,
+      scale: 0.9
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1] as const,
+      }
+    }
+  };
+
+  const fadeInRight = {
+    hidden: {
+      opacity: 0,
+      x: 80,
+      scale: 0.9
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1] as const,
+      }
+    }
+  };
+
+  const scaleIn = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      y: 30
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: [0.22, 1, 0.36, 1] as const,
+      }
+    }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
@@ -489,9 +569,10 @@ const Histoire: FrontendPage = () => {
       <section className="py-16 bg-gradient-to-b from-gray-50 via-white to-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-12"
           >
             <p className="text-[#f8812f] font-semibold uppercase tracking-wider text-sm mb-3">
@@ -504,9 +585,10 @@ const Histoire: FrontendPage = () => {
 
           <div className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-10 items-start">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={fadeInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="space-y-5"
             >
               <div className="relative">
@@ -560,9 +642,10 @@ const Histoire: FrontendPage = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="grid grid-cols-2 gap-4"
             >
               {[
@@ -572,6 +655,7 @@ const Histoire: FrontendPage = () => {
                 { url: "/echangeur-shinzo-abe.webp", label: "Echangeur Shinzo Abe" },
               ].map((image, idx) => (
                 <motion.button
+                  variants={scaleIn}
                   key={image.url}
                   type="button"
                   onClick={() =>
@@ -645,6 +729,8 @@ const Histoire: FrontendPage = () => {
       </section>
       */}
 
+      
+
       {/* Patrimoine culturel */}
       {/*
       <section className="py-16 bg-gray-50">
@@ -691,9 +777,10 @@ const Histoire: FrontendPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={fadeInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="order-2 lg:order-1"
             >
               <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Économie</p>
@@ -735,9 +822,10 @@ const Histoire: FrontendPage = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={fadeInRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="order-1 lg:order-2 relative"
             >
               <div className="relative h-72 sm:h-80 lg:h-[420px] rounded-2xl overflow-hidden shadow-2xl bg-gray-200">
@@ -798,9 +886,10 @@ const Histoire: FrontendPage = () => {
         />
         <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-10"
           >
             <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Administration</p>
@@ -809,9 +898,10 @@ const Histoire: FrontendPage = () => {
 
           <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 items-start">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={fadeInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="space-y-4 order-2 lg:order-1"
             >
               <div className="h-72 sm:h-80 lg:h-[460px] rounded-2xl overflow-hidden shadow-2xl">
@@ -824,9 +914,10 @@ const Histoire: FrontendPage = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={fadeInRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="space-y-6 order-1 lg:order-2"
             >
               <div className="space-y-4 text-gray-700 leading-relaxed">
@@ -889,54 +980,23 @@ const Histoire: FrontendPage = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-12"
           >
             <p className="text-[#f8812f] font-semibold uppercase tracking-wider text-sm mb-3">Équipements</p>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Infrastructures et équipements structurants</h2>
           </motion.div>
 
-          <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 items-start">
+          <div className="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] gap-10 items-start">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-5"
-            >
-              <div className="relative">
-                <div
-                  className="absolute inset-0 opacity-[0.06] bg-no-repeat bg-left-top bg-contain pointer-events-none"
-                  style={{ backgroundImage: "url('/logo.png')" }}
-                />
-                <div className="relative space-y-4">
-                  <p className="text-gray-700 leading-relaxed text-lg">
-                    Treichville dispose de nombreux équipements structurants, parmi lesquels :
-                  </p>
-                  <ul className="space-y-3 text-gray-700 leading-relaxed text-lg">
-                    {[
-                      "Des bâtiments administratifs municipaux",
-                      "Des établissements scolaires et des centres de formation",
-                      "Des centres de santé publics et privés, ainsi qu’un dispensaire municipal offrant des soins gratuits",
-                      "Des infrastructures sportives et culturelles",
-                      "Des marchés, des gares routières et des espaces de loisirs",
-                    ].map((item) => (
-                      <li key={item} className="flex items-start gap-3">
-                        <span className="mt-1.5 h-3 w-3 rounded-full bg-[#f8812f]" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="grid sm:grid-cols-2 gap-4"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="order-2 lg:order-1 grid sm:grid-cols-2 gap-4"
             >
               {[
                 {
@@ -951,15 +1011,28 @@ const Histoire: FrontendPage = () => {
                   caption:
                     "Structure de sante de proximite pour rapprocher les soins.",
                 },
-              ].map((item) => (
+              ].map((item, idx) => (
                 <div key={item.src} className="space-y-3">
-                  <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      openLightbox(
+                        [
+                          { id: "ecole", url: "/ecole-maternelle.jpeg", alt: "Ecole maternelle Marguerite Sakoum" },
+                          { id: "dispensaire", url: "/dispensaire-municipal.png", alt: "Dispensaire municipal" },
+                          { id: "stade", url: "/stade-cheick-konate.png", alt: "Stade Cheick Konaté Anzoumana" },
+                        ],
+                        idx
+                      )
+                    }
+                    className="rounded-2xl overflow-hidden shadow-lg bg-gray-200 w-full group cursor-pointer"
+                  >
                     <img
                       src={item.src}
                       alt={item.title}
-                      className="w-full h-52 object-cover"
+                      className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                  </div>
+                  </button>
                   <div className="text-sm text-gray-700 leading-relaxed">
                     <strong className="text-gray-900">{item.title}</strong> {item.caption}
                   </div>
@@ -967,16 +1040,63 @@ const Histoire: FrontendPage = () => {
               ))}
 
               <div className="sm:col-span-2 space-y-3">
-                <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200">
+                <button
+                  type="button"
+                  onClick={() =>
+                    openLightbox(
+                      [
+                        { id: "ecole", url: "/ecole-maternelle.jpeg", alt: "Ecole maternelle Marguerite Sakoum" },
+                        { id: "dispensaire", url: "/dispensaire-municipal.png", alt: "Dispensaire municipal" },
+                        { id: "stade", url: "/stade-cheick-konate.png", alt: "Stade Cheick Konaté Anzoumana" },
+                      ],
+                      2
+                    )
+                  }
+                  className="rounded-2xl overflow-hidden shadow-lg bg-gray-200 w-full group cursor-pointer"
+                >
                   <img
                     src="/stade-cheick-konate.png"
                     alt="Stade Cheick Konaté Anzoumana"
-                    className="w-full h-64 object-cover"
+                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                </div>
+                </button>
                 <div className="text-sm text-gray-700 leading-relaxed text-center">
                   <strong className="text-gray-900">Stade Cheick Konaté Anzoumana</strong> situé au quartier
                   Yobou Lambert ex Biafra.
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              variants={fadeInRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="order-1 lg:order-2 space-y-5"
+            >
+              <div className="relative">
+                <div
+                  className="absolute inset-0 opacity-[0.06] bg-no-repeat bg-left-top bg-contain pointer-events-none"
+                  style={{ backgroundImage: "url('/logo.png')" }}
+                />
+                <div className="relative space-y-4">
+                  <p className="text-gray-700 leading-relaxed text-lg">
+                    Treichville dispose de nombreux équipements structurants, parmi lesquels :
+                  </p>
+                  <ul className="space-y-3 text-gray-700 leading-relaxed text-lg">
+                    {[
+                      "Des bâtiments administratifs municipaux",
+                      "Des établissements scolaires et des centres de formation",
+                      "Des centres de santé publics et privés, ainsi qu'un dispensaire municipal offrant des soins gratuits",
+                      "Des infrastructures sportives et culturelles",
+                      "Des marchés, des gares routières et des espaces de loisirs",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-1.5 h-3 w-3 rounded-full bg-[#f8812f]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </motion.div>
@@ -988,9 +1108,10 @@ const Histoire: FrontendPage = () => {
       <section className="py-16 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-10"
           >
             <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Économie locale</p>
@@ -1000,9 +1121,10 @@ const Histoire: FrontendPage = () => {
           <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 items-start">
             {/* Texte principal */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={fadeInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="space-y-5"
             >
               <div className="relative">
@@ -1033,9 +1155,10 @@ const Histoire: FrontendPage = () => {
 
             {/* Pôles économiques */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className="grid sm:grid-cols-2 gap-4"
             >
               {[
@@ -1045,7 +1168,7 @@ const Histoire: FrontendPage = () => {
                   badge: "Pôle technologique",
                   badgeColor: "bg-[#03800a]",
                   text:
-                    "Pôle informel majeur de la téléphonie mobile, reconnu pour la diversité de l’offre et le savoir-faire.",
+                    "Pôle informel majeur de la téléphonie mobile, reconnu pour la diversité de l'offre et le savoir-faire.",
                 },
                 {
                   image: "/centre-artisanal.png",
@@ -1053,15 +1176,27 @@ const Histoire: FrontendPage = () => {
                   badge: "Artisanat & Culture",
                   badgeColor: "bg-[#f8812f]",
                   text:
-                    "Centre Artisanal de la Ville d'Abidjan, vitrine de l’artisanat local ivoirien et africain.",
+                    "Centre Artisanal de la Ville d'Abidjan, vitrine de l'artisanat local ivoirien et africain.",
                 },
-              ].map((item) => (
-                <div key={item.title} className="space-y-3">
-                  <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200 relative">
+              ].map((item, idx) => (
+                <motion.div key={item.title} variants={scaleIn} className="space-y-3">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      openLightbox(
+                        [
+                          { id: "marche-tel", url: "/marche-telephone.jpg", alt: "Marché de téléphones" },
+                          { id: "cava", url: "/centre-artisanal.png", alt: "CAVA - Centre Artisanal" },
+                        ],
+                        idx
+                      )
+                    }
+                    className="rounded-2xl overflow-hidden shadow-lg bg-gray-200 relative w-full group cursor-pointer"
+                  >
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-52 object-cover"
+                      className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 left-3">
                       <span className={`inline-flex items-center gap-1.5 ${item.badgeColor} text-white px-3 py-1 rounded-full text-xs font-semibold`}>
@@ -1069,11 +1204,11 @@ const Histoire: FrontendPage = () => {
                         {item.badge}
                       </span>
                     </div>
-                  </div>
+                  </button>
                   <div className="text-sm text-gray-700 leading-relaxed">
                     <strong className="text-gray-900">{item.title}</strong> — {item.text}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
@@ -1084,318 +1219,317 @@ const Histoire: FrontendPage = () => {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-12"
           >
             <p className="text-[#f8812f] font-semibold uppercase tracking-wider text-sm mb-3">Vie communautaire</p>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Vie sociale, culturelle et sportive</h2>
-            <p className="text-gray-600 mt-4 max-w-3xl mx-auto">
-              La vie sociale de Treichville se distingue par sa richesse et son dynamisme, avec une intense activité culturelle,
-              artistique et sportive.
-            </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {[
-              {
-                title: "Activité culturelle et artistique",
-                description: "Événements culturels, expositions et manifestations artistiques tout au long de l'année",
-                icon: Palette,
-                color: "from-purple-500 to-pink-500",
-              },
-              {
-                title: "Manifestations sportives",
-                description: "Compétitions, tournois et encadrement soutenu de la jeunesse par le sport",
-                icon: Users,
-                color: "from-blue-500 to-cyan-500",
-              },
-              {
-                title: "Tissu associatif actif",
-                description: "Associations de quartiers, unions de femmes et groupements de jeunes dynamiques",
-                icon: Heart,
-                color: "from-[#03800a] to-emerald-700",
-              },
-              {
-                title: "Cohésion sociale",
-                description: "Actions de solidarité, célébrations communautaires et programmes d'entraide",
-                icon: Users,
-                color: "from-[#f8812f] to-amber-500",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-4`}>
-                  <item.icon className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* TODO: Images des programmes sociaux (natation, fête des mères/pères) */}
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 items-start">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-xl overflow-hidden shadow-lg"
+              variants={fadeInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="space-y-5"
             >
-              <div className="aspect-video bg-gray-200">
-                <img
-                  src="https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=600"
-                  alt="Programme natation enfants - Image placeholder"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-600">
-                  Programme natation 2025 : 2 mois offerts à plus de 1000 enfants de la commune
-                </p>
-              </div>
+              <p className="text-gray-700 leading-relaxed text-lg">
+                La vie sociale de Treichville se distingue par sa richesse et son dynamisme :
+              </p>
+              <ul className="space-y-3 text-gray-700 leading-relaxed text-lg">
+                {[
+                  "Une intense activité culturelle et artistique",
+                  "Des manifestations sportives et un encadrement soutenu de la jeunesse",
+                  "Un tissu associatif particulièrement actif",
+                  "Des actions de cohésion sociale et de solidarité",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="mt-1.5 h-3 w-3 rounded-full bg-[#f8812f]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-gray-700 leading-relaxed">
+                Durant les vacances scolaires 2025, le Conseil municipal a offert deux mois de natation
+                à plus de 1000 enfants de la commune.
+              </p>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-xl overflow-hidden shadow-lg"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid sm:grid-cols-2 gap-4"
             >
-              <div className="aspect-video bg-gray-200">
-                <img
-                  src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600"
-                  alt="Fête des mères - Image placeholder"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-600">
-                  Célébration de la fête des mères avec remise de cadeaux aux mamans de la commune
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-xl overflow-hidden shadow-lg"
-            >
-              <div className="aspect-video bg-gray-200">
-                <img
-                  src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600"
-                  alt="Fête des pères - Image placeholder"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-600">
-                  Célébration de la fête des pères avec les papas de la commune
-                </p>
-              </div>
+              {[
+                {
+                  src: "/natation.png",
+                  title: "Programme natation 2025",
+                  caption: "2 mois offerts à plus de 1000 enfants",
+                },
+                {
+                  src: "/remise-de-cadeaux.png",
+                  title: "Fête des mères",
+                  caption: "Remise de cadeaux aux mamans de la commune",
+                },
+                {
+                  src: "/fete-pere.png",
+                  title: "Fête des pères",
+                  caption: "Célébration avec les papas de la commune",
+                },
+                {
+                  src: "/vacance-scolaire.png",
+                  title: "Vacances scolaires",
+                  caption: "Activités et animations pour les jeunes",
+                },
+              ].map((item, idx) => (
+                <motion.button
+                  variants={scaleIn}
+                  key={item.title}
+                  type="button"
+                  onClick={() =>
+                    openLightbox(
+                      [
+                        { id: "natation", url: "/natation.png", alt: "Programme natation 2025" },
+                        { id: "meres", url: "/remise-de-cadeaux.png", alt: "Fête des mères" },
+                        { id: "peres", url: "/fete-pere.png", alt: "Fête des pères" },
+                        { id: "vacances", url: "/vacance-scolaire.png", alt: "Vacances scolaires" },
+                      ],
+                      idx
+                    )
+                  }
+                  className="group text-left"
+                  aria-label={`Voir ${item.title}`}
+                >
+                  <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200">
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="w-full h-44 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="mt-3 text-sm text-gray-700 leading-relaxed">
+                    <strong className="text-gray-900">{item.title}</strong> — {item.caption}
+                  </div>
+                </motion.button>
+              ))}
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Actions et politiques de développement */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-12"
           >
-            <p className="text-[#03800a] font-semibold uppercase tracking-wider text-sm mb-3">Politiques municipales</p>
+            <p className="text-[#f8812f] font-semibold uppercase tracking-wider text-sm mb-3">Politiques municipales</p>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Actions et politiques de développement</h2>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="space-y-8">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-2xl p-8 shadow-lg"
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="relative space-y-5"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#f8812f] to-amber-500 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">Politiques structurantes</h3>
-              </div>
-              <div className="space-y-6">
-                <div className="border-l-4 border-[#03800a] pl-4">
-                  <h4 className="font-bold text-gray-900 mb-2">Cadre de vie et salubrité</h4>
-                  <p className="text-gray-600 text-sm mb-2">
-                    Création d'un Comité local de salubrité, d'une brigade dédiée et d'équipes de nettoyage nocturne
-                    pour une commune propre.
-                  </p>
-                </div>
-                <div className="border-l-4 border-[#f8812f] pl-4">
-                  <h4 className="font-bold text-gray-900 mb-2">Programmes sociaux</h4>
-                  <p className="text-gray-600 text-sm mb-2">
-                    Prise en charge scolaire, équipement des cantines, soutien aux comités de quartiers,
-                    unions de femmes et associations de jeunes.
-                  </p>
-                </div>
-                <div className="border-l-4 border-[#03800a] pl-4">
-                  <h4 className="font-bold text-gray-900 mb-2">Modernisation des services</h4>
-                  <p className="text-gray-600 text-sm mb-2">
-                    Amélioration continue des services municipaux pour plus d'efficacité et de proximité.
-                  </p>
-                </div>
-                <div className="border-l-4 border-[#f8812f] pl-4">
-                  <h4 className="font-bold text-gray-900 mb-2">Digitalisation progressive</h4>
-                  <p className="text-gray-600 text-sm mb-2">
-                    Transformation numérique de l'administration pour des services plus accessibles.
-                  </p>
-                </div>
-              </div>
+              <div
+                className="absolute inset-0 opacity-[0.06] bg-no-repeat bg-center bg-contain pointer-events-none"
+                style={{ backgroundImage: "url('/logo.png')" }}
+              />
+              <p className="relative text-gray-700 leading-relaxed text-lg">
+                La Municipalite met en oeuvre plusieurs politiques structurantes, notamment :
+              </p>
+              <ul className="relative space-y-3 text-gray-700 leading-relaxed text-lg">
+                {[
+                  "L'amelioration du cadre de vie et de la salubrite, avec la creation d'un Comite local de salubrite, d'une brigade dediee et d'equipes de nettoyage nocturne",
+                  "Des programmes sociaux en faveur des populations vulnerables, incluant la prise en charge scolaire, l'equipement des cantines et le soutien aux comites de quartiers, aux unions de femmes et aux associations de jeunes",
+                  "La modernisation des services municipaux",
+                  "La digitalisation progressive de l'administration",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="mt-1.5 h-3 w-3 rounded-full bg-[#f8812f]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-6"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid sm:grid-cols-2 gap-6"
             >
-              {/* TODO: Images comité salubrité et prise en charge scolaire */}
-              <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
-                <div className="aspect-video bg-gray-200">
-                  <img
-                    src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800"
-                    alt="Comité de salubrité - Image placeholder"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h4 className="font-bold text-gray-900 mb-2">Comité local de salubrité</h4>
-                  <p className="text-gray-600 text-sm">
-                    Opérations mensuelles de nettoyage de la commune avec la participation des habitants et des agents municipaux.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
-                <div className="aspect-video bg-gray-200">
-                  <img
-                    src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800"
-                    alt="Prise en charge scolaire - Image placeholder"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h4 className="font-bold text-gray-900 mb-2">Soutien à l'éducation</h4>
-                  <p className="text-gray-600 text-sm">
-                    Remise de prises en charge scolaires aux élèves et étudiants de la commune pour favoriser leur réussite.
-                  </p>
-                </div>
-              </div>
+              {[
+                {
+                  src: "/education.jpg",
+                  title: "Remise de prise en charge aux eleves et etudiants de la commune",
+                },
+                {
+                  src: "/salubrite.jpg",
+                  title: "Le comite local de salubrite lors d'une operation mensuelle de nettoyage",
+                },
+              ].map((item, idx) => (
+                <motion.button
+                  variants={scaleIn}
+                  key={item.title}
+                  type="button"
+                  onClick={() =>
+                    openLightbox(
+                      [
+                        { id: "eleves", url: "/education.jpg", alt: "Remise de prise en charge aux eleves et etudiants" },
+                        { id: "salubrite", url: "/salubrite.jpg", alt: "Comite local de salubrite" },
+                      ],
+                      idx
+                    )
+                  }
+                  className="group text-left"
+                  aria-label={`Voir ${item.title}`}
+                >
+                  <div className="rounded-2xl overflow-hidden shadow-lg bg-gray-200">
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="w-full h-60 sm:h-72 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="mt-3 text-sm text-gray-700 leading-relaxed">
+                    <strong className="text-gray-900">{item.title}</strong>
+                  </div>
+                </motion.button>
+              ))}
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Perspectives et vision d'avenir */}
-      <section className="py-16 bg-gradient-to-br from-[#f8812f] to-amber-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#03800a] rounded-full blur-3xl" />
-        </div>
+      {/* Treichville, une commune ouverte au monde & Perspectives d'avenir */}
+      <section className="py-20 bg-gradient-to-br from-[#fff4e8] via-white to-[#eef9f1] relative overflow-hidden">
+        <div className="absolute -top-16 -left-16 w-72 h-72 bg-[#f8812f]/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-[#03800a]/15 rounded-full blur-3xl" />
 
         <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <p className="text-white/80 font-semibold uppercase tracking-wider text-sm mb-3">Avenir</p>
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Perspectives et vision d'avenir</h2>
-            <p className="text-white/90 max-w-3xl mx-auto">
-              La vision municipale s'articule autour de plusieurs axes prioritaires pour faire de Treichville
-              une commune moderne, inclusive et dynamique.
-            </p>
-          </motion.div>
+          <div className="grid lg:grid-cols-2 gap-10">
+            {/* Bloc gauche - Treichville, une commune ouverte au monde */}
+            <motion.div
+              variants={fadeInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="relative bg-white/80 backdrop-blur rounded-3xl p-8 shadow-xl border border-white/70"
+            >
+              <div className="absolute top-6 right-6 h-2 w-16 rounded-full bg-gradient-to-r from-[#f8812f] to-amber-500" />
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                Treichville, une commune ouverte au monde
+              </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Building,
-                title: "Développement urbain maîtrisé",
-                description: "Aménagement harmonieux et durable du territoire",
-              },
-              {
-                icon: TrendingUp,
-                title: "Économie locale renforcée",
-                description: "Soutien à l'entrepreneuriat et à l'emploi",
-              },
-              {
-                icon: Heart,
-                title: "Commune propre, moderne et inclusive",
-                description: "Cadre de vie amélioré pour tous les habitants",
-              },
-              {
-                icon: Users,
-                title: "Jeunesse formée et engagée",
-                description: "Formation, responsabilisation et insertion des jeunes",
-              },
-            ].map((item, index) => (
+              <div className="space-y-4 text-gray-700 leading-relaxed text-lg">
+                <p>
+                  La Commune de Treichville développe une politique d'ouverture fondée sur :
+                </p>
+
+                <ul className="space-y-3">
+                  {[
+                    "La coopération décentralisée ;",
+                    "Les partenariats institutionnels et économiques ;",
+                    "L'accueil de délégations et d'investisseurs.",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <span className="mt-2 h-2.5 w-2.5 rounded-full bg-[#f8812f] flex-shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="pt-2">
+                  Elle se positionne ainsi comme un territoire de collaboration, d'échanges et d'opportunités.
+                </p>
+              </div>
+
+              {/* Image Projet Eburny Pearl */}
               <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300"
+                variants={scaleIn}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                className="mt-6 rounded-2xl overflow-hidden shadow-2xl"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-4">
-                  <item.icon className="w-7 h-7 text-[#f8812f]" />
-                </div>
-                <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                <p className="text-white/80 text-sm">{item.description}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* TODO: Image projet Eburny Pearl */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-12 bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20"
-          >
-            <div className="grid lg:grid-cols-2 gap-6">
-              <div className="aspect-video lg:aspect-auto bg-white/5">
                 <img
-                  src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800"
-                  alt="Projet Eburny Pearl - Image placeholder"
-                  className="w-full h-full object-cover"
+                  src="/projet-eburny.png"
+                  alt="Projet Eburny Pearl - Rénovation du quartier Yobou-Lambert"
+                  className="w-full h-64 sm:h-72 object-cover"
                 />
-              </div>
-              <div className="p-8 flex flex-col justify-center">
-                <h3 className="text-2xl font-bold mb-4">Projet Eburny Pearl</h3>
-                <p className="text-white/90 leading-relaxed mb-4">
-                  Rénovation ambitieuse du quartier Yobou-Lambert (ex-Biafra) visant à transformer cet espace
-                  en un pôle moderne d'attractivité économique, culturelle et touristique.
+              </motion.div>
+            </motion.div>
+
+            {/* Bloc droite - Perspectives et vision d'avenir */}
+            <motion.div
+              variants={fadeInRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="relative bg-white/80 backdrop-blur rounded-3xl p-8 shadow-xl border border-white/70"
+            >
+              <div className="absolute top-6 right-6 h-2 w-16 rounded-full bg-gradient-to-r from-[#03800a] to-emerald-400" />
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                Perspectives et vision d'avenir
+              </h2>
+
+              <div className="space-y-4 text-gray-700 leading-relaxed text-lg">
+                <p>
+                  La vision municipale s'articule autour de plusieurs axes prioritaires :
                 </p>
-                <p className="text-white/80 text-sm">
-                  Un projet structurant pour l'avenir de Treichville et du District d'Abidjan.
-                </p>
+
+                <ul className="space-y-3">
+                  {[
+                    "Un développement urbain maîtrisé ;",
+                    "Une économie locale renforcée ;",
+                    "Une commune propre, moderne et inclusive ;",
+                    "Une jeunesse formée, responsable et engagée.",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <span className="mt-2 h-2.5 w-2.5 rounded-full bg-[#03800a] flex-shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          </motion.div>
+
+              {/* Image Projet Eburny Pearl */}
+              <motion.div
+                variants={scaleIn}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                className="mt-6 rounded-2xl overflow-hidden shadow-2xl"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img
+                  src="/projet-eburny.png"
+                  alt="Projet Eburny Pearl - Vision d'avenir pour Treichville"
+                  className="w-full h-64 sm:h-72 object-cover"
+                />
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
