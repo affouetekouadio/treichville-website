@@ -154,7 +154,7 @@ const ParcsPiscines: FrontendPage = () => {
       </section>
 
       {/* Info */}
-      <section className="py-16 bg-[#f8812f]">
+      {/* <section className="py-16 bg-[#f8812f]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Users className="w-16 h-16 text-white/80 mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-4">
@@ -164,7 +164,7 @@ const ParcsPiscines: FrontendPage = () => {
             Nos équipements sont à votre disposition pour des moments de détente et de convivialité
           </p>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

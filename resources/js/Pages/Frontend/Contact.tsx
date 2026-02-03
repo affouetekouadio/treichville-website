@@ -178,49 +178,61 @@ const Contact: FrontendPage<ContactPageProps> = ({ directionContacts = [] }) => 
       />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-12 items-stretch">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
+            className="h-full"
           >
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Informations de contact</h2>
-            {[
-              { icon: MapPin, title: "Adresse", content: "8X6P+3Q4, Av. Victor Biaka, Abidjan" },
-              { icon: Phone, title: "Téléphone", content: "27 21 2 40809", link: "tel:27212240809" },
-              { icon: Mail, title: "Email", content: "contact@treichville.ci", link: "mailto:contact@treichville.ci" },
-              { icon: Clock, title: "Horaires", content: "Lun - Ven : 7h30 - 16h30" }
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex gap-4 p-6 bg-white rounded-xl shadow-lg"
-              >
-                <div className="w-12 h-12 bg-[#03800a] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <item.icon className="w-6 h-6 text-white" />
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 h-full flex flex-col">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-[#03800a] rounded-xl flex items-center justify-center">
+                  <MapPin className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="font-bold text-gray-900 mb-1">{item.title}</div>
-                  {item.link ? (
-                    <a href={item.link} className="text-gray-600 hover:text-[#f8812f] transition-colors whitespace-pre-line">
-                      {item.content}
-                    </a>
-                  ) : (
-                    <div className="text-gray-600 whitespace-pre-line">{item.content}</div>
-                  )}
+                  <h2 className="text-2xl font-bold text-gray-900">Informations pratiques</h2>
+                  <p className="text-gray-600">Pour tous contacts</p>
                 </div>
-              </motion.div>
-            ))}
+              </div>
+
+              <div className="space-y-4 text-gray-700 text-base leading-relaxed flex-1">
+                <div className="font-semibold text-gray-900">République de Côte d'Ivoire</div>
+                <div className="font-semibold text-gray-900">District Autonome d’Abidjan – Mairie de Treichville</div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                    <div className="text-sm text-gray-500">Secrétariat du maire</div>
+                    <a href="tel:+2252721216440" className="mt-1 block text-lg font-semibold text-gray-900 hover:text-[#f8812f]">
+                      +225 27-21-21-64-40
+                    </a>
+                  </div>
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                    <div className="text-sm text-gray-500">Secrétariat général</div>
+                    <a href="tel:+2252721247121" className="mt-1 block text-lg font-semibold text-gray-900 hover:text-[#f8812f]">
+                      +225 27-21-24-71-21
+                    </a>
+                  </div>
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                    <div className="text-sm text-gray-500">Standard mairie</div>
+                    <a href="tel:+2252721241168" className="mt-1 block text-lg font-semibold text-gray-900 hover:text-[#f8812f]">
+                      +225 27-21-24-11-68
+                    </a>
+                  </div>
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                    <div className="text-sm text-gray-500">Boîte postale</div>
+                    <div className="mt-1 text-lg font-semibold text-gray-900">05 BP 926 ABIDJAN 05</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
 
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white rounded-xl p-8 shadow-xl"
+            className="bg-white rounded-xl p-8 shadow-xl h-full"
           >
             {submitted ? (
               <motion.div
@@ -310,6 +322,7 @@ const Contact: FrontendPage<ContactPageProps> = ({ directionContacts = [] }) => 
         </div>
 
         {/* Contacts des directions */}
+        {/*
         <div className="mt-16">
           <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
             <div>
@@ -380,6 +393,7 @@ const Contact: FrontendPage<ContactPageProps> = ({ directionContacts = [] }) => 
             })}
           </div>
         </div>
+        */}
       </div>
     </div>
   );

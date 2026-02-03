@@ -20,7 +20,7 @@ const annexes = [
   },
   {
     title: "Palais de la culture",
-    image: "/palais-culture.webp",
+    image: "/palais-culture.png",
     description:
       "Inauguré en 1999, c'est l'un des plus grands complexes culturels d'Afrique de l'Ouest. Il comprend plusieurs salles de spectacles, d'exposition et de conférence, et accueille des événements culturels et institutionnels de grande envergure.",
   },

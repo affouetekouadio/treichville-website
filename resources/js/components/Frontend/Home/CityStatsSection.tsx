@@ -14,8 +14,8 @@ type Stat = {
 const stats: Stat[] = [
   {
     icon: Users,
-    value: 100,
-    suffix: "K",
+    value: 107,
+    suffix: "K+",
     label: "Habitants",
     color: "text-blue-500",
     bgGradient: "from-blue-500/20 to-cyan-500/10",
@@ -30,8 +30,8 @@ const stats: Stat[] = [
   },
   {
     icon: TrendingUp,
-    value: 9,
-    suffix: "km²",
+    value: 850,
+    suffix: "ha",
     label: "Superficie",
     color: "text-[#03800a]",
     bgGradient: "from-[#03800a]/20 to-[#03800a]/10",
@@ -184,7 +184,7 @@ export default function CityStatsSection({ backgroundImage }: CityStatsSectionPr
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#03800a] to-[#03800a] border-2 border-white" />
             </div>
             <span className="text-gray-900 font-medium">
-              Environ <span className="font-bold text-[#f8812f]">100 000</span> citoyens dans la
+              Plus de <span className="font-bold text-[#f8812f]">107 000</span> citoyens dans la
               commune
             </span>
           </div>

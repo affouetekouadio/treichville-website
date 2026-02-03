@@ -175,7 +175,7 @@ export default function QuickServicesSection({ directions = [] }: QuickServicesP
   }, [directions]);
 
   return (
-    <section className="relative -mt-20 z-20">
+    <section className="relative mt-8 sm:mt-10 lg:-mt-20 z-20">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 items-stretch">
           {items.map((service, index) => (

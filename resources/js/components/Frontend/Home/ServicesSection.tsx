@@ -161,13 +161,13 @@ export default function ServicesSection({ services = [] }: Props) {
                 className="w-full md:snap-start md:min-w-[280px] lg:min-w-[320px] bg-[#fff7ef] text-[#0f172a] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 group border border-white/10"
                 style={{ boxShadow: `0 14px 38px -18px ${accent}80` }}
               >
-                <div className="relative h-44 sm:h-48 md:h-60 lg:h-64">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{
-                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.55)), url('${bgImage}')`,
-                    }}
+                <div className="relative h-48 sm:h-52 md:h-60 lg:h-64 bg-gray-200">
+                  <img
+                    src={bgImage}
+                    alt={service.nom}
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/45 via-[#f77f2b]/10 to-transparent" />
                   <div
                     className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur"
                     style={{ borderColor: accent, backgroundColor: `${accent}20` }}

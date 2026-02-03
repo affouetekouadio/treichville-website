@@ -129,7 +129,7 @@ export default function HeroSection({ slides = [] }: HeroSectionProps) {
   };
 
   return (
-    <section className="relative h-[700px] overflow-hidden bg-gray-900">
+    <section className="relative h-[380px] sm:h-[520px] lg:h-[700px] overflow-hidden bg-gray-900">
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={currentSlide}
@@ -146,7 +146,7 @@ export default function HeroSection({ slides = [] }: HeroSectionProps) {
             <img
               src={activeSlides[currentSlide].image ?? ""}
               alt={activeSlides[currentSlide].title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-[75%_30%] sm:object-[center_30%]"
             />
             {/* ça ajoute un peti fond sur les images */}
             {/* <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div> */}
@@ -164,8 +164,8 @@ export default function HeroSection({ slides = [] }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-5xl lg:text-7xl font-bold text-white leading-tight mb-6"
-              >
+              className="text-3xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight mb-4 sm:mb-6"
+            >
                 {activeSlides[currentSlide].title}
                 <br />
                 {activeSlides[currentSlide].subtitle}{" "}
@@ -178,23 +178,25 @@ export default function HeroSection({ slides = [] }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
-                className="text-xl text-gray-300 mb-8 leading-relaxed"
-              >
+              className="text-base sm:text-xl text-gray-300 mb-6 sm:mb-8 leading-relaxed"
+            >
                 {activeSlides[currentSlide].description}
               </motion.p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-              >
-                <Button
-                  onClick={handleCta}
-                  className="bg-[#f8812f] text-white hover:bg-orange-600 px-10 py-6 text-lg rounded-full font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl"
+              {Boolean(activeSlides[currentSlide]?.cta?.trim()) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
                 >
-                  {activeSlides[currentSlide].cta}
-                </Button>
-              </motion.div>
+                  <Button
+                    onClick={handleCta}
+                    className="bg-[#f8812f] text-white hover:bg-orange-600 px-8 sm:px-10 py-4 sm:py-6 text-base sm:text-lg rounded-full font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl"
+                  >
+                    {activeSlides[currentSlide].cta}
+                  </Button>
+                </motion.div>
+              )}
             </motion.div>
           </div>
         </motion.div>
@@ -203,13 +205,13 @@ export default function HeroSection({ slides = [] }: HeroSectionProps) {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-[#f8812f] backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300 z-10 group"
+        className="hidden sm:flex absolute left-3 sm:left-8 bottom-24 sm:bottom-auto sm:top-1/2 translate-y-0 sm:-translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-white/10 hover:bg-[#f8812f] backdrop-blur-sm rounded-full items-center justify-center text-white transition-all duration-300 z-10 group"
       >
         <ChevronLeft className="w-6 h-6 group-hover:scale-110 transition-transform" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-[#f8812f] backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-300 z-10 group"
+        className="hidden sm:flex absolute right-3 sm:right-8 bottom-24 sm:bottom-auto sm:top-1/2 translate-y-0 sm:-translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-white/10 hover:bg-[#f8812f] backdrop-blur-sm rounded-full items-center justify-center text-white transition-all duration-300 z-10 group"
       >
         <ChevronRight className="w-6 h-6 group-hover:scale-110 transition-transform" />
       </button>

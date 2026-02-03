@@ -446,15 +446,23 @@ export default function Layout({ children }: LayoutProps) {
               <div className="space-y-4 text-gray-600">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-[var(--primary-orange)] mt-1 flex-shrink-0" />
-                  <span>8X6P+3Q4, Av. Victor Biaka<br />Abidjan, Côte d'Ivoire</span>
+                  <span>District Autonome d’Abidjan – Mairie de Treichville</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
-                  <span>+225 27 21 2 40809</span>
+                  <span>+225 27-21-21-64-40</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
+                  <span>+225 27-21-24-71-21</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
+                  <span>+225 27-21-24-11-68</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-[var(--primary-orange)] flex-shrink-0" />
-                  <span>contact@treichville.ci</span>
+                  <span>05 BP 926 ABIDJAN 05</span>
                 </div>
               </div>
             </div>

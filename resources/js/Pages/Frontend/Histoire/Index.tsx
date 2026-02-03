@@ -906,7 +906,7 @@ const Histoire: FrontendPage = () => {
             >
               <div className="h-72 sm:h-80 lg:h-[460px] rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="/mairie.jpg"
+                  src="/mairie-new.jpeg"
                   alt="Mairie de Treichville"
                   className="w-full h-full object-cover"
                 />
