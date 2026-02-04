@@ -75,14 +75,19 @@ const ServicesDetails: FrontendPage<DirectionDetailsProps> = ({
             Direction
           </span>
           {direction.responsable && (
-            <span className="text-sm text-gray-500">
-              Responsable : <strong className="text-gray-800">{direction.responsable}</strong>
-            </span>
+            <div className="inline-flex items-center gap-3 rounded-2xl border border-orange-200 bg-orange-50 px-4 py-2 shadow-sm">
+              <span className="text-xs font-semibold uppercase tracking-wide text-orange-600">
+                Responsable
+              </span>
+              <span className="text-lg sm:text-xl font-bold text-orange-900">
+                {direction.responsable}
+              </span>
+            </div>
           )}
         </div>
-        {direction.short_description && (
+        {/* {direction.short_description && (
           <p className="mt-3 text-lg text-gray-600 max-w-3xl">{direction.short_description}</p>
-        )}
+        )} */}
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">

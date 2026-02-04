@@ -70,7 +70,7 @@ export default function Layout({ children }: LayoutProps) {
       submenu: [
         { label: "Message du Maire", path: "MessageMaire" },
         { label: "Le Maire et le Conseil", path: "ConseilMunicipal" },
-        { label: "Dernières actus", path: "Actualites" }
+        { label: "Actualités", path: "Actualites" }
       ]
     },
     { 
@@ -115,7 +115,7 @@ export default function Layout({ children }: LayoutProps) {
       label: "Que faire à Treichville?", 
       path: "QueFaire",
       submenu: [
-        { label: "Events et expos", path: "Evenements" },
+        { label: "Evénements", path: "Evenements" },
         { label: "Endroit à découvrir", path: "ParcsPiscines" }
       ]
     },

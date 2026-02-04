@@ -76,7 +76,7 @@ const MessageMaire: FrontendPage = () => {
   const msg = props.messageMaire;
   const intro = props.content?.intro;
 
-  const backgroundImage = msg?.image_fond_url || intro?.background_image || "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1400";
+  const backgroundImage = "/logo.png";
   const mayorPhoto = msg?.photo_url || intro?.image || "/images/personnes/message-maire.jpg";
   const titreVision = msg?.titre_vision || "Vision 2025-2030";
   const salutation = msg?.salutation || "Chères Treichvilloises, chers Treichvillois,";
@@ -328,12 +328,12 @@ const MessageMaire: FrontendPage = () => {
               >
                 Nous contacter
               </Link>
-              <a
+              {/* <a
                 href="#"
                 className="px-8 py-4 bg-[#f8812f] text-white rounded-xl font-semibold hover:bg-amber-600 transition-colors shadow-xl"
               >
                 Participer à un projet
-              </a>
+              </a> */}
             </div>
           </div>
         </motion.div>

@@ -17,6 +17,61 @@ const Histoire: FrontendPage = () => {
     {
       id: 1,
       main: {
+        url: "/mairie-new.jpeg",
+        alt: "Mairie de Treichville",
+      },
+      secondary: {
+        url: "/images/treichville-4.jpg",
+        alt: "Boulevard et vie urbaine",
+      },
+    },
+    {
+      id: 2,
+      main: {
+        url: "/palais-culture.png",
+        alt: "Palais de la Culture",
+      },
+      secondary: {
+        url: "/mosquee.webp",
+        alt: "Mosquée de Treichville",
+      },
+    },
+    {
+      id: 3,
+      main: {
+        url: "/projet-eburny.png",
+        alt: "Projet Eburny",
+      },
+      secondary: {
+        url: "/images/treichville-4.jpg",
+        alt: "Boulevard et vie urbaine",
+      },
+    },
+    {
+      id: 4,
+      main: {
+        url: "/maison-nzassa.jpg",
+        alt: "Maison Nzassa",
+      },
+      secondary: {
+        url: "/chu.jpg",
+        alt: "CHU de Treichville",
+      },
+    },
+    {
+      id: 5,
+      main: {
+        url: "/centre-artisanal.png",
+        alt: "Centre artisanal",
+      },
+      secondary: {
+        url: "/images/treichville-1.jpeg",
+        alt: "Treichville - Architecture",
+      },
+    },
+    {
+      id: 6,
+      main: {
         url: "/images/treichville-4.jpg",
         alt: "Treichville - Vue principale",
       },
@@ -26,7 +81,7 @@ const Histoire: FrontendPage = () => {
       },
     },
     {
-      id: 2,
+      id: 7,
       main: {
         url: "/images/treichville-3.jpg",
         alt: "Lagune et port de Treichville",
@@ -37,7 +92,7 @@ const Histoire: FrontendPage = () => {
       },
     },
     {
-      id: 3,
+      id: 8,
       main: {
         url: "/images/treichville-4.jpg",
         alt: "Boulevard et vie urbaine",
@@ -1377,11 +1432,11 @@ const Histoire: FrontendPage = () => {
               {[
                 {
                   src: "/education.jpg",
-                  title: "Remise de prise en charge aux eleves et etudiants de la commune",
+                  title: "Remise de prise en charge aux élèves et étudiants de la commune",
                 },
                 {
                   src: "/salubrite.jpg",
-                  title: "Le comite local de salubrite lors d'une operation mensuelle de nettoyage",
+                  title: "Le comité local de salubrité lors d'une opération mensuelle de nettoyage",
                 },
               ].map((item, idx) => (
                 <motion.button
