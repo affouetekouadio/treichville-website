@@ -124,7 +124,7 @@ const ConseilMunicipal: FrontendPage = () => {
         <div
           className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: `url('${intro?.background_image || fallbackBackground}')`,
+            backgroundImage: "url('/logo.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
