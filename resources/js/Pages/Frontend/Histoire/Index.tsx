@@ -161,6 +161,8 @@ const Histoire: FrontendPage = () => {
   const [economyDirection, setEconomyDirection] = useState(0);
   const [currentPresentation, setCurrentPresentation] = useState(0);
   const [presentationDirection, setPresentationDirection] = useState(0);
+  const [currentVisionImageLeft, setCurrentVisionImageLeft] = useState(0);
+  const [currentVisionImageRight, setCurrentVisionImageRight] = useState(1);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [lightboxImages, setLightboxImages] = useState<
@@ -193,6 +195,54 @@ const Histoire: FrontendPage = () => {
     }, 7000);
     return () => clearInterval(timer);
   }, [presentationSlides.length, isLightboxOpen]);
+
+  const visionImages = [
+    { url: "/mairie-new-1.jpeg", alt: "Mairie de Treichville" },
+    { url: "/projet-eburny.png", alt: "Projet Eburny Pearl" },
+    { url: "/maison-nzassa.jpg", alt: "Maison Nzassa" },
+  ];
+  const visionLightboxImages = visionImages.map((img, index) => ({
+    id: `vision-${index}`,
+    url: img.url,
+    alt: img.alt,
+  }));
+
+  useEffect(() => {
+    const timerLeft = setInterval(() => {
+      setCurrentVisionImageLeft((prev) => (prev + 1) % visionImages.length);
+    }, 6000);
+    const timerRight = setInterval(() => {
+      setCurrentVisionImageRight((prev) => (prev + 1) % visionImages.length);
+    }, 6000);
+
+    return () => {
+      clearInterval(timerLeft);
+      clearInterval(timerRight);
+    };
+  }, [visionImages.length]);
+
+  useEffect(() => {
+    const stagger = setTimeout(() => {
+      setCurrentVisionImageRight((prev) => (prev + 1) % visionImages.length);
+    }, 2500);
+    return () => clearTimeout(stagger);
+  }, [visionImages.length]);
+
+  const stepVisionLeft = (dir: "next" | "prev") => {
+    setCurrentVisionImageLeft((prev) =>
+      dir === "next"
+        ? (prev + 1) % visionImages.length
+        : (prev - 1 + visionImages.length) % visionImages.length
+    );
+  };
+
+  const stepVisionRight = (dir: "next" | "prev") => {
+    setCurrentVisionImageRight((prev) =>
+      dir === "next"
+        ? (prev + 1) % visionImages.length
+        : (prev - 1 + visionImages.length) % visionImages.length
+    );
+  };
 
   const nudge = useCallback(
     (dir: "next" | "prev") => {
@@ -1522,13 +1572,38 @@ const Histoire: FrontendPage = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
-                className="mt-6 rounded-2xl overflow-hidden shadow-2xl"
+                className="mt-6 rounded-2xl overflow-hidden shadow-2xl relative cursor-zoom-in"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
+                onClick={() => openLightbox(visionLightboxImages, currentVisionImageLeft)}
               >
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-3 z-10">
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      stepVisionLeft("prev");
+                    }}
+                    className="h-10 w-10 rounded-full bg-white/90 hover:bg-white border border-orange-100 shadow-lg flex items-center justify-center"
+                    aria-label="Image précédente"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-orange-600" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      stepVisionLeft("next");
+                    }}
+                    className="h-10 w-10 rounded-full bg-white/90 hover:bg-white border border-orange-100 shadow-lg flex items-center justify-center"
+                    aria-label="Image suivante"
+                  >
+                    <ChevronRight className="h-5 w-5 text-orange-600" />
+                  </button>
+                </div>
                 <img
-                  src="/projet-eburny.png"
-                  alt="Projet Eburny Pearl - Rénovation du quartier Yobou-Lambert"
+                  src={visionImages[currentVisionImageLeft].url}
+                  alt={visionImages[currentVisionImageLeft].alt}
                   className="w-full h-64 sm:h-72 object-cover"
                 />
               </motion.div>
@@ -1573,14 +1648,39 @@ const Histoire: FrontendPage = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
-                className="mt-6 rounded-2xl overflow-hidden shadow-2xl"
+                className="mt-6 rounded-2xl overflow-hidden shadow-2xl relative cursor-zoom-in"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
+                onClick={() => openLightbox(visionLightboxImages, currentVisionImageRight)}
               >
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-3 z-10">
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      stepVisionRight("prev");
+                    }}
+                    className="h-10 w-10 rounded-full bg-white/90 hover:bg-white border border-emerald-100 shadow-lg flex items-center justify-center"
+                    aria-label="Image précédente"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-[#03800a]" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      stepVisionRight("next");
+                    }}
+                    className="h-10 w-10 rounded-full bg-white/90 hover:bg-white border border-emerald-100 shadow-lg flex items-center justify-center"
+                    aria-label="Image suivante"
+                  >
+                    <ChevronRight className="h-5 w-5 text-[#03800a]" />
+                  </button>
+                </div>
                 <img
-                  src="/projet-eburny.png"
-                  alt="Projet Eburny Pearl - Vision d'avenir pour Treichville"
-                  className="w-full h-64 sm:h-72 object-cover"
+                  src={visionImages[currentVisionImageRight].url}
+                  alt={visionImages[currentVisionImageRight].alt}
+                  className="w-full h-80 sm:h-96 object-cover"
                 />
               </motion.div>
             </motion.div>
