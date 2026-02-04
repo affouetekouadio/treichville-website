@@ -238,7 +238,7 @@ Route::get('/', function () use ($loadActualites, $loadEvenements, $loadSlides, 
             'type' => 'lieu',
             'titre' => $item->nom,
             'description' => $item->description,
-            'url' => route('decouvrir.index'),
+            'url' => route('parcs-piscines.index'),
         ];
     });
     $flashInfos = $flashInfos->merge($flashLieux);

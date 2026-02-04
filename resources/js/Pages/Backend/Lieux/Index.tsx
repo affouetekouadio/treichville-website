@@ -2,7 +2,7 @@ import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import type { FrontendPage } from '@/types';
 import { useMemo, useState, useEffect, FormEvent } from 'react';
-import { MapPin, Plus, Edit, Trash2, GripVertical, Eye, X, Upload, Trees, Waves } from 'lucide-react';
+import { MapPin, Plus, Edit, Trash2, GripVertical, Eye, X, Upload, Trees, Waves, Palette, HeartPulse, Landmark } from 'lucide-react';
 import { useNotification } from '@/contexts/NotificationContext';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import ImagePreviewModal from '@/components/ImagePreviewModal';
@@ -79,6 +79,27 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [draggingId, setDraggingId] = useState<number | null>(null);
+
+  const typeOptions = [
+    { value: 'Parc', label: 'Parc' },
+    { value: 'Piscine', label: 'Piscine' },
+    { value: 'Jardin', label: 'Jardin' },
+    { value: 'Culture', label: 'Lieu culturel' },
+    { value: 'Sante', label: 'Santé' },
+    { value: 'Monument', label: 'Monument' },
+  ];
+
+  const typeStyles: Record<
+    string,
+    { label: string; icon: React.ElementType; className: string }
+  > = {
+    Parc: { label: 'Parc', icon: Trees, className: 'bg-green-100 text-green-700' },
+    Piscine: { label: 'Piscine', icon: Waves, className: 'bg-blue-100 text-blue-700' },
+    Jardin: { label: 'Jardin', icon: Trees, className: 'bg-emerald-100 text-emerald-700' },
+    Culture: { label: 'Culture', icon: Palette, className: 'bg-purple-100 text-purple-700' },
+    Sante: { label: 'Santé', icon: HeartPulse, className: 'bg-rose-100 text-rose-700' },
+    Monument: { label: 'Monument', icon: Landmark, className: 'bg-amber-100 text-amber-700' },
+  };
 
   const [search, setSearch] = useState(listing?.filters.search ?? '');
   const sortValue = listing?.filters.sort ?? 'ordre';
@@ -420,17 +441,20 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
 
                   {/* Type badge */}
                   <div className="flex-shrink-0">
-                    {lieu.type === 'Parc' ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                        <Trees className="h-3 w-3" />
-                        Parc
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
-                        <Waves className="h-3 w-3" />
-                        Piscine
-                      </span>
-                    )}
+                    {(() => {
+                      const style = typeStyles[lieu.type] || {
+                        label: lieu.type,
+                        icon: MapPin,
+                        className: 'bg-gray-100 text-gray-700',
+                      };
+                      const Icon = style.icon;
+                      return (
+                        <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium ${style.className}`}>
+                          <Icon className="h-3 w-3" />
+                          {style.label}
+                        </span>
+                      );
+                    })()}
                   </div>
 
                   {/* Informations */}
@@ -523,8 +547,11 @@ const LieuxIndex: FrontendPage<LieuxPageProps> = ({ lieux = [], listing }) => {
                     onChange={(e) => setForm({ ...form, type: e.target.value })}
                     className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#f8812f] focus:outline-none focus:ring-2 focus:ring-orange-200"
                   >
-                    <option value="Parc">Parc</option>
-                    <option value="Piscine">Piscine</option>
+                    {typeOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
