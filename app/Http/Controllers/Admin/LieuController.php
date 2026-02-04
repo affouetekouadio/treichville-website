@@ -46,7 +46,7 @@ class LieuController extends Controller
     {
         try {
             $validated = $request->validate([
-                'type' => 'required|string|in:Parc,Piscine',
+                'type' => 'required|string|in:Parc,Piscine,Jardin,Culture,Sante,Monument',
                 'nom' => 'required|string|max:255',
                 'description' => 'required|string',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
@@ -119,7 +119,7 @@ class LieuController extends Controller
     {
         try {
             $validated = $request->validate([
-                'type' => 'required|string|in:Parc,Piscine',
+                'type' => 'required|string|in:Parc,Piscine,Jardin,Culture,Sante,Monument',
                 'nom' => 'required|string|max:255',
                 'description' => 'required|string',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
