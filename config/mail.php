@@ -124,6 +124,6 @@ return [
     |
     */
 
-    'admin_email' => env('MAIL_ADMIN_EMAIL', 'contact@treichville.ci'),
+    'admin_email' => env('MAIL_ADMIN_EMAIL', 'affouetekouadio@gmail.com'),
 
 ];
