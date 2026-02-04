@@ -321,6 +321,25 @@ const Contact: FrontendPage<ContactPageProps> = ({ directionContacts = [] }) => 
           </motion.div>
         </div>
 
+        {/* Localisation */}
+        <div className="mt-12">
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-100">
+              <h3 className="text-xl font-bold text-gray-900">Localiser la mairie de Treichville</h3>
+              <p className="text-gray-600 text-sm">Carte interactive</p>
+            </div>
+            <div className="h-[360px] sm:h-[420px] lg:h-[460px]">
+              <iframe
+                title="Mairie de Treichville"
+                src="https://www.google.com/maps?q=Mairie%20de%20Treichville&output=embed"
+                className="w-full h-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Contacts des directions */}
         {/*
         <div className="mt-16">
