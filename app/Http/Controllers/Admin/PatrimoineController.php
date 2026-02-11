@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patrimoine;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -53,6 +54,8 @@ class PatrimoineController extends Controller
             }
 
             $validated['slug'] = Str::slug($validated['titre']);
+            $validated['description'] = HtmlSanitizer::clean($validated['description'] ?? null);
+            $validated['contenu'] = HtmlSanitizer::clean($validated['contenu'] ?? null);
 
             $patrimoine = Patrimoine::create($validated);
 
@@ -103,6 +106,8 @@ class PatrimoineController extends Controller
                 $validated['image_path'] = $request->file('image')->store('patrimoines', 'public');
             }
 
+            $validated['description'] = HtmlSanitizer::clean($validated['description'] ?? null);
+            $validated['contenu'] = HtmlSanitizer::clean($validated['contenu'] ?? null);
             $patrimoine->update($validated);
 
             return response()->json([

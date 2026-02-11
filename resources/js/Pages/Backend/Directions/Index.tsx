@@ -20,6 +20,15 @@ type DirectionItem = {
   contenu?: string | null;
   icon?: string | null;
   responsable?: string | null;
+  fonction_responsable?: string | null;
+  photo_responsable_url?: string | null;
+  biographie_responsable?: string | null;
+  reseaux_sociaux_responsable?: {
+    facebook?: string | null;
+    twitter?: string | null;
+    linkedin?: string | null;
+    instagram?: string | null;
+  } | null;
   adresse?: string | null;
   ordre?: number | null;
   actif?: boolean;
@@ -103,10 +112,18 @@ const AdminDirections: FrontendPage<DirectionPageProps> = ({ directions = [], li
     contenu: '',
     icon: '',
     responsable: '',
+    fonction_responsable: '',
     adresse: '',
     ordre: '0',
     actif: true,
+    biographie_responsable: '',
+    reseaux_sociaux_facebook: '',
+    reseaux_sociaux_twitter: '',
+    reseaux_sociaux_linkedin: '',
+    reseaux_sociaux_instagram: '',
   });
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   const resetForm = () => {
     setForm({
@@ -115,10 +132,18 @@ const AdminDirections: FrontendPage<DirectionPageProps> = ({ directions = [], li
       contenu: '',
       icon: '',
       responsable: '',
+      fonction_responsable: '',
       adresse: '',
       ordre: '0',
       actif: true,
+      biographie_responsable: '',
+      reseaux_sociaux_facebook: '',
+      reseaux_sociaux_twitter: '',
+      reseaux_sociaux_linkedin: '',
+      reseaux_sociaux_instagram: '',
     });
+    setPhotoFile(null);
+    setPhotoPreview(null);
     setEditingId(null);
   };
 
@@ -129,10 +154,18 @@ const AdminDirections: FrontendPage<DirectionPageProps> = ({ directions = [], li
       contenu: item.contenu ?? '',
       icon: item.icon ?? '',
       responsable: item.responsable ?? '',
+      fonction_responsable: item.fonction_responsable ?? '',
       adresse: item.adresse ?? '',
       ordre: String(item.ordre ?? 0),
       actif: item.actif ?? true,
+      biographie_responsable: item.biographie_responsable ?? '',
+      reseaux_sociaux_facebook: item.reseaux_sociaux_responsable?.facebook ?? '',
+      reseaux_sociaux_twitter: item.reseaux_sociaux_responsable?.twitter ?? '',
+      reseaux_sociaux_linkedin: item.reseaux_sociaux_responsable?.linkedin ?? '',
+      reseaux_sociaux_instagram: item.reseaux_sociaux_responsable?.instagram ?? '',
     });
+    setPhotoFile(null);
+    setPhotoPreview(item.photo_responsable_url ?? null);
     setEditingId(item.id);
     setOpenForm(true);
   };
@@ -143,28 +176,49 @@ const AdminDirections: FrontendPage<DirectionPageProps> = ({ directions = [], li
 
     try {
       const csrf = document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '';
-      const payload = {
-        nom: form.nom,
-        description: form.short_description,
-        short_description: form.short_description,
-        contenu: form.contenu,
-        icon: form.icon || null,
-        responsable: form.responsable || null,
-        adresse: form.adresse || null,
-        ordre: Number(form.ordre || 0),
-        actif: form.actif ? 1 : 0,
-      };
+
+      const formData = new FormData();
+      formData.append('nom', form.nom);
+      formData.append('description', form.short_description);
+      formData.append('short_description', form.short_description);
+      formData.append('contenu', form.contenu);
+      if (form.icon) formData.append('icon', form.icon);
+      if (form.responsable) formData.append('responsable', form.responsable);
+      if (form.fonction_responsable) formData.append('fonction_responsable', form.fonction_responsable);
+      if (form.adresse) formData.append('adresse', form.adresse);
+      formData.append('ordre', String(Number(form.ordre || 0)));
+      formData.append('actif', form.actif ? '1' : '0');
+
+      if (form.biographie_responsable) {
+        formData.append('biographie_responsable', form.biographie_responsable);
+      }
+      if (photoFile) {
+        formData.append('photo_responsable', photoFile);
+      }
+
+      const sociaux: Record<string, string> = {};
+      if (form.reseaux_sociaux_facebook) sociaux.facebook = form.reseaux_sociaux_facebook;
+      if (form.reseaux_sociaux_twitter) sociaux.twitter = form.reseaux_sociaux_twitter;
+      if (form.reseaux_sociaux_linkedin) sociaux.linkedin = form.reseaux_sociaux_linkedin;
+      if (form.reseaux_sociaux_instagram) sociaux.instagram = form.reseaux_sociaux_instagram;
+      if (Object.keys(sociaux).length > 0) {
+        formData.append('reseaux_sociaux_responsable', JSON.stringify(sociaux));
+      }
 
       const url = editingId ? `/admin/api/directions/${editingId}` : '/admin/api/directions';
 
+      // Pour PUT avec FormData, utiliser POST + _method override
+      if (editingId) {
+        formData.append('_method', 'PUT');
+      }
+
       const response = await fetch(url, {
-        method: editingId ? 'PUT' : 'POST',
+        method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf,
           'X-Requested-With': 'XMLHttpRequest',
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -369,6 +423,97 @@ const AdminDirections: FrontendPage<DirectionPageProps> = ({ directions = [], li
                   />
                 </div>
               </div>
+
+              {form.responsable && (
+                <div className="col-span-1 md:col-span-2 border-t border-gray-100 pt-4 mt-1">
+                  <p className="text-sm font-semibold text-gray-800 mb-3">Profil du responsable</p>
+
+                  <div className="mb-4">
+                    <label className="text-sm font-medium text-gray-700">Fonction</label>
+                    <input
+                      value={form.fonction_responsable}
+                      onChange={(e) => setForm({ ...form, fonction_responsable: e.target.value })}
+                      className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-green-200"
+                      placeholder="Ex: Directeur, Directrice, Chef de service..."
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="text-sm font-medium text-gray-700">Photo du responsable</label>
+                    <div className="mt-1 flex items-center gap-4">
+                      {photoPreview && (
+                        <img
+                          src={photoPreview}
+                          alt="Apercu"
+                          className="w-16 h-16 rounded-full object-cover border-2 border-orange-200"
+                        />
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setPhotoFile(file);
+                            setPhotoPreview(URL.createObjectURL(file));
+                          }
+                        }}
+                        className="text-sm text-gray-600"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="text-sm font-medium text-gray-700">Biographie</label>
+                    <textarea
+                      value={form.biographie_responsable}
+                      onChange={(e) => setForm({ ...form, biographie_responsable: e.target.value })}
+                      rows={4}
+                      className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-green-200"
+                      placeholder="Biographie du responsable..."
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">Facebook</label>
+                      <input
+                        value={form.reseaux_sociaux_facebook}
+                        onChange={(e) => setForm({ ...form, reseaux_sociaux_facebook: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-green-200"
+                        placeholder="https://facebook.com/..."
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">Twitter / X</label>
+                      <input
+                        value={form.reseaux_sociaux_twitter}
+                        onChange={(e) => setForm({ ...form, reseaux_sociaux_twitter: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-green-200"
+                        placeholder="https://twitter.com/..."
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">LinkedIn</label>
+                      <input
+                        value={form.reseaux_sociaux_linkedin}
+                        onChange={(e) => setForm({ ...form, reseaux_sociaux_linkedin: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-green-200"
+                        placeholder="https://linkedin.com/in/..."
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">Instagram</label>
+                      <input
+                        value={form.reseaux_sociaux_instagram}
+                        onChange={(e) => setForm({ ...form, reseaux_sociaux_instagram: e.target.value })}
+                        className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-[#03800a] focus:outline-none focus:ring-2 focus:ring-green-200"
+                        placeholder="https://instagram.com/..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="text-sm font-medium text-gray-700">Description courte</label>

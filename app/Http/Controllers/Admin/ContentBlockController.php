@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContentBlock;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -35,6 +36,7 @@ class ContentBlockController extends Controller
                 $validated['background_image_path'] = $request->file('background_image')->store('content-blocks/backgrounds', 'public');
             }
 
+            $validated['content'] = HtmlSanitizer::clean($validated['content'] ?? null);
             $block = ContentBlock::create($validated);
 
             return response()->json([
@@ -66,6 +68,7 @@ class ContentBlockController extends Controller
                 $validated['background_image_path'] = $request->file('background_image')->store('content-blocks/backgrounds', 'public');
             }
 
+            $validated['content'] = HtmlSanitizer::clean($validated['content'] ?? null);
             $contentBlock->update($validated);
 
             return response()->json([

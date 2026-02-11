@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Actualite;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -61,6 +62,8 @@ class ActualiteController extends Controller
             }
 
             $validated['slug'] = Str::slug($validated['titre']);
+            $validated['description'] = HtmlSanitizer::clean($validated['description'] ?? null);
+            $validated['contenu'] = HtmlSanitizer::clean($validated['contenu'] ?? null);
 
             $actualite = Actualite::create($validated);
 
@@ -113,6 +116,8 @@ class ActualiteController extends Controller
                 $validated['image_path'] = $request->file('image')->store('actualites', 'public');
             }
 
+            $validated['description'] = HtmlSanitizer::clean($validated['description'] ?? null);
+            $validated['contenu'] = HtmlSanitizer::clean($validated['contenu'] ?? null);
             $actualite->update($validated);
 
             return response()->json([

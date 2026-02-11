@@ -297,7 +297,9 @@ Route::get('/contact', function () {
     ]);
 })->name('contact');
 
-Route::post('/contact', [App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [App\Http\Controllers\Frontend\ContactController::class, 'store'])
+    ->middleware('throttle:contact-form')
+    ->name('contact.store');
 
 Route::get('/actualites', function (Request $request) use ($loadActualites) {
     $perPage = 12;

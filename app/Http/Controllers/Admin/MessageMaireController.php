@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MessageMaire;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -70,6 +71,8 @@ class MessageMaireController extends Controller
                 MessageMaire::where('actif', true)->update(['actif' => false]);
             }
 
+            $validated['contenu_message'] = HtmlSanitizer::clean($validated['contenu_message'] ?? null);
+            $validated['texte_conclusion'] = HtmlSanitizer::clean($validated['texte_conclusion'] ?? null);
             $message = MessageMaire::create($validated);
 
             return response()->json([
@@ -136,6 +139,8 @@ class MessageMaireController extends Controller
                     ->update(['actif' => false]);
             }
 
+            $validated['contenu_message'] = HtmlSanitizer::clean($validated['contenu_message'] ?? null);
+            $validated['texte_conclusion'] = HtmlSanitizer::clean($validated['texte_conclusion'] ?? null);
             $messageMaire->update($validated);
 
             return response()->json([

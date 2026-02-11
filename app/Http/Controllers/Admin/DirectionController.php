@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Direction;
 use App\Models\DirectionContact;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -36,6 +38,10 @@ class DirectionController extends Controller
                     'contenu' => $direction->contenu,
                     'icon' => $direction->icon,
                     'responsable' => $direction->responsable,
+                    'fonction_responsable' => $direction->fonction_responsable,
+                    'photo_responsable_url' => $direction->photo_responsable_url,
+                    'biographie_responsable' => $direction->biographie_responsable,
+                    'reseaux_sociaux_responsable' => $direction->reseaux_sociaux_responsable,
                     'adresse' => $direction->adresse,
                     'ordre' => $direction->ordre,
                     'actif' => $direction->actif,
@@ -70,6 +76,10 @@ class DirectionController extends Controller
                 'contenu' => ['nullable', 'string'],
                 'icon' => ['nullable', 'string', 'max:100'],
                 'responsable' => ['nullable', 'string', 'max:255'],
+                'fonction_responsable' => ['nullable', 'string', 'max:255'],
+                'photo_responsable' => ['nullable', 'file', 'image', 'max:10240'],
+                'biographie_responsable' => ['nullable', 'string'],
+                'reseaux_sociaux_responsable' => ['nullable', 'string'],
                 'adresse' => ['nullable', 'string', 'max:500'],
                 'ordre' => ['nullable', 'integer', 'min:0'],
                 'actif' => ['nullable', 'boolean'],
@@ -85,6 +95,19 @@ class DirectionController extends Controller
             // Génération du slug
             $validated['slug'] = Direction::generateUniqueSlug(Str::slug($validated['nom']));
 
+            // Upload de la photo du responsable
+            $photoPath = null;
+            if ($request->hasFile('photo_responsable')) {
+                $photoPath = $request->file('photo_responsable')
+                    ->store('directions/responsables', 'public');
+            }
+
+            // Decode des réseaux sociaux
+            $reseauxSociaux = null;
+            if (!empty($validated['reseaux_sociaux_responsable'])) {
+                $reseauxSociaux = json_decode($validated['reseaux_sociaux_responsable'], true);
+            }
+
             // Création de la direction
             $direction = Direction::create([
                 'nom' => $validated['nom'],
@@ -94,6 +117,10 @@ class DirectionController extends Controller
                 'contenu' => $validated['contenu'] ?? null,
                 'icon' => $validated['icon'] ?? null,
                 'responsable' => $validated['responsable'] ?? null,
+                'fonction_responsable' => $validated['fonction_responsable'] ?? null,
+                'photo_responsable' => $photoPath,
+                'biographie_responsable' => HtmlSanitizer::clean($validated['biographie_responsable'] ?? null),
+                'reseaux_sociaux_responsable' => $reseauxSociaux,
                 'adresse' => $validated['adresse'] ?? null,
                 'ordre' => $validated['ordre'] ?? 0,
                 'actif' => $validated['actif'] ?? true,
@@ -149,6 +176,10 @@ class DirectionController extends Controller
                 'contenu' => ['nullable', 'string'],
                 'icon' => ['nullable', 'string', 'max:100'],
                 'responsable' => ['nullable', 'string', 'max:255'],
+                'fonction_responsable' => ['nullable', 'string', 'max:255'],
+                'photo_responsable' => ['nullable', 'file', 'image', 'max:10240'],
+                'biographie_responsable' => ['nullable', 'string'],
+                'reseaux_sociaux_responsable' => ['nullable', 'string'],
                 'adresse' => ['nullable', 'string', 'max:500'],
                 'ordre' => ['nullable', 'integer', 'min:0'],
                 'actif' => ['nullable', 'boolean'],
@@ -167,6 +198,24 @@ class DirectionController extends Controller
                 $validated['slug'] = Direction::generateUniqueSlug(Str::slug($validated['nom']), $direction->id);
             }
 
+            // Gestion de la photo du responsable
+            $photoPath = $direction->photo_responsable;
+            if ($request->hasFile('photo_responsable')) {
+                // Supprimer l'ancienne photo locale
+                $oldPath = $direction->photo_responsable;
+                if ($oldPath && !str_starts_with($oldPath, 'http://') && !str_starts_with($oldPath, 'https://') && !str_starts_with($oldPath, '/')) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $photoPath = $request->file('photo_responsable')
+                    ->store('directions/responsables', 'public');
+            }
+
+            // Decode des réseaux sociaux
+            $reseauxSociaux = $direction->reseaux_sociaux_responsable;
+            if (array_key_exists('reseaux_sociaux_responsable', $validated) && !empty($validated['reseaux_sociaux_responsable'])) {
+                $reseauxSociaux = json_decode($validated['reseaux_sociaux_responsable'], true);
+            }
+
             $direction->update([
                 'nom' => $validated['nom'] ?? $direction->nom,
                 'slug' => $validated['slug'] ?? $direction->slug,
@@ -175,6 +224,10 @@ class DirectionController extends Controller
                 'contenu' => $validated['contenu'] ?? $direction->contenu,
                 'icon' => $validated['icon'] ?? $direction->icon,
                 'responsable' => $validated['responsable'] ?? $direction->responsable,
+                'fonction_responsable' => $validated['fonction_responsable'] ?? $direction->fonction_responsable,
+                'photo_responsable' => $photoPath,
+                'biographie_responsable' => HtmlSanitizer::clean($validated['biographie_responsable'] ?? $direction->biographie_responsable),
+                'reseaux_sociaux_responsable' => $reseauxSociaux,
                 'adresse' => $validated['adresse'] ?? $direction->adresse,
                 'ordre' => $validated['ordre'] ?? $direction->ordre,
                 'actif' => $validated['actif'] ?? $direction->actif,
@@ -247,6 +300,12 @@ class DirectionController extends Controller
     public function destroy(Direction $direction)
     {
         try {
+            // Supprimer la photo locale du responsable
+            $oldPath = $direction->photo_responsable;
+            if ($oldPath && !str_starts_with($oldPath, 'http://') && !str_starts_with($oldPath, 'https://') && !str_starts_with($oldPath, '/')) {
+                Storage::disk('public')->delete($oldPath);
+            }
+
             // Les contacts seront supprimés automatiquement grâce à cascadeOnDelete
             $direction->delete();
 

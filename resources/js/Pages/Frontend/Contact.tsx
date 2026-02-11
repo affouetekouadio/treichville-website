@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,8 +67,14 @@ const Contact: FrontendPage<ContactPageProps> = ({ directionContacts = [] }) => 
     email: "",
     telephone: "",
     sujet: "",
-    message: ""
+    message: "",
+    website: "",
+    hp_time: 0,
   });
+
+  useEffect(() => {
+    setData("hp_time", Date.now());
+  }, [setData]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -248,6 +254,24 @@ const Contact: FrontendPage<ContactPageProps> = ({ directionContacts = [] }) => 
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="sr-only" aria-hidden="true">
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={data.website}
+                    onChange={(e) => setData("website", e.target.value)}
+                  />
+                </div>
+                <input type="hidden" name="hp_time" value={data.hp_time} />
+                {(errors.spam || errors.rate_limit) && (
+                  <p className="text-red-600 text-sm">
+                    {errors.spam ?? errors.rate_limit}
+                  </p>
+                )}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="nom">Nom complet *</Label>

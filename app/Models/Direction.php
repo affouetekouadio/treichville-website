@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -22,6 +23,10 @@ class Direction extends Model
         'contenu',
         'icon',
         'responsable',
+        'fonction_responsable',
+        'photo_responsable',
+        'biographie_responsable',
+        'reseaux_sociaux_responsable',
         'adresse',
         'ordre',
         'actif',
@@ -30,6 +35,11 @@ class Direction extends Model
     protected $casts = [
         'actif' => 'boolean',
         'ordre' => 'integer',
+        'reseaux_sociaux_responsable' => 'array',
+    ];
+
+    protected $appends = [
+        'photo_responsable_url',
     ];
 
     /**
@@ -94,6 +104,26 @@ class Direction extends Model
     }
 
     /**
+     * Génère l'URL de la photo du responsable
+     */
+    public function getPhotoResponsableUrlAttribute(): ?string
+    {
+        if (! $this->photo_responsable) {
+            return null;
+        }
+
+        if (
+            str_starts_with($this->photo_responsable, 'http://') ||
+            str_starts_with($this->photo_responsable, 'https://') ||
+            str_starts_with($this->photo_responsable, '/')
+        ) {
+            return $this->photo_responsable;
+        }
+
+        return Storage::disk('public')->url($this->photo_responsable);
+    }
+
+    /**
      * Formate les données pour l'affichage frontend
      */
     public function toFrontendArray(): array
@@ -107,6 +137,10 @@ class Direction extends Model
             'contenu' => $this->contenu ?? '',
             'icon' => $this->icon,
             'responsable' => $this->responsable,
+            'fonction_responsable' => $this->fonction_responsable,
+            'photo_responsable_url' => $this->photo_responsable_url,
+            'biographie_responsable' => $this->biographie_responsable,
+            'reseaux_sociaux_responsable' => $this->reseaux_sociaux_responsable,
             'adresse' => $this->adresse,
             'contacts' => $this->contacts->map(function ($contact) {
                 return [

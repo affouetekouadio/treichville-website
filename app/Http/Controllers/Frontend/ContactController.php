@@ -16,6 +16,18 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
+        $honeypot = (string) $request->input('website', '');
+        $submittedAt = (int) $request->input('hp_time', 0);
+        $nowMs = (int) round(microtime(true) * 1000);
+        $minElapsedMs = 3000;
+
+        if ($honeypot !== '' || ($submittedAt > 0 && ($nowMs - $submittedAt) < $minElapsedMs)) {
+            return back()
+                ->withErrors(['spam' => 'Votre message n’a pas pu être envoyé.'])
+                ->withInput()
+                ->setStatusCode(422);
+        }
+
         // Validation des données
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
@@ -23,6 +35,8 @@ class ContactController extends Controller
             'telephone' => 'nullable|string|max:20',
             'sujet' => 'required|string|max:255',
             'message' => 'required|string|max:5000',
+            'website' => 'nullable|string|max:255',
+            'hp_time' => 'nullable|integer',
         ], [
             'nom.required' => 'Le nom est requis',
             'email.required' => 'L\'email est requis',
